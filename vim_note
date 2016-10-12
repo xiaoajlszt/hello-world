@@ -76,13 +76,6 @@ ctrl+r 恢复上一步被撤销的操作
 <2> 将光标移到左边Tlist函数名上, 按下回车后, 右侧会自动跳转到函数定义处
 <3> 将光标移到左边Tlist函数名上, 按下空格后, 下方会显示函数声明
 
-3、文件浏览器和窗口管理器 插件: WinManager
-Winmanager插件在这里下载：http://vim.sourceforge.net/scripts/script.php?script_id=95
-下载后，把该文件在~/.vim/目录中解压缩，这会把winmanager插件解压到~/.vim/plugin和~/.vim/doc目录中：
-:helptags ~/.vim/doc“命令来生成帮助标签，然后就可以使用”:help winmanager“来查看帮助了。
-<0> :WMToggle 打开插件
-<1> 
-
 4、a.vim-master插件
 <0> :A 头文件与对应源文件文件之间切换
     :AS 上下分割为两部分  (光标切换/ctrl w)
@@ -138,6 +131,7 @@ d	删除光标所在的buffer
 
 10、ctrlp插件  //（正则/模糊）搜索文件（打开的缓冲区/最近使用的文件）
 <1> ctrl-p   //搜索文件
+<2> <Esc>退出
 
 11、neocomplete插件  //自动补全
 
@@ -175,9 +169,42 @@ http://blog.csdn.net/zhaoyw2008/article/details/8012757
 <3> 在新水平tab中打开  ,bs
 <4> 在新竖直tab中打开  ,bv
 
+17、molokai插件  //用于VIM的配色方案
+  set t_Co=256
+  set background=dark
+  colorscheme molokai
+
+18、winmanager
+let g:winManagerWindowLayout = "FileExplorer,BufExplorer"
+let g:winManagerWidth = 20
+nmap <silent> <F7> :WMToggle<cr>
+
+20、YouCompleteMe(代码补全神器)  https://github.com/Valloric/YouCompleteMe#fedora-linux-x64
+<1>下载  git clone --recursive https://github.com/Valloric/YouCompleteMe.git
+<2>检查仓库完整性 git submodule update --init --recursive
+<3>编译  http://blog.jobbole.com/58978/      http://www.linuxidc.com/Linux/2015-07/120352.htm   http://249wangmang.blog.163.com/blog/static/5263076520140209571338/
+./install.py --clang-completer
+//--clang-completer表示支持C系列语言的语法
+<4>安装说明
+1)YCM插件是一个编译形成的组件，如果ycm_core library APIs发生变化，需要update YCM时，YCM会通知重新编译，需要返回安装步骤
+2)上述安装过程中会下载 /YouCompleteMe/third_party/ycmd/clang_archives/clang+llvm-3.9.0-x86_64-opensuse13.2.tar.xz  
+  解压后，后续会用到
+3)在YouCompleteMe目录下创建ycm_build目录，进入该目录编译，（这样生成的文件都会在这个目录中，便于管理）
+  执行 cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=~/.vim/bundle/YouCompleteMe/third_party/ycmd/clang_archives/clang+llvm-3.9.0-x86_64-opensuse13.2 . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
+  //其中DPATH_TO_LLVM_ROOT是2)中clang+llvm包的路径
+  执行 cmake --build . --target ycm_core 生成ycm_core.so
+  执行 make ycm_support_libs 生成ycm_client_support.so //执行失败
+<5>配置 //可能不需要上述3)中的编译部分。。。
+1)在~/.vim/.vimrc_plugin中加入 
+let g:ycm_global_ycm_extra_conf = '~/.ycm_extra_conf.py'
+否则会报错：ValueError: Still no compile flags, no completions yet.
+
+2)启动/关闭 
+nnoremap <leader>y :let g:ycm_auto_trigger=0<CR>                " turn off YCM
+nnoremap <leader>Y :let g:ycm_auto_trigger=1<CR>                "turn on YCM
 
 
-   
+
 ---------------------------------------------------------
 vim语法：
 0、简单语法
