@@ -180,16 +180,47 @@ let g:winManagerWidth = 20
 nmap <silent> <F7> :WMToggle<cr>
 
 20、YouCompleteMe(代码补全神器)  https://github.com/Valloric/YouCompleteMe#fedora-linux-x64
-<1>下载  git clone --recursive https://github.com/Valloric/YouCompleteMe.git
-<2>检查仓库完整性 git submodule update --init --recursive
-<3>编译  http://blog.jobbole.com/58978/      http://www.linuxidc.com/Linux/2015-07/120352.htm   http://249wangmang.blog.163.com/blog/static/5263076520140209571338/
-./install.py --clang-completer
+<1>下载  
+1)git clone --recursive https://github.com/Valloric/YouCompleteMe.git
+2)检查仓库完整性 git submodule update --init --recursive
+//此时/YouCompleteMe/third_party/ycmd/，下会没有clang+llvm-3.9.0-x86_64-opensuse13.2.tar.xz，需要下载
+
+http://blog.jobbole.com/58978/      
+http://www.linuxidc.com/Linux/2015-07/120352.htm   
+http://249wangmang.blog.163.com/blog/static/5263076520140209571338/	
+http://584250550.blog.51cto.com/637589/1369990/
+<2>手动安装  
+1)安装clang\python\vim(at least 7.3.584 )
+2)下载clang+llvm-3.9.0-x86_64-opensuse13.2，解压至~/.vim/bundle/YouCompleteMe/third_party/ycmd/clang_archives
+3)/YouCompleteMe/下建立ycm_build文件夹，进入该文件夹执行：
+cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=~/.vim/bundle/YouCompleteMe/third_party/ycmd/clang_archives/clang+llvm-3.9.0-x86_64-opensuse13.2 . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
+4)执行cmake --build . --target ycm_core   /  make ycm_core  //生成ycm_core
+  //(无效)执行make ycm_support_libs  //这条命令才会生成第三个文件ycm_client_support.so。因为，YouCompleteMe是C/S架构的，所以存在服务器和服务端的说法。
+5)在~/.vim/.vimrc_plugin中加入 
+let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
+否则会报错：ValueError: Still no compile flags, no completions yet.
+6).ycm_extra_conf.py配置相关
+为了能够顺利使用语法补全和跳转，需要在.ycm_extra_conf.py中加入自己工程的相关路径，默认.ycm_extra_conf.py配置文件中只有系统函数。(http://584250550.blog.51cto.com/637589/1369990/)
+我们一般把“-I”用作自己的代码，"-isystem"用作第三代码。这样编译代码的时候，第三方代码编译时的warning，就不会显示出来，只需要专注在自己写的代码。
+
+但是上述方法会加入太多的路径，可以使用官方提供的方法：
+# Set this to the absolute path to the folder (NOT the file!) containing the
+# compile_commands.json file to use that instead of 'flags'. See here for
+# more details: http://clang.llvm.org/docs/JSONCompilationDatabase.html
+#
+# You can get CMake to generate this file for you by adding:
+#   set( CMAKE_EXPORT_COMPILE_COMMANDS 1 )
+# to your CMakeLists.txt file.
+即，在CMakeLists中增加命令set( CMAKE_EXPORT_COMPILE_COMMANDS 1 )，make之后会在build文件夹中生成compile_commands.json文件。
+在.ycm_extra_conf.py中设置json文件的路径即可。eg: compilation_database_folder = '/home/xiaopeng/git/rcp_paas/rcp/build/'
+这样就可以任意跳转咯~~
+
+<3>自动安装 (推荐)
+-./install.py --clang-completer    //此步骤会下载clang+llvm-3.9.0-x86_64-opensuse13.2.tar.xz至目录/YouCompleteMe/third_party/ycmd/
 //--clang-completer表示支持C系列语言的语法
 <4>安装说明
 1)YCM插件是一个编译形成的组件，如果ycm_core library APIs发生变化，需要update YCM时，YCM会通知重新编译，需要返回安装步骤
-2)上述安装过程中会下载 /YouCompleteMe/third_party/ycmd/clang_archives/clang+llvm-3.9.0-x86_64-opensuse13.2.tar.xz  
-  解压后，后续会用到
-3)在YouCompleteMe目录下创建ycm_build目录，进入该目录编译，（这样生成的文件都会在这个目录中，便于管理）
+2)在YouCompleteMe目录下创建ycm_build目录，进入该目录编译，（这样生成的文件都会在这个目录中，便于管理）
   执行 cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=~/.vim/bundle/YouCompleteMe/third_party/ycmd/clang_archives/clang+llvm-3.9.0-x86_64-opensuse13.2 . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
   //其中DPATH_TO_LLVM_ROOT是2)中clang+llvm包的路径
   执行 cmake --build . --target ycm_core 生成ycm_core.so
