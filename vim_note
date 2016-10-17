@@ -212,8 +212,10 @@ let g:ycm_global_ycm_extra_conf='~/.vim/bundle/YouCompleteMe/third_party/ycmd/cp
 #   set( CMAKE_EXPORT_COMPILE_COMMANDS 1 )
 # to your CMakeLists.txt file.
 即，在CMakeLists中增加命令set( CMAKE_EXPORT_COMPILE_COMMANDS 1 )，make之后会在build文件夹中生成compile_commands.json文件。
-在.ycm_extra_conf.py中设置json文件的路径即可。eg: compilation_database_folder = '/home/xiaopeng/git/rcp_paas/rcp/build/'
+在.ycm_extra_conf.py中设置json文件的路径即可。eg: compilation_database_folder = '/home/.../git/.../.../build/'
 这样就可以任意跳转咯~~
+ctrl o //跳转后返回
+
 
 <3>自动安装 (推荐)
 -./install.py --clang-completer    //此步骤会下载clang+llvm-3.9.0-x86_64-opensuse13.2.tar.xz至目录/YouCompleteMe/third_party/ycmd/
