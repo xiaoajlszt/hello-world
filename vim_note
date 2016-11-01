@@ -92,7 +92,7 @@ ctrl+r 恢复上一步被撤销的操作
 <0>先在~/vimrc中增加,用于设定是否使用 quickfix 窗口来显示 cscope 结果
 :set cscopequickfix=s-,c-,d-,i-,t-,e-
 <1>在代码根目录下执行： cscope -Rbq  生成三个文件：cscope.in.out  cscope.out  cscope.po.out 
-<2>在~/vimrc中增加:cs add /usr/local/share/uspp/uspp/cscope.out /usr/local/share/uspp/uspp
+<2>在~/vimrc中增加:cs add /usr/local/share/uspp/uspp/cscope.out /usr/local/share/uspp/uspp  （可能默认在当前工程寻找，所以也可以不加）
 <3>在VIM中执行:cs find g 函数名/变量名   用于查找函数\变量等
               :cs find c 函数名/变量名   用于查找函数\变量等被哪些地方调用，并跳转到第一个    再执行:cw 打开QuickFix窗口，显示所有调用
 			  
@@ -107,6 +107,18 @@ cs find c|d|e|f|g|i|s|t name
 6 或 e	查找本 egrep 模式
 7 或 f	查找本文件
 8 或 i	查找包含本文件的文件
+
+"cscope
+nmap <leader>ss :cs find s <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>gg :cs find g <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>cc :cs find c <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>tt :cs find t <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>ee :cs find e <C-R>=expand("<cword>")<CR><CR>
+nmap <leader>ff :cs find f <C-R>=expand("<cfile>")<CR><CR>
+nmap <leader>ii :cs find i <C-R>=expand("<cfile>")<CR><CR>
+nmap <leader>dd :cs find d <C-R>=expand("<cword>")<CR><CR>
+
+:cs reset重新初始化所有连接
 
 6、QuickFix窗口
 <0>打开 :cw
