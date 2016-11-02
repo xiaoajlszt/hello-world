@@ -1,0 +1,22 @@
+一、安装
+1、虚机安装
+<1>安装RHEL时提示“此主机支持 Intel VT-x,但 Intel VT-x 处于禁用状态”
+解决方法：重启计算机，开机F1进入BIOS界面。“Advanced--CPU setup--Intel(R) Virtualization Technology”设置为Enable。
+          F10保存并退出。重启计算机即可。
+
+<2>安装RHEL 7.0/7.1，打开只有命令行界面，并且切换不到图形界面
+解决方法：我这里是因为VMware配置完成后，在安装虚拟机时（autoinst.iso）自动安装了，很多选项没有配置，解决方法两种，如下：
+          http://blog.csdn.net/hemingwang0902/article/details/8890267
+
+<3>配置网络
+-虚机、浏览器代理配置
+-DNS配置
+/etc/resolv.conf中添加： 
+nameserver 8.8.8.8
+nameserver 8.8.4.4 
+(ZTE  nameserver 10.30.1.10/10.30.1.9)
+重启网卡service network restart
+
+2、docker安装
+
+

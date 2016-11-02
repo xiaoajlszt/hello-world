@@ -1,8 +1,3 @@
-选项切换  tab          shift+tab
-选项卡切换ctrl+tab     shift+ctrl+tab
-窗口切换  alt+tab      shift+alt+tab
-
-
 一、vim基本命令
 0、基本操作：
 <0> 0 数字0移动到一行的最前面字符
@@ -140,6 +135,9 @@ d	删除光标所在的buffer
 <3> <leader>e        //一次显示左侧tab页
 <4> 隐藏某些文档(.pyc .git .hg .svn .bzr)
 <5> 将该插件视为浏览文档的工具而不是一个分页的工具。
+
+//wsl
+<6>.vimrc_amix中 map <leader>e :edit %:p:h<cr>
 
 10、ctrlp插件  //（正则/模糊）搜索文件（打开的缓冲区/最近使用的文件）
 <1> ctrl-p   //搜索文件
@@ -305,53 +303,3 @@ w:name —— 只对当前窗口有效的变量
 g:name —— 全局变量
 v:name —— vim预定义变量
 a:name —— 函数的参变量
-
-
-
-
----------------------------------------------------------
-1、gdb调试：ctrl+x+a调出函数单步执行
-
-2、指针类型不能随意强制转化：
-如：
-word a = 1，将&a作为入参传入函数时（函数参数类型为dword *）
-那么 word * 转dword * ，这样解析的时候按dword解析4个字节，多出来的两个字节里的数据不可知，（dword *）&a指向的值就不一定是1了。
-
-6、ldd命令：显示动态库
-在制作自己的发行版时经常需要判断某条命令需要哪些共享库文件的支持，以确保指定的命令在独立的系统内可以可靠的运行。
-在Linux环境下通过ldd命令即可实现，在终端下执行：ldd /bin/ls //ldd命令通常使用"-v"或"--verbose"选项来显示所依赖的动态连接库的尽可能的详细信息。即可得到/bin/ls命令的相关共享库文件列表：
-
-在 ldd 命令打印的结果中，“=>”左边的表示该程序需要连接的共享库之 so 名称，右边表示由 Linux 的共享库系统找到的对应的共享库在文件系统中的具体位置。默认情况下，/etc/ld.so.conf 文件中包含有默认的共享库搜索路径。
-
-使用动态库时：
-[root@Master uspp]# ldd ./build/test/ft_lb/lb_test 
-        linux-vdso.so.1 =>  (0x00007ffe1f787000)
-        libantlr3c.so => not found
-        libpthread.so.0 => /lib64/libpthread.so.0 (0x00007f47c3307000)
-        libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007f47c2fff000)
-        libm.so.6 => /lib64/libm.so.6 (0x00007f47c2cfd000)
-        libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007f47c2ae6000)
-        libc.so.6 => /lib64/libc.so.6 (0x00007f47c2725000)
-        /lib64/ld-linux-x86-64.so.2 (0x00007f47c354e000)
-
-使用静态库时：
-[root@Master uspp]# ldd ./build/test/ft_lb/lb_test 
-        linux-vdso.so.1 =>  (0x00007ffe394f1000)
-        libpthread.so.0 => /lib64/libpthread.so.0 (0x00007fe7a26f2000)
-        libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007fe7a23e9000)
-        libm.so.6 => /lib64/libm.so.6 (0x00007fe7a20e7000)
-        libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007fe7a1ed1000)
-        libc.so.6 => /lib64/libc.so.6 (0x00007fe7a1b0f000)
-        /lib64/ld-linux-x86-64.so.2 (0x00007fe7a2938000)
-		
-Windows和Linux的加载时链接是由操作系统来完成的，格式在不同的系统下有不同的区别，但是原理还是一样的。
-linux下文件的类型是不依赖于其后缀名的，但一般来讲：
-.o,是目标文件,相当于windows中的.obj文件
-.so 为共享库,是shared object,用于动态连接的,和dll差不多
-.a为静态库,是好多个.o合在一起,用于静态连接
-.la为libtool自动生成的一些共享库，vi编辑查看，主要记录了一些配置信息。
-
-7、我们在删除一个指针之后（free/delete），编译器只会释放该指针所指向的内存空间，而不会删除这个指针本身。（该指针会变成野指针！！指向一个已删除的对象或未申请访问受限内存区域的指针）
-在删除一个指针之后，一定将该指针设置成空指针（即在delete *p之后一定要加上： p=NULL）
-
-8、fe包含lb的头文件，就可以使用lb中的结构体，但不能使用lb中的函数，必须要在main/fe/CMakeList中链接lb的库。。编译原理
