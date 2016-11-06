@@ -1,0 +1,43 @@
+1、chattr和lsattr
+<1>引入   
+   如果你发现root用户都不能修改某个文件，大部分原因是使用chattr命令锁定该文件了。
+   chattr用于改变文件/目录的属性，lsattr用于查看文件/目录的属性。通过chattr修改属性能够提高系统的安全性。
+   chmod知识改变文件的rwx权限，chattr可以控制更底层的属性。
+
+<2>用法
+   chattr [ -RVf ] [ -v version ] [ mode ] files...
+   
+mode：
++ ：在原有参数设定基础上，追加参数。
+- ：在原有参数设定基础上，移除参数。
+= ：更新为指定参数设定。
+A：文件或目录的 atime (access time)不可被修改(modified), 可以有效预防例如手提电脑磁盘I/O错误的发生。
+S：硬盘I/O同步选项，功能类似sync。
+a：即append，设定该参数后，只能向文件中添加数据，而不能删除，多用于服务器日志文件安全，只有root才能设定这个属性。
+c：即compresse，设定文件是否经压缩后再存储。读取时需要经过自动解压操作。
+d：即no dump，设定文件不能成为dump程序的备份目标。
+i：设定文件不能被删除、改名、设定链接关系，同时不能写入或新增内容。i参数对于文件 系统的安全设置有很大帮助。
+j：即journal，设定此参数使得当通过mount参数：data=ordered 或者 data=writeback 挂 载的文件系统，文件在写入时会先被记录(在journal中)。如果filesystem被设定参数为 data=journal，则该参数自动失效。
+s：保密性地删除文件或目录，即硬盘空间被全部收回。
+u：与s相反，当设定为u时，数据内容其实还存在磁盘中，可以用于undeletion。
+
+常用到的是a和i：
+a选项强制只可添加不可删除，多用于日志系统的安全设定。
+而i是更为严格的安全设定，只有superuser (root) 或具有CAP_LINUX_IMMUTABLE处理能力（标识）的进程能够施加该选项。
+
+
+2、查找系统命令的路径
+<1>which //查看系统命令是否存在，以及执行的到底是哪个位置的命令
+在PATH变量指定的路径中搜索某个系统命令的位置，并返回第一个搜索到的结果(第一个搜索到的结果也就是被执行的那个)。
+
+<2>whereis //查看一个命令或文件所在的路径，会搜出所有的路径
+只能用于程序名的搜索，只搜索二进制文件-b、man说明文件-m和源代码文件-s
+
+eg：
+[root@xiaopeng linux-4.8.1]# whereis man
+man: /usr/bin/man /usr/share/man /usr/share/man/man1/man.1.gz /usr/share/man/man1p/man.1p.gz /usr/share/man/man7/man.7.gz
+[root@xiaopeng linux-4.8.1]# which man
+/usr/bin/man
+
+
+
