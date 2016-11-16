@@ -1,0 +1,66 @@
+一、下载
+1、wget  http://www.cnblogs.com/peida/archive/2013/03/18/2965369.html
+eg:wget -O docker-registry.html https://docs.docker.com/docker-trusted-registry/  //下载某个网页
+
+二、通过网络传输文件
+常见协议：FTP、SFTP、RSYNC、SCP
+通过FTP传输文件可以使用lftp命令；通过SSH连接传输文件可以使用sftp命令
+RSYNC使用SSH和rsync命令;scp通过SSH进行传输
+
+1、连接FTP服务器传输文件  
+远程主机安装FTP服务器才能使用，使用21端口。
+
+<1>lftp username@ftphost
+
+2、rcp   http://www.cnblogs.com/peida/archive/2013/03/14/2958685.html
+<1> rcp代表“remote file copy”（远程文件拷贝）。该命令用于在计算机之间拷贝文件。
+    rcp命令有两种格式:第一种格式用于文件到文件的拷贝\第二种格式用于把文件或目录拷贝到另一个目录中。
+<2> rcp [参数] [源文件] [目标文件]
+
+3、scp
+scp是secure copy的简写，用于在Linux下进行远程拷贝文件的命令，和它类似的命令有cp，不过cp只是在本机进行拷贝不能跨服务器，而且scp传输是加密的,可能会稍微影响一下速度。
+当你服务器硬盘变为只读 read only system时，用scp可以帮你把文件移出来。另外，scp还非常不占资源，不会提高多少系统负荷，在这一点上，rsync就远远不及它了。
+虽然 rsync比scp会快一点，但当小文件众多的情况下，rsync会导致硬盘I/O非常高，而scp基本不影响系统正常使用。
+<1>命令格式：
+scp [参数] [原路径] [目标路径]
+<2>命令功能：
+scp是 secure copy的缩写, scp是linux系统下基于ssh登陆进行安全的远程文件拷贝命令。linux的scp命令可以在linux服务器之间复制文件和目录。
+<3>用法：
+1) 本地文件复制到远程
+scp local_file remote_username@remote_ip:remote_folder  
+scp local_file remote_username@remote_ip:remote_file  
+scp local_file remote_ip:remote_folder  
+scp local_file remote_ip:remote_file  
+第1,2个指定了用户名，命令执行后需要输入用户密码，第1个仅指定了远程的目录，文件名字不变，第2个指定了文件名  
+第3,4个没有指定用户名，命令执行后需要输入用户名和密码，第3个仅指定了远程的目录，文件名字不变，第4个指定了文件名  
+2) 远程文件复制到本地
+从远程复制到本地的scp命令与上面的命令雷同，只要将从本地复制到远程的命令后面2个参数互换顺序就行了。
+eg：scp 10.43.214.192:/home/jenkins_workspace/test/date.txt ./date
+    scp 10.43.214.192:~/vim.tar .
+
+三、远程登录
+1、SSH   //详见linux脚本攻略
+SSH(Secure Shell)能够访问远程计算机的shell，进而执行各种命令。它通过加密通道来传输网络数据。
+GNU/Linux发布版本中默认不包括SSH，需要安装openssh-server和openssh-client。
+SSH服务默认运行在22端口之上。
+
+SSH执行指纹核对来确保用户连接到正确的远程主机，在第一次连接到服务器上，SSH默认会存储指纹信息，以后的连接过程中会核对该指纹。
+<1> ssh username@remote_ip
+    ssh username@remote_ip -p *** //指定端口
+	ssh username@remote_ip 'command1;command2;...' //在远程主机中执行命令，并将结果显示在本地shell中
+	
+<2> SSH的压缩功能  //当有带宽限制时使用
+    ssh -C username@remote_ip
+	
+<3> 将本地数据重定向到远程shell命令的stdin
+    sh username@remote_ip 'echo' < file  //远程主机上echo打印出通过stdin从本地接收到的数据
+
+<4> 在远程主机中执行图形化命令
+    需要设置DISPLAY变量，否则无法显示。
+	
+2、用SSH实现无密码自动登陆
+
+
+
+
+	
