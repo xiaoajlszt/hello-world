@@ -59,6 +59,67 @@ SSH执行指纹核对来确保用户连接到正确的远程主机，在第一次连接到服务器上，SSH默认会
     需要设置DISPLAY变量，否则无法显示。
 	
 2、用SSH实现无密码自动登陆
+http://blog.csdn.net/kongqz/article/details/6338690
+SSH采用了非对称加密技术，认证秘钥包含一个公钥和一个私钥。通过ssh-keygen命令创建认证秘钥。
+要实现自动化认证，公钥必须放在服务器中(~/.ssh/authorized_keys),对应的私钥应该放在客户机的~/.ssh目录中。
+其中arthorized_keys文件的路径和名称可以通过/etc/ssh/sshd_config进行配置。
+<1>设置SSH自动化认证需要两步：
+1)创建SSH秘钥
+2)将生成的公钥传给远程主机，并将其加入文件~/.ssh/authorized_keys中
+$ ssh USER@REMOTE_IP 'cat >> ~/.ssh/authorized_keys' < ~/.ssh/id_rsa.pub 
+
+<2>ssh-copy-id工具在佛那个将公钥加入远程服务器的authorized_keys文件中
+ssh-copy-id USER@REMOTE_IP
+
+3、使用SSH进行端口转发
+端口转发允许其他计算机利用你的主机来连接到远程服务器上的特定服务。
+如：主机IP 192.168.1.2,将主机端口8000上的流程转发到www.kernel.org的端口80上，那么其他计算机就可以使用浏览器通过访问http://192.168.1.2:8000来进入Linux内核站点了。
+
+一旦端口转发设置完毕，会得到一个shell提示符，进行转发的过程中，shell必须保持打开状态。
+
+<1>将本地端口上的流量转发到其他主机上
+ssh -L 8000:www.kernel.org:80 user@localhost
+//user为本地主机的用户名
+
+<2>将远程主机上的流量转发到其他主机上
+ssh -L 8000:www.kernel.org:80 user@REMOTE_IP
+//user为使用SSH进行访问的用户名，REMOTE_IP为远程主机名或IP地址
+
+<3>非交互式端口转发
+如果只想设置端口转发，而不希望总是保持一个打开状态的shell，可以：
+ssh -fL 8000:www.kernl.org:80 user@localhost -N
+-f指定ssh在执行命令前转入到后台运行，-L指定远程主机的登录名，-N告诉SSH无需执行命令，只进行端口转发
+
+<4>反向端口转发
+如果你有一台无法通过互联网访问到的机器，但又希望其他用户可以访问到这台机器上的服务，就可以使用反向端口转发。
+在可以访问到的远程主机上设置反向端口转发，将流量转发到运行服务的本地主机上：
+ssh -R 8000:localhost:80 user@REMOTE_IP
+//将远程主机(设置反向转发的主机)端口8000上的流量转发到本地主机(运行服务的主机)端口80上，REMOTE_IP为远程主机的主机名或IP地址
+
+4、在本地挂载点上挂载远程驱动器
+在执行读写数据操作时，通过本地挂载点访问远程主机文件系统。可以利用SSH和sshfs来实现，sshfs允许将远程群文件系统挂载到本地挂载点上。
+sshfs -o allow_other user@remotehost:/home/path /mnt/mountpoint
+//远程的/home/path中的数据就可以通过/mnt/mountpoint来访问了
+
+完成任务后再通过 umount /mnt/mountpoint卸载
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
