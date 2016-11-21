@@ -1,0 +1,83 @@
+1、查询系统信息
+<1> uname -r  //显示电脑及操作系统相关信息
+<2> cat /proc/version   //正在运行的内核版本
+<3> cat /etc/issue      //发行版本信息
+<4> lsb_release -a      //某些情况下要安装lsb
+
+2、内核回退(3.18.27-->3.10.327)
+[root@forimg ~]# uname -a
+Linux forimg.novalocal 3.18.27 #1 SMP Mon Feb 29 16:36:56 CST 2016 x86_64 x86_64
+
+<1> cat /boot/grub2/grub.cfg | grep '^\<menuentry\>'
+
+menuentry 'CentOS Linux (3.18.27) 7 (Core)' --class rhel fedora --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.18.27-advanced-7e8be671-88c4-4e76-90db-c8d5e86c5707' {
+m
+menuentry 'CentOS Linux (3.10.0-327.10.1.el7.x86_64) 7 (Core)' --class rhel fedora --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-327.10.1.el7.x86_64-advanced-7e8be671-88c4-4e76-90db-c8d5e86c5707' {
+m
+menuentry 'CentOS Linux (3.10.0-327.3.1.el7.x86_64) 7 (Core)' --class rhel fedora --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-327.3.1.el7.x86_64-advanced-7e8be671-88c4-4e76-90db-c8d5e86c5707' {
+m
+menuentry 'CentOS Linux (3.10.0-229.14.1.el7.x86_64) 7 (Core)' --class rhel fedora --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-229.14.1.el7.x86_64-advanced-7e8be671-88c4-4e76-90db-c8d5e86c5707' {
+m
+menuentry 'CentOS Linux (3.10.0-229.el7.x86_64) 7 (Core)' --class rhel fedora --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-3.10.0-229.el7.x86_64-advanced-7e8be671-88c4-4e76-90db-c8d5e86c5707' {
+m
+menuentry 'CentOS Linux (0-rescue-1323cceb05ae4830ab91939fa041fcd3) 7 (Core)' --class rhel fedora --class gnu-linux --class gnu --class os --unrestricted $menuentry_id_option 'gnulinux-0-rescue-1323cceb05ae4830ab91939fa041fcd3-advanced-7e8be671-88c4-4e76-90db-c8d5e86c5707' {
+
+<2> grub2-set-default "CentOS Linux (3.10.0-327.10.1.el7.x86_64) 7 (Core)"   //设置默认启动项
+<3> grub2-editenv list //验证默认启动项
+saved_entry=CentOS Linux (3.10.0-327.10.1.el7.x86_64) 7 (Core)
+<4> reboot   //重启虚机
+
+[root@forimg ~]# uname -a
+Linux forimg.novalocal 3.10.0-327.10.1.el7.x86_64 #1 SMP Tue Feb 16 17:03:50 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux
+
+3、新建SWAP分区  
+<1>说明
+1)一种流行的、以讹传讹的说法是，安装Linux系统时，交换分区swap的大小应该是内存的两倍
+2)SWAP就是LINUX下的虚拟内存分区,它的作用是在物理内存使用完之后,将磁盘空间(也就是SWAP分区)虚拟成内存来使用。
+[root@forimg ~]# free
+              total        used        free      shared  buff/cache   available
+Mem:       16432744      351592    15709788        8980      371364    15867496
+Swap:             0           0           0
+
+[root@forimg ~]# dd if=/dev/zero of=/var/swapfile bs=1024 count=1048576
+   //将/dev/zero内容写入/var/swapfile，读写块大小1024bytes，块个数1048576
+。(swap空间为1G)(/dev/zero是一个未使用的文件模板，可以用来创建“干净”的文件)
+[root@forimg ~]# mkswap /var/swapfile
+   //把该文件变为swap文件
+[root@forimg ~]# swapon /var/swapfile   //激活这个swap文件
+[root@forimg ~]# echo "/var/swapfile swap swap default 0 0" >> /etc/fstab   //设置SWAP分区开机启动
+检查SWAP分区。
+
+[root@forimg ~]# free
+              total        used        free      shared  buff/cache   available
+Mem:       16432744      360704    14618780        8984     1453260    15843764
+Swap:       1048572           0     1048572
+
+3)删除多余的swap空间
+[root@forimg ~]# swapoff /var/swapfile  //使用swapoff命令回收swap空间
+去掉/etc/fstab中的开机启动项
+[root@forimg ~]# rm /var/swapfile       //从文件系统中回收该文件
+
+4、修改内核启动参数
+由于tulip创建线程时，设置了调度属性，如果不关闭cgroup，则tulip上电失败。 修改内核启动参数，禁用cgroup。
+<1> 配置内核启动参数/etc/default/grub，向GRUB_CMDLINE_LINUX配置项中 增加如下内容。
+cgroup_disable=cpu,cpuset,memory
+<2> 加载配置
+请区分固件接口类型, 如果执行ls /sys/firmware/efi有结果输出则为UEFI，否则为BIOS。
+#BIOS模式
+grub2-mkconfig -o /boot/grub2/grub.cfg
+#UEFI模式
+grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg
+<3> 重启linux系统，检查内核参数是否修改成功
+reboot
+cat /proc/cmdline
+BOOT_IMAGE=/vmlinuz-3.10.0-327.el7.x86_64 root=/dev/mapper/centos-root ro crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet cgroup_disable=cpu,cpuset,memory
+
+5、释放buff/cache空间
+   buffer作为buffer cache的内存，是块设备的读写缓冲区；cache作为page cache的内存，文件系统的cache。如果cache的值很大，说明cache住的文件数很多。
+   释放方法有三种（系统默认值是0，释放之后你可以再改回0值）：
+   To free pagecache: ?echo 1 > /proc/sys/vm/drop_caches
+   To free dentries and inodes: ?echo 2 > /proc/sys/vm/drop_caches
+   To free pagecache, dentries and inodes: ?echo 3 > /proc/sys/vm/drop_caches
+
+   注意：在清空缓存前我们需要在linux系统中执行一下sync命令，将缓存中的未被写入磁盘的内容写到磁盘上。

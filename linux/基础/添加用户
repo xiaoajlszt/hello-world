@@ -1,0 +1,15 @@
+1、添加用户
+      #adduser tommy   添加用户
+   #passwd tommy??  设置密码
+   
+2、赋予用户root权限
+   修改 /etc/sudoers 文件，找到## Allow root to run any commands anywhere，在root下面添加，如下所示：
+   root   ALL=(ALL)   ALL
+   tommy  ALL=(ALL)   ALL
+   修改完毕，现在可以用tommy帐号登录，然后用命令 sudo – ，即可获得root权限进行操作。
+
+3、创建docker分组
+   此时使用docker命令需要在前面加上sudo。
+   可以使用有sudo权限的帐号登录系统。创建docker分组，并将用户添加到这个分组里面。
+   $sudo usermod -aG docker tommy
+   切换到tommy账户，就可以使用docker命令了。
