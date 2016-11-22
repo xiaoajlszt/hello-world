@@ -69,15 +69,15 @@ grub2-mkconfig -o /boot/grub2/grub.cfg
 #UEFI模式
 grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg
 <3> 重启linux系统，检查内核参数是否修改成功
-reboot
+reboot	```																																													
 cat /proc/cmdline
 BOOT_IMAGE=/vmlinuz-3.10.0-327.el7.x86_64 root=/dev/mapper/centos-root ro crashkernel=auto rd.lvm.lv=centos/root rd.lvm.lv=centos/swap rhgb quiet cgroup_disable=cpu,cpuset,memory
 
 5、释放buff/cache空间
    buffer作为buffer cache的内存，是块设备的读写缓冲区；cache作为page cache的内存，文件系统的cache。如果cache的值很大，说明cache住的文件数很多。
    释放方法有三种（系统默认值是0，释放之后你可以再改回0值）：
-   To free pagecache: ?echo 1 > /proc/sys/vm/drop_caches
-   To free dentries and inodes: ?echo 2 > /proc/sys/vm/drop_caches
-   To free pagecache, dentries and inodes: ?echo 3 > /proc/sys/vm/drop_caches
+   To free pagecache: echo 1 > /proc/sys/vm/drop_caches
+   To free dentries and inodes: echo 2 > /proc/sys/vm/drop_caches
+   To free pagecache, dentries and inodes: echo 3 > /proc/sys/vm/drop_caches
 
    注意：在清空缓存前我们需要在linux系统中执行一下sync命令，将缓存中的未被写入磁盘的内容写到磁盘上。
