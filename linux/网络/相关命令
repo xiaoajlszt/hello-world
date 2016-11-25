@@ -31,3 +31,7 @@ http://blog.csdn.net/qihuanfengyun/article/details/5507835
       ip link set ns1-nic up
 	  ip addr add 10.0.0.1/24 dev testbr//给网桥一个地址
    <3>此时网桥和nstest可以ping通
+   
+3、nslookup  //用了域名服务器后，经常要查询域名的解析情况，nslookup是常用工具之一
+有时候配置/etc/resolv.conf后，仍然不能访问，可以通过该方法：
+nslookup解析出ip后，可以将其写入/etc/hosts中。
