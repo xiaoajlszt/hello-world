@@ -36,4 +36,10 @@
 2、查看运行级别用：runlevel
    进入其它运行级别用：init N
    另外init0为关机，init 6为重启系统
+  
+注意：
+linux tty命令行模式是不支持中文编码的，显示出来都是正方形块块。图形界面和ssh远程登录是可以显示中文的。
+
+https://wiki.centos.org/zh/HowTos/Laptops/Wireless?highlight=%25284965%2529
+
    

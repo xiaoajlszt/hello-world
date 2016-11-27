@@ -39,5 +39,7 @@ man: /usr/bin/man /usr/share/man /usr/share/man/man1/man.1.gz /usr/share/man/man
 [root@xiaopeng linux-4.8.1]# which man
 /usr/bin/man
 
-
+3、关闭告警声
+<1>关掉:  rmmod pcspkr
+<2>重新打开:  modprobe pcspkr
 
