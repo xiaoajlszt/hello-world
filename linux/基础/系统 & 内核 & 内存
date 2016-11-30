@@ -84,6 +84,102 @@ Swap:       1048572           0     1048572
    
 6、dd命令
 
+7、巨页
+<1>目前使用到的
+1)内核启动参数配置文件 /etc/default/grub 向GRUB_CMDLINE_LINUX配置项中 增加如下内容：
+hugepagesz=2M hugepages=1024
+
+2)加载配置。区分固件接口类型：执行ls /sys/firmware/efi，如果有结果输出则为UEFI，否则为BIOS。
+#BIOS模式
+root@xiii: ~ # grub2-mkconfig -o /boot/grub2/grub.cfg
+
+#UEFI模式
+root@xiii: ~ # grub2-mkconfig -o /boot/efi/EFI/centos/grub.cfg
+
+3)重启虚机，检查内核参数是否修改成功
+[root@opencos ~]# cat /proc/cmdline 
+BOOT_IMAGE=/vmlinuz-3.10.0-327.36.3.el7.x86_64 root=/dev/mapper/centos-root ro rhgb quiet cgroup_disable=cpu,cpuset,memory hugepagesz=2M hugepages=1024
+
+<2>使用HugePages优化内存性能    http://www.linuxidc.com/Linux/2015-03/114587.htm
+1)引子
+系统进程是通过虚拟地址访问内存，但是CPU必须把它转换程物理内存地址才能真正访问内存。
+为了提高这个转换效率，CPU会缓存最近的虚拟内存地址和物理内存地址的映射关系，并保存在一个由CPU维护的映射表中。
+为了尽量提高内存的访问速度，需要在映射表中保存尽量多的映射关系。
+
+而在Linux中，内存都是以页的形式划分的，默认情况下每页是4K，这就意味着如果物理内存很大，则映射表的条目将会非常多，会影响CPU的检索效率。
+因为内存大小是固定的，为了减少映射表的条目，可采取的办法只有增加页的尺寸。 
+
+
+2)相关概念
+-page table是操作系统上的虚拟内存系统的数据结构模型，用于存储虚拟地址与物理地址的对应关系。
+当我们访问内存时，首先访问page table，然后Linux在通过page table的mapping来访问真实物理内存(ram+swap)。
+
+-A Translation Lookaside Buffer (TLB):
+TLB是在cpu中分配的一个固定大小的buffer(or cache)，用于保存page table的部分内容，使CPU更快的访问并进行地址转换。
+
+-hugetlb 是记录在TLB中的条目并指向Hugepages。
+
+-hugetlbfs:这是一个新的基于2.6 kernel之上的内存文件系统，如同tmpfs。
+在TLB中通过hugetlb来指向hugepages。这些被分配的hugepages作为内存文件系统hugetlbfs(类似tmpfs)提供给进程使用。
+
+3)使用HugePages的意义
+HugePages是Linux内核的一个特性，使用hugepage可以用更大的内存页来取代传统的4K页面。使用HugePage主要带来以下好处：
+
+-HugePages 会在系统启动时，直接分配并保留对应大小的内存区域。
+-HugePages 在开机之后，如果没有管理员的介入，是不会释放和改变的。
+-没有swap。
+Notswappable: HugePages are not swappable. Therefore there is no page-in/page-out mechanism overhead. 
+HugePages are universally regarded aspinned.
+
+-大大提高了CPU cache中存放的page table所覆盖的内存大小，从而提高了TLB命中率。
+进程的虚拟内存地址段先连接到page table然后再连接到物理内存。所以在访问内存时需要先访问page tables得到虚拟内存和物理内存的映射关系，然后再访问物理内存。
+CPU cache中有一部分TLB用来存放部分page table以提高这种转换的速度。因为page size变大了，所以同样大小的TLB，所覆盖的内存大小也变大了。
+提高了TLB命中率，也提高了地址转换的速度。
+
+-减轻page table的负载。
+进行XXX系统性能测试时，如果没有使用HugePages，数据库服务器上的pagetable大小大约为5G，
+这应该也是导致性能测试时数据库服务器内存不足的主要原因。
+node74:/home/Oracle # cat /proc/meminfo
+MemTotal:      16323732 kB
+PageTables:      5442384kB
+
+配置了HugePages后，pagetable大小仅为124M（性能测试时内存使用率稳定在80%左右）：
+node74:/home/oracle # cat /proc/meminfo
+MemTotal:      16323732 kB
+PageTables:      127384 kB
+
+-提高内存的性能，降低CPU负载。
+
+4)使用HugePages需要注意的地方
+-Hugepages是在分配后就会预留出来的，其大小一定要比服务器上所有实例的SGA总和要大，差一点都不行。
+比如说Hugepages设置为8G，oracle SGA为9G，那么oracle在启动的时候就不会使用到这8G的Hugepages。这8G就浪费了。
+所以在设置Hugepages时要计算SGA的大小，后面会给出一个脚本来计算。
+
+-其他进程无法使用Hugepages的内存，所以不要设置太大，稍稍比SGA大一点保证SGA可以使用到hugepages就好了。
+
+-在meminfo中和Hugepage相关的有四项：
+HugePages_Total:   4611
+HugePages_Free:     474
+HugePages_Rsvd:     467
+Hugepagesize:      2048 kB
+
+HugePages_Total为所分配的页面数目，和Hugepagesize相乘后得到所分配的内存大小。4611*2/1024大约为9GB
+HugePages_Free为从来没有被使用过的Hugepages数目。即使oraclesga已经分配了这部分内存，但是如果没有实际写入，那么看到的还是Free的。这是很容易误解的地方。
+HugePages_Rsvd为已经被分配预留但是还没有使用的page数目。在Oracle刚刚启动时，大部分内存应该都是Reserved并且Free的，随着oracle SGA的使用，Reserved和Free都会不断的降低。
+HugePages_Free、HugePages_Rsvd 这部分是没有被使用到的内存，如果没有其他的oracle instance，这部分内存也许永远都不会被使用到，也就是被浪费了。
+
+-HugePages和oracle AMM（自动内存管理）是互斥的，所以使用HugePages必须设置内存参数MEMORY_TARGET / MEMORY_MAX_TARGET 为0。
+
+
+
+
+
+
+
+
+
+
+
 
 
 
