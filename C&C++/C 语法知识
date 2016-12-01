@@ -103,7 +103,8 @@ eg: 1字节对齐后，该结构总长为13字节；去掉对齐后，总长为16字节。
 
 10、volatile关键字  http://www.cnblogs.com/yc_sunniwell/archive/2010/07/14/1777432.html
 
-
+11、static
+http://www.cnblogs.com/stoneJin/archive/2011/09/21/2183313.html
 
 
 
