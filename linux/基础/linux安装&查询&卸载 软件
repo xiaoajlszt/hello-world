@@ -68,3 +68,11 @@ rpm -qf /etc/crontab 就可以知道是那个套件啰！重新安装一次该套件即可！
 <3>yum upgrade
 2、版本升级（不同版本间）
 
+七、最小安装centos
+安装centos时选择最小安装，之后进入虚机执行：
+yum group install -y "Development and Creative Workstation"   //安装程序组
+其中："Development and Creative Workstation" 对应安装界面软件选择中的"开发及生成工作站"。
+
+yum install -y cmake git-review samba python-pip gcc gcc-c++ telnet zlib zlib-devel  //再安装需要的其他程序
+
+

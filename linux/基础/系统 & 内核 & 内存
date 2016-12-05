@@ -170,10 +170,40 @@ HugePages_Free、HugePages_Rsvd 这部分是没有被使用到的内存，如果没有其他的oracle 
 
 -HugePages和oracle AMM（自动内存管理）是互斥的，所以使用HugePages必须设置内存参数MEMORY_TARGET / MEMORY_MAX_TARGET 为0。
 
+8、sysctl命令  //http://blog.csdn.net/hncdsun/article/details/5093983
+<1>虚拟机使用scp向外拷贝文件时很慢，输入 “sysctl -w net.ipv4.tcp_window_scaling=0”
 
+<2>sysctl命令用于配置与显示在/proc/sys目录中的内核参数。可用来设置或重新设置联网功能，如IP转发、IP碎片去除以及源路由检查等。
+用户只需要编辑/etc/sysctl.conf文件，即可手工或自动执行由sysctl控制的功能。
 
+<3>命令格式：
+	sysctl [-n] [-e] -w variable=value
+    sysctl [-n] [-e] -p <filename> (default /etc/sysctl.conf)
+    sysctl [-n] [-e] -a
+	
+    常用参数的意义：
+    -w   临时改变某个指定参数的值，如
+         sysctl -w net.ipv4.ip_forward=1
+    -a   显示所有的系统参数
+    -p   从指定的文件加载系统参数，如不指定即从/etc/sysctl.conf中加载
+    
+	如果仅仅是想临时改变某个系统参数的值，可以用两种方法来实现,例如想启用IP路由转发功能：
 
+	1) #echo 1 > /proc/sys/net/ipv4/ip_forward
+    2) #sysctl -w net.ipv4.ip_forward=1
+    以上两种方法都可能立即开启路由功能，但如果系统重启，或执行了
+    # service network restart命令，所设置的值即会丢失。
+	
+	如果想永久保留配置，可以修改/etc/sysctl.conf文件将 net.ipv4.ip_forward=0改为net.ipv4.ip_forward=1。
 
+<4>其他说明：
+1)/proc：该目录是一个"虚拟档案系统"，该目录下的数据都在内存中，不占任何磁盘空间。
+
+2)net.ipv4.tcp_window_scaling = 1  //设置tcp/ip会话的滑动窗口大小是否可变。参数值为布尔值，为1时表示可变，为0时表示不可变。
+tcp/ip通常使用的窗口最大可达到 65535 字节，对于高速网络，该值可能太小，这时候如果启用了该功能，可以使tcp/ip滑动窗口大小增大数个数量级，
+从而提高数据传输的能力。
+
+3)其他一些参数说明：http://blog.chinaunix.net/uid-27022856-id-3235897.html
 
 
 
