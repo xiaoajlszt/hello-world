@@ -255,15 +255,83 @@ C99和GNU C均支持内联函数，可以消除函数调用和返回所带来的开销(寄存器存储和恢复)。
 struct task_struct *task;
 for(task=current; task!=&init_task; task=task->parent)
 
-<2>
+<2>借助任务队列的双向循环链表
+next_task()/prev_task()宏
 
+<3>for_each_process(task)
 
+3.3 进程创建
+1、其他系统：许多其他系统都提供了产生(spawn)进程的机制，首先在新的地址空间里创建进程，读入可执行文件，最后开始执行。
+2、Unix系统：将上述步骤分解到两个单独的函数(fork、exec)中去执行。
+			 fork()通过拷贝当前进程创建一个子进程。子进程与父进程的区别仅在于PID、PPID和某些资源的统计量。
+			 exec()负责读取可执行文件并将其载入地址空间开始运行。
+			 
+一、写时拷贝
+1、linux的fork()使用写时拷贝(copy-on-write)页实现，可以推迟甚至避免拷贝父进程数据的技术。
+	内核此时并不复制整个进程的地址空间，而是让父进程和子进程共享同一个拷贝。
+	
+2、只有在需要写入时，数据才会复制，从而使各个进程有各自的拷贝。
+	在页根本不会被写的情况下(如，fork之后立即调用exec)，它们就无须复制了。
+	
+二、fork
+1、linux通过clone()系统调用实现fork()。
+	fork、vfork、__clone库函数都根据各自需要的参数标志去调用clone()，然后由clone()去调用()。
+	
+2、do_fork完成创建中的大部分工作。该函数调用copy_process()函数，然后让进程开始运行。
 
+三、vfork
+1、除了不拷贝父进程的页表项外，vfork()与fork()的功能相同。
+	子进程作为父进程的一个单独进程在它的地址空间里运行，父进程被阻塞，直到子进程退出或执行exec()。
+	子进程不能向地址空间写入。
+	
+2、由于执行fork()时引入了写时拷贝页，并且明确了子进程先执行。vfork的好处就仅限于不拷贝父进程的页表项了。//页表项和页表是一个东西？？
 
+3、理想情况下，系统最高不要调用vfork()，内核也不用实现它。完全可以把vfork()实现成一个普通的fork()。
 
+3.4 线程在linux中的实现
+1、从内核角度来说，没有线程这个概念，linux把所有线程都当做进程来实现。
+	线程仅仅被视为一个与其他进程共享某些资源的进程。每个线程都拥有唯一隶属于自己的task_struct。
+	
+2、其他系统(如：windows\sun solaris)的内核提供了专门支持线程的机制。相对于重量级的进程，线程被抽象成一种耗费较少资源，运行迅速的执行单元。
+	而对于linux，线程知识一种进程间共享资源的手段，linux的进程本身就够轻量级了。
+	
+一、创建线程
+1、线程的创建于普通进程的创建类似，只是要在调用clone()时需要传递一些参数标志来指明需要共享的资源：
+<1>clone(CLONE_VM | CLONE_FS | CLONE_FILES | CLONE_SIGHAND, 0)
+上述代码产生的结果和调用fork()差不多，只是父子俩共享地址空间、文件系统资源、文件描述符和信号处理程序。
+换句话说，新建的进程和它的父进程就是流行的所谓线程。
 
+<2>普通fork实现：
+clone(SIGCHLD,0)
 
+<3>vfork实现：
+clone(CLONE_VFORK | CLONE_VM | SIGCHLD, 0)
 
+2、clone参数标记          
+#define CLONE_VM    0x00000100  /* set if VM shared between processes */                             |~ 父子进程共享地址空间                                      
+#define CLONE_FS    0x00000200  /* set if fs info shared between processes */                        |~ 父子进程共享文件系统信息                                      
+#define CLONE_FILES 0x00000400  /* set if open files shared between processes */                     |~ 父子进程共享打开的文件                                      
+#define CLONE_SIGHAND   0x00000800  /* set if signal handlers and blocked signals shared */          |~ 父子进程共享信号处理函数及被阻断的信号                                      
+#define CLONE_PTRACE    0x00002000  /* set if we want to let tracing continue on the child too */    |~ 继续调试子进程                                      
+#define CLONE_VFORK 0x00004000  /* set if the parent wants the child to wake it up on mm_release */  |~ 调用vfork，父进程准备睡眠，等待子进程将其唤醒                                      
+#define CLONE_PARENT    0x00008000  /* set if we want to have the same parent as the cloner */       |~ 指定子进程与父进程拥有同一个父进程                                     
+#define CLONE_THREAD    0x00010000  /* Same thread group? */                                         |~ 父进程放入相同的线程组                                      
+#define CLONE_NEWNS 0x00020000  /* New namespace group? */                                           |~ 为子进程创建新的命名空间                                      
+#define CLONE_SYSVSEM   0x00040000  /* share system V SEM_UNDO semantics */                          |~ 父子进程共享System V SEM_UNDO语言                                      
+#define CLONE_SETTLS    0x00080000  /* create a new TLS for the child */                             |~ 为子进程创建新的TLS(thread-local storage)                                      
+#define CLONE_PARENT_SETTID 0x00100000  /* set the TID in the parent */                              |~ 设置父进程的TID                                      
+#define CLONE_CHILD_CLEARTID    0x00200000  /* clear the TID in the child */                         |~ 清除子进程的TID                                      
+#define CLONE_DETACHED      0x00400000  /* Unused, ignored */                                        |~                                       
+#define CLONE_UNTRACED      0x00800000  /* set if the tracing process can't force CLONE_PTRACE on thi|~                                       
+#define CLONE_CHILD_SETTID  0x01000000  /* set the TID in the child */                               |~ 设置子进程的TID                                     
+/* 0x02000000 was previously the unused CLONE_STOPPED (Start in stopped state)                       |~                                       
+ and is now available for re-use. */                                                               |~                                       
+#define CLONE_NEWUTS        0x04000000  /* New utsname group? */                                     |~                                       
+#define CLONE_NEWIPC        0x08000000  /* New ipcs */                                               |~                                       
+#define CLONE_NEWUSER       0x10000000  /* New user namespace */                                     |~                                       
+#define CLONE_NEWPID        0x20000000  /* New pid namespace */                                      |~                                       
+#define CLONE_NEWNET        0x40000000  /* New network namespace */                                  |~                                       
+#define CLONE_IO        0x80000000  /* Clone io context */  
 
 
 
