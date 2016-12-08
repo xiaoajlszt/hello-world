@@ -224,7 +224,7 @@ nnoremap <leader>Y :let g:ycm_auto_trigger=1<CR>                "turn on YCM
 
 注意：
 将.vim目录直接拷贝过去时，要在root账户下:
-<1>安装clang
+<1>安装clang、python-devel.x86_64
 <2>/YouCompleteMe/下建立ycm_build文件夹，进入该文件夹执行：
 cmake -G "Unix Makefiles" -DPATH_TO_LLVM_ROOT=~/.vim/bundle/YouCompleteMe/third_party/ycmd/clang_archives/clang+llvm-3.9.0-x86_64-opensuse13.2 . ~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp
 <3>执行cmake --build . --target ycm_core   /  make ycm_core  //生成ycm_core
