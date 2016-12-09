@@ -135,6 +135,7 @@ d	删除光标所在的buffer
 <3> <leader>e        //一次显示左侧tab页
 <4> 隐藏某些文档(.pyc .git .hg .svn .bzr)
 <5> 将该插件视为浏览文档的工具而不是一个分页的工具。
+<6> 在该窗口执行 ctrl-p 显示/关闭 最近打开的文件。 
 
 //wsl
 <6>.vimrc_amix中 map <leader>e :edit %:p:h<cr>

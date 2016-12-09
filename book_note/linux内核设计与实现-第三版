@@ -502,22 +502,52 @@ LinuxÎªÁË±£Ö¤½»»¥Ê½Ó¦ÓÃºÍ×ÀÃæÏµÍ³µÄÐÔÄÜ£¬ËùÒÔ¶Ô½ø³ÌµÄÏìÓ¦×öÁËÓÅ»¯(Ëõ¶ÌÏìÓ¦Ê±¼ä)£
 <1>CFSÊ×ÏÈÒªÈ·±£ÏµÍ³ÐÔÄÜ²»ÊÜËðÊ§¡£
 1)CFSÔÊÐíÃ¿¸ö½ø³ÌÔËÐÐÒ»¶ÎÊ±¼ä¡¢Ñ­»·ÂÖ×ª¡¢Ñ¡ÔñÔËÐÐ×îÉÙµÄ½ø³Ì×÷ÎªÏÂÒ»¸öÔËÐÐ½ø³Ì¡£
 2)CFSÔÚËùÓÐ¿ÉÔËÐÐ½ø³Ì×ÜÊý»ù´¡ÉÏ¼ÆËã³öÒ»¸ö½ø³ÌÓ¦¸ÃÔËÐÐ¶à¾Ã£¬¶ø²»ÊÇÒÀ¿¿niceÖµÀ´¼ÆËãÊ±¼äÆ¬¡£
-3)niceÖµÔÚCFSÖÐ±»×÷Îª½ø³Ì»ñµÃµÄ´¦ÀíÆ÷ÔËÐÐ±ÈµÄÈ¨ÖØ
+3)niceÖµÔÚCFSÖÐ±»×÷Îª½ø³Ì»ñµÃµÄ´¦ÀíÆ÷ÔËÐÐ±ÈµÄÈ¨ÖØ¡£
+	Ã¿¸ö½ø³Ì¶¼°´ÆäÈ¨ÖØÔÚÈ«²¿¿ÉÔËÐÐ½ø³ÌÖÐËùÕ¼µÄ±ÈÀýµÄ"Ê±¼äÆ¬"À´ÔËÐÐ¡£
+4)Ä¿±êÑÓ³Ù£ºCFSÎªÍêÃÀ¶àÈÎÎñÖÐµÄÎÞÏÞÐ¡µ÷¶ÈÖÜÆÚµÄ½üËÆÖµÉèÁ¢µÄÒ»¸öÄ¿±ê¡£   //µ÷¶ÈÖÜÆÚ£ºËùÓÐÈÎÎñµ÷¶ÈÒ»±éµÄÊ±¼ä
+	Ô½Ð¡µÄµ÷¶ÈÖÜÆÚ½«´øÀ´Ô½ºÃµÄ½»»¥ÐÔ£¬Í¬Ê±Ò²¸ü½Ó½üÍêÃÀµÄ¶àÈÎÎñ¡£
+5)×îÐ¡Á£¶È£ºCFSÒýÈëµÄÃ¿¸ö½ø³Ì»ñµÃÊ±¼äÆ¬µÄµ×Ïß¡£Ä¬ÈÏÇé¿öÏÂÕâ¸öÖµÊÇ1ms¡£È·±£ÇÐ»»ÏûºÄ±»ÏÞÖÆÔÚÒ»¶¨·¶Î§ÄÚ¡£
 
+3¡¢¾ø¶ÔµÄniceÖµ²»ÔÙÓ°Ïìµ÷¶È¾ö²ß£¬Ö»ÓÐÏà¶ÔÖµ²Å»áÓ°Ïì´¦ÀíÆ÷Ê±¼äµÄ·ÖÅä±ÈÀý¡£
+	0   5    //niceÖµÎª5µÄ½ø³ÌµÄÈ¨ÖØ½«ÊÇÄ¬ÈÏnice½ø³ÌµÄ1/3
+   10  15    //niceÖµÎª15µÄ½ø³ÌµÄÈ¨ÖØ½«ÊÇniceÖµÎª10µÄ½ø³ÌµÄ1/3
+   
+   ÈÎºÎ½ø³ÌËù»ñµÃµÄ´¦ÀíÆ÷Ê±¼äÊÇÓÉËü×Ô¼ººÍÆäËûËùÓÐ¿ÉÔËÐÐ½ø³ÌniceÖµµÄÏà¶Ô²îÖµ¾ö¶¨µÄ¡£
+   niceÖµ¶ÔÊ±¼äÆ¬µÄ×÷ÓÃ²»ÔÙÊÇËãÊõ¼ÓÈ¨£¬¶øÊÇ¼¸ºÎ¼ÓÈ¨¡£
+   ÈÎºÎniceÖµ¶ÔÓ¦µÄ¾ø¶ÔÊ±¼ä²»ÔÙÊÇÒ»¸ö¾ø¶ÔÖµ£¬¶øÊÇ´¦ÀíÆ÷µÄÊ¹ÓÃ±È¡£(ÕâÑù¿ÉÒÔÔÚÄ¿±êÑÓ³ÙÄÚ½øÐÐ¶à¸ö½ø³ÌµÄÇÐ»»)
+	CFS³ÆÎª¹«Æ½µ÷¶ÈÆ÷ÊÇÒòÎªËüÈ·±£Ã¿¸ö½ø³Ì¹«Æ½µÄ´¦ÀíÆ÷Ê¹ÓÃ±È¡£
+	
+4.5 Linuxµ÷¶ÈµÄÊµÏÖ  kernel/sched/fair.c
 
+Ò»¡¢Ê±¼ä¼ÇÕË
+<1>ËùÓÐµÄµ÷¶ÈÆ÷¶¼±ØÐë¶Ô½ø³ÌÔËÐÐÊ±¼ä×ö¼ÇÕË¡£
+<2>¶àÊýUnixÏµÍ³£¬·ÖÅäÒ»¸öÊ±¼äÆ¬¸øÃ¿Ò»¸ö½ø³Ì¡£ÄÇÃ´µ±Ã¿´ÎÏµÍ³Ê±ÖÓ½ÚÅÄ·¢ÉúÊ±£¬Ê±¼äÆ¬¶¼»á±»¼õÉÙÒ»¸ö½ÚÅÄÖÜÆÚ¡£
+µ±Ò»¸ö½ø³ÌµÄÊ±¼äÆ¬±»¼õÉÙµ½0Ê±£¬Ëü¾Í»á±»ÁíÒ»¸öÊ±¼äÆ¬ÉÐÎ´¼õµ½0µÄ¿ÉÔËÐÐ½ø³ÌÇÀÕ¼¡£
 
+1¡¢µ÷¶ÈÆ÷ÊµÌå½á¹¹  //sched_entity½á¹¹Ìå
+<1>Ëü×÷ÎªÒ»¸öÃûÎªseµÄ³ÉÔ±±äÁ¿£¬Ç¶ÈëÔÚ½ø³ÌÃèÊö·ûtask_struct½á¹¹ÄÚ¡£
+<2>ÓÃÓÚ×·×Ù½ø³ÌÔËÐÐÊ±¼ä¼ÇÕË¡£
 
+2¡¢ÐéÄâÊµÊ±
+<1>½á¹¹Ìåsched_entityÖÐµÄvruntime±äÁ¿´æ·Å½ø³ÌµÄÐéÄâÔËÐÐÊ±¼ä(»¨ÔÚÔËÐÐÉÏµÄÊ±¼äºÍ)£¬
+	¸ÃÔËÐÐÊ±¼äµÄ¼ÆËãÊÇ¾­¹ýÁËËùÓÐ¿ÉÔËÐÐ½ø³Ì×ÜÊýµÄ±ê×¼»¯(»òÕßËµ±»¼ÓÈ¨)µÄ¡£
+	
+<2>µ¥Î»Îª ns£¬Òò´ËvruntimeÓë¶¨Ê±Æ÷½ÚÅÄ²»ÔÙÏà¹Ø¡£
 
+<3>CFSÊ¹ÓÃvruntime±äÁ¿À´¼ÇÂ¼Ò»¸ö³ÌÐòµ½µ×ÔËÐÐÁË¶à´ÎÊ±¼äÒÔ¼°Ëü»¹Ó¦ÔÙÔËÐÐ¶à¾Ã¡£
 
+<4>sched/fair.cÎÄ¼þÖÐµÄupdate_curr()º¯ÊýÊµÏÖÁË¸Ã¼ÇÕË¹¦ÄÜ¡£
+1)update_curr()ÊÇÓÉÏµÍ³¶¨Ê±Æ÷ÖÜÆÚÐÔµ÷ÓÃµÄ£¬ÎÞÂÛ½ø³Ì´¦ÓÚ¿ÉÔËÐÐÌ¬£¬»¹ÊÇ±»×èÈû´¦ÓÚ²»¿ÉÔËÐÐÌ¬¡£
+	¸ù¾ÝÕâÖÖ·½Ê½£¬vruntime¿ÉÒÔ×¼È·µØ²âÁ¿¸ø¶¨½ø³ÌµÄÔËÐÐÊ±¼ä£¬¶øÇÒ¿ÉÒÔÖªµÀË­Ó¦¸ÃÊÇÏÂÒ»¸öÔËÐÐµÄ½ø³Ì¡£
 
+¶þ¡¢½ø³ÌÑ¡Ôñ
+<1>CFSÊÔÍ¼ÀûÓÃÒ»¸ö¼òµ¥µÄ¹æÔòÈ¥¾ùºâ½ø³ÌµÄÐéÄâÔËÐÐÊ±¼ä£º
+	µ±CFSÐèÒªÑ¡ÔñÏÂÒ»¸öÔËÐÐ½ø³ÌÊ±£¬Ëü»áÌôÒ»¸ö¾ßÓÐ×îÐ¡vruntimeµÄ½ø³Ì¡£
 
-
-
-
-
-
-
-
+<2>CFSµ÷¶ÈËã·¨µÄºËÐÄ£º
+	Ñ¡Ôñ¾ßÓÐ×îÐ¡vruntimeµÄÈÎÎñ¡£
+	
+<3>CFSÊ¹ÓÃºìºÚÊ÷À´×éÖ¯¿ÉÔËÐÐ½ø³Ì¶ÓÁÐ£¬²¢ÇÒÀûÓÃÆäÑ¸ËÙÕÒµ½×îÐ¡vruntimeÖµµÄ½ø³Ì¡£
 
 
 
