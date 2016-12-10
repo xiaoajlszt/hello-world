@@ -549,6 +549,49 @@ LinuxÎªÁË±£Ö¤½»»¥Ê½Ó¦ÓÃºÍ×ÀÃæÏµÍ³µÄÐÔÄÜ£¬ËùÒÔ¶Ô½ø³ÌµÄÏìÓ¦×öÁËÓÅ»¯(Ëõ¶ÌÏìÓ¦Ê±¼ä)£
 	
 <3>CFSÊ¹ÓÃºìºÚÊ÷À´×éÖ¯¿ÉÔËÐÐ½ø³Ì¶ÓÁÐ£¬²¢ÇÒÀûÓÃÆäÑ¸ËÙÕÒµ½×îÐ¡vruntimeÖµµÄ½ø³Ì¡£
 
+1¡¢ÌôÑ¡ÏÂÒ»¸öÈÎÎñ
+<1>¼ÙÉèÓÐÒ»¸öºìºÚÊ÷(rbtree)´æ´¢ÁËÏµÍ³ÖÐËùÓÐ¿ÉÔËÐÐ½ø³Ì£¬ÆäÖÐ½ÚµãµÄ¼üÖµ±ãÊÇ¿ÉÔËÐÐ½ø³ÌµÄÐéÄâÔËÐÐÊ±¼ä¡£
+<2>CFSµ÷¶ÈÆ÷Ñ¡È¡´ýÔËÐÐµÄÏÂÒ»¸ö½ø³Ì£¬ÊÇËùÓÐ½ø³ÌÖÐvruntime×îÐ¡µÄÄÇÒ»¸ö£¬Ëü¶ÔÓ¦µÄ±ãÊÇÔÚÊ÷ÖÐ×î×ó²àµÄÒ¶×Ó½áµã¡£
+<3>kernel/sched/fair.c	__pick_next_entity() ÊµÏÖÕâÒ»¹ý³Ì¡£
+	µ«Êµ¼ÊÉÏ¸Ãº¯Êý±¾Éí²¢²»»á±éÀúºìºÚÊ÷È¥ÕÒµ½×î×óÒ¶×Ó½Úµã£¬ÒòÎª¸ÃÖµÒÑ¾­»º´æÔÚrb_leftmost×Ö¶ÎÖÐ¡£
+
+2¡¢ÏòÊ÷ÖÐ¼ÓÈë½ø³Ì
+<1>CFS½«½ø³Ì¼ÓÈërbtree£¬ÒÔ¼°»º´æ×î×óÒ¶×Ó½Úµã£¬·¢ÉúÔÚ½ø³Ì±äÎª¿ÉÔËÐÐ×´Ì¬(±»»½ÐÑ)»òÕßÍ¨¹ýfork()µ÷ÓÃµÚÒ»´Î´´½¨½ø³ÌÊ±¡£
+__enqueue_entity()º¯ÊýÊµÏÖ¡£
+
+3¡¢´ÓÊ÷ÖÐÉ¾³ý½ø³Ì
+É¾³ý¶¯×÷·¢ÉúÔÚ½ø³Ì¶ÂÈû(±äÎª²»¿ÉÔËÐÐÌ¬)»òÕßÖÕÖ¹Ê±(½áÊøÔËÐÐ)¡£
+__dequeue_entity()º¯ÊýÊµÏÖ¡£
+
+Èý¡¢µ÷¶ÈÆ÷Èë¿Ú
+1¡¢µ÷¶È½ø³ÌµÄÖ÷ÒªÈë¿Úº¯ÊýÊÇschedule()¡£
+<1>ËüÊÇÄÚºËÆäËû²¿·ÖÓÃÓÚµ÷¶È½ø³Ìµ÷¶ÈÆ÷µÄÈë¿Ú£ºÑ¡ÔñÄÄ¸ö½ø³Ì¿ÉÒÔÔËÐÐ£¬ºÎÊ±½«ÆäÍ¶ÈëÔËÐÐ¡£
+<2>schedule()Í¨³£¶¼ÐèÒªºÍÒ»¸ö¾ßÌåµÄµ÷¶ÈÀàÏà¹ØÁª¡£Ò²¾ÍÊÇËµ£¬Ëü»áÕÒµ½Ò»¸ö×î¸ßÓÅÏÈ¼¶µÄµ÷¶ÈÀà¡£
+	¸Ãµ÷¶ÈÀàÐèÒªÓÐ×Ô¼ºµÄ¿ÉÔËÐÐ¶ÓÁÐ£¬È»ºóÎÊµ÷¶ÈÀàË­²ÅÊÇÏÂÒ»¸öÒªÔËÐÐµÄ½ø³Ì¡£
+<3>schedule()»áµ÷ÓÃpick_next_task()£¬ºóÕß»áÒÔÓÅÏÈ¼¶ÎªÐò£¬´Ó¸ßµ½µÍ£¬ÒÀ´Î¼ì²éÃ¿¸öµ÷¶ÈÀà¡£²¢ÇÒ´Ó×î¸ßÓÅÏÈ¼¶µÄµ÷¶ÈÀàÖÐÑ¡Ôñ×î¸ÃÓÅÏÈ¼¶µÄ½ø³Ì¡£
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
