@@ -71,6 +71,7 @@ gd 高亮  转到当前光标所指的局部变量的定义
 :split/sp + 文件名
 
 2)纵向切割
+:vnew + 文件名
 :vsplit/vsp + 文件名
     
 <2>打开多个文件(窗口)
@@ -409,3 +410,48 @@ colorscheme molokai
 7、Taglist/Tagbar
 
 8、WinManager
+
+-----------------------------------------------------------------------------------------------
+五、配置文件说明
+一、.vimrc_amix
+1、文件类型检测 //http://easwy.com/blog/archives/advanced-vim-skills-filetype-on/
+<1>文件中的命令
+filetype plugin on
+filetype indent on
+
+<2>相关概念
+打开文件类型检测功能很简单，在你的vimrc中加入下面一句话就可以了：filetype plugin indent on 
+1)可以在vim中输入":filetype"命令，查看文件类型检测功能是否已经打开。
+2)filetype plugin indent on可分为以下三条命令：
+	filetype on         //打开文件类型检测功能。
+		当执行该命令时，vim实际上执行的是vimRUNTIME/filetype.vim和vimRUNTIME/scripts.vim来判断文件的类型。
+	filetype plugin on  //允许vim加载文件类型插件。实际执行vimRUNTIME/ftplugin.vim
+		当执行该命令时，vim会根据检测到的文件类型，在runtimepath中搜索该类型的所有插件，并执行它们。
+	filetype indent on  //允许vim为不同类型的文件定义不同的缩进格式。实际执行vimRUNTIME/indent.vim
+	
+2、	
+
+
+二、.vimrc_plugin
+
+
+三、.vimrc_xxvv
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
