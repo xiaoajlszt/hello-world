@@ -146,3 +146,33 @@ $ docker run -d -P --name web -v /src/webapp:/opt/webapp:ro training/webapp pyth
 4、卷标签 z共享 Z私有
 SELinux标签系统
 5、挂载一个主机文件作为数据卷
+
+六、/var/lib/docker/devicemapper/devicemapper/
+1、
+[root@opencos devicemapper]# ll -h
+total 9.1G
+-rw-------. 1 root root 100G Dec 12 10:35 data
+-rw-------. 1 root root 2.0G Dec 12 10:35 metadata
+
+[root@opencos devicemapper]# du -h data 
+9.1G    data
+[root@opencos devicemapper]# du -h metadata 
+9.8M    metadata
+
+可见data的100G并非真实占用，只用了9.1G。
+
+<1>Device mapper driver会创建一个100G的简单文件包含你的镜像和容器。每一个容器被限制在10G大小的卷内。
+那么看来这个100G的简单文件正是这个名为data的文件。
+
+<2>虚机中的镜像和容器中的文件系统会保存在data文件中。
+
+
+
+
+
+
+
+
+
+
+
