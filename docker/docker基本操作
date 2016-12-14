@@ -147,7 +147,31 @@ $ docker run -d -P --name web -v /src/webapp:/opt/webapp:ro training/webapp pyth
 SELinux标签系统
 5、挂载一个主机文件作为数据卷
 
-六、/var/lib/docker/devicemapper/devicemapper/
+六、启动执行命令
+1、Dockerfile
+<1>CMD和ENTRYPOINT是在启动容器时执行的命令，都只能写一条；如果写多条，则最后一条生效。
+	
+<2>CMD 指令提供容器运行时的默认值，这些默认值可以是一条指令，也可以是一些参数。
+1)CMD有3种格式：
+CMD <command> (shell格式)
+CMD ["executable", "param1", "param2"] (exec格式，推荐)
+CMD ["param1", "param2"] (为ENTRYPOINT指令提供参数)
+	
+2)用户在执行docker run命令时，如果指定了命令参数，则会覆盖CMD指令中的命令。
+
+<3>ENTRYPOINT 与CMD类似，都可以让容器在启动时执行命令。
+1)ENTRYPOINT有两种格式：
+ENTRYPOINT <command> (shell格式)
+ENTRYPOINT ["executable", "param1", "param2"] (exec格式，推荐)
+
+2)exec格式时，docker run命令传入的参数会覆盖CMD指令的内容并且附加到ENTRYPOINT指令的参数中。
+
+3)ENTRYPOINT会被docker run携带的--entrypoint="..."参数覆盖。
+
+2、docker run [OPTIONS] IMAGE[:TAG] [COMMAND] [ARG...]
+
+
+七、/var/lib/docker/devicemapper/devicemapper/
 1、
 [root@opencos devicemapper]# ll -h
 total 9.1G

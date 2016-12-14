@@ -43,3 +43,23 @@ man: /usr/bin/man /usr/share/man /usr/share/man/man1/man.1.gz /usr/share/man/man
 <1>关掉:  rmmod pcspkr
 <2>重新打开:  modprobe pcspkr
 
+4、sh -c 'useradd rcp-jenkins -u 1004 -s /bin/bash;su rcp-jenkins -c '\''./runmake v4 release noclean'\'''
+   sh "docker run --rm ${volume} ${DOCKER_IMAGE} sh -c \"${docker_cmd}\""
+<1>sh 
+-c string : -c表示命令需要从string中获取。string后面的参数会作为命令的参数。 
+
+<2>useradd
+-u：指定用户的UID(一组数字)
+-s：指定用户的登录shell
+-c：指定一段注释性描述
+
+eg: 
+useradd test123 -u 10000
+
+test123:x:10000:10000::/home/test123:/bin/bash
+
+<3>su
+-c command：变更账号，并执行command指令后再变回原来的使用者。
+
+
+
