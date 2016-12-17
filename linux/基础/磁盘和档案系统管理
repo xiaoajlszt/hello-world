@@ -26,7 +26,7 @@
 	MBR仅提供最多四个磁盘分割(partition)的记录。这就是所谓的Primary(P)和Externed(E)的partition最多只能有四个的原因。
 	Externed(E)最多只能有一个。
 	
-3、档案系统
+3、档案系统 df -hT
 在告知操作系统磁盘分割 (partition)信息之后，需要将partition格式化为操作系统识别的档案系统(Filesystem)。
 linux标准档案系统是ext2。
 <1>逻辑区块Block：在partition进行filesystem格式化时，所指定的最小存储单位。
@@ -44,7 +44,13 @@ linux标准档案系统是ext2。
    
 <3>inode除了记录档案属性外，同时还必须要具有指向(pointer)的功能，指向档案内容所在的block。
 
-<4>EXT2的几个特点：
+<4>目录
+当在linux下的ext2档案系统中建立一个目录时，ext2会分配一个inode与至少一块Block给该目录。
+其中，inode记录该目录的相关属性，并指向分配到的那块Block；而Block则是记录在这个目录下的相关联的档案(或目录)的关联性。
+1)当我们要读取一个档案的内容时，linux会先由根目录"/"取得该档案的上层目录所在的inode，再由该目录所记录的档案关联性(在该目录所属的block区域)
+	取得该档案的inode。
+
+<5>EXT2的几个特点：
     1)block与inode的数量在一开始格式化时就已经固定了。
 	2)一个partition能容纳的档案数与inode有关，一个inode只能记录一个档案属性。
 	3)一般来说，每4kbytes的硬盘空间分配一个inode。
@@ -61,6 +67,37 @@ linux标准档案系统是ext2。
 6、挂载点的意义
 例如：将/与/home设定为两个partition的挂在点，/接在/dev/hda1，/home接在/dev/hda2上。
 那么/home底下的所有目录都是使用/dev/hda2那个partition的资料；而非/home的则都是用/dev/hda1的数据。
+
+
+-------------------------------------------------------------------------------------------------------------
+补充：
+1、ls查询档案所记载的时间
+<1>mtime(modification time)：上一次修改文件内容的时间。ls -l看到的就是这个时间
+<2>ctime(status time)：修改文件内容、所有者、权限、链接设置等 保存在inode中的内容的时间。即上一次修改inode内容的时间。
+	ls -l --time=ctime
+<3>atime(access time)：上一次读/执行文件的时间。
+	ls -l --time=atime
+
+2、dumpe2fs //查看inode大小  -- 128 bytes
+
+3、mke2fs  //格式化ext2档案系统
+   
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
