@@ -802,10 +802,14 @@ LinuxºÜ¶ÌµÄÉÏÏÂÎÄÇĞ»»Ê±¼äÊÇÒ»¸öÖØÒªÔ­Òò£¬½ø³öÄÚºË¶¼±»ÓÅ»¯µÄ¼ò½à¸ßĞ§£»ÁíÒ»¸öÔ­ÒòÊ
 eg:open()ÏµÍ³µ÷ÓÃ£º
 	long open(const char* filename, int flags, int mode)
    ²»ÒÀ¿¿¿âÖ§³Ö£¬Ö±½Óµ÷ÓÃ´ËÏµÍ³µ÷ÓÃ£º
-    #define NR_open	5
-	_syscall3(long, open, const char *, filename, int, flags, int, mode)
+    #define NR_open	5  //ÔÚasm/unistd.hÖĞ¶¨Òå£¬ÊÇÏµÍ³µ÷ÓÃºÅ
+	_syscall3(long, open, const char *, filename, int, flags, int, mode)  //¶ÔÓÚÃ¿¸öºêÀ´Ëµ£¬¶¼ÓĞ2+2*n¸ö²ÎÊı¡£
 ÕâÑù£¬Ó¦ÓÃ³ÌĞò¾Í¿ÉÒÔÖ±½ÓÊ¹ÓÃopen()ÁË¡£
 	
+Èı¡¢ÎªÊ²Ã´²»Í¨¹ıÏµÍ³µ÷ÓÃ·½Ê½ÊµÏÖ
+
+µÚÁùÕÂ ÄÚºËÊı¾İ½á¹¹
+
 	
 	
 	
