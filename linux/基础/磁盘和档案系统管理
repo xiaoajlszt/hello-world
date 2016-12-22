@@ -60,6 +60,10 @@ linux标准档案系统是ext2。
 	7)关于单一档案：若 block size=1024，最大容量为 16GB，若 block size=4096，容量最大为 2TB； 
 	8)关于整个 partition：若 block size=1024，则容量达 2TB，若 block size=4096，则容量达 32TB。 
 	9)文件名最长达 255 字符，完整文件名长达 4096 字符。
+	
+5、EXT2/EXT3档案的存取与日志式档案系统的功能
+<1>每个ext2档案系统在建立时，会依据partition大小，给予数个block group。
+<2>每个block group拥有superblock/group description/block bitmap/inode bitmap/inode table/data blocks等区域。
 
 5、linux档案系统的运作
 异步处理方式：如果linux不正常关机，由于内存中的(标记为dirty的)数据，尚未写入磁盘中。
