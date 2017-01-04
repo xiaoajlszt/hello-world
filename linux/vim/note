@@ -136,7 +136,7 @@ exit  从shell回到vim
 <0>在源代码根目录下执行 ctags -R  生成tags文件
 <1>在.vimrc中增加tags文件的路径如 :set tags=/usr/local/share/uspp/uspp/tags
    也可以每次在vim中执行:set tags=/usr/local/share/uspp/uspp/tags
-<2><C-]>（函数、宏、变量等）跳转到定义处；<C-T>返回之前位置
+<2><C-]>（函数、宏、变量等）跳转到定义处；<C-T>返回之前位置  <C-O> <C-I>
 <3>代码发生变化都要重新执行步骤0
 
 自动补全 ctrl+n
