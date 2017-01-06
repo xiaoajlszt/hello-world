@@ -64,3 +64,13 @@ eg：
 	find . -type f -ok wc -l {} \;   //找出当前目录下所有的普通文件并显示文件行数(需确认) 
 	find . -type f -exec wc -l {} \;   //找出当前目录下所有的普通文件并显示文件行数(无需确认)
 
+4、查看大文件
+<1>大文件
+find . -type f -size +800M  
+find . -type f -size +800M -print0 | xargs -0 du -h  //不加-print0，不会换行，杂乱在一起
+find . -type f -size +800M -print0 | xargs -0 du -h | sort -nr
+
+<2>大目录
+du -h --max-depth=1
+du -h --max-depth=2 | sort -n
+du -hm --max-depth=2 | sort -nr | head -12
