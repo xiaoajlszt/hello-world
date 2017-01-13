@@ -211,7 +211,6 @@ d	删除光标所在的buffer
 <3> <leader>e        //一次显示左侧tab页
 <4> 隐藏某些文档(.pyc .git .hg .svn .bzr)
 <5> 将该插件视为浏览文档的工具而不是一个分页的工具。
-<6> 在该窗口执行 ctrl-p 显示/关闭 最近打开的文件。 
 
 //wsl
 <6>.vimrc_amix中 map <leader>e :edit %:p:h<cr>
@@ -219,6 +218,7 @@ d	删除光标所在的buffer
 10、ctrlp插件  //（正则/模糊）搜索文件（打开的缓冲区/最近使用的文件）
 <1> ctrl-p   //搜索文件
 <2> <Esc>退出
+WinManager窗口中执行ctrl+p切换到最近打开的文件。
 
 11、neocomplete插件  //自动补全
 
