@@ -661,9 +661,9 @@ __dequeue_entity()函数实现。
 3)时间片只是用来重新调度同一优先级的进程。对于SCHED_FIFO进程，高优先级总是立即抢占低优先级，
 	但低优先级进程决不能抢占SCHED_RR任务，即使它的时间片耗尽。
 
-2、实时优先级范围从0到MAX_PT_PRIO-1，默认情况下，MAX_PT_PRIO为100。[0,99]
+2、实时优先级范围从0到MAX_RT_PRIO-1，默认情况下，MAX_RT_PRIO为100。[0,99]
    
-   SCHED_NORMAL级进程的nice值共享了这个取值空间，它的取值范围从MAX_PT_PRIO到(MAX_PT_PRIO+40)。
+   SCHED_NORMAL级进程的nice值共享了这个取值空间，它的取值范围从MAX_RT_PRIO到(MAX_RT_PRIO+40)。
 	也就是说默认情况下nice值[-20,19],直接对应的是[100,139]的实时优先级。
    
 
@@ -672,9 +672,11 @@ __dequeue_entity()函数实现。
 <1>这些系统调用可以用来操作和处理进程优先级、调度策略以及处理器绑定。同时还提供了显式地将处理器交给其他进程的机制。
 
 一、与调度策略和优先级相关的系统调用
-<1>调度策略 task_struct中policy和rt_policy的值
-<2>实时优先级 封装在
-<3>静态优先级 nice() task_struct中的static_prio和prio值
+<1>sched_setscheduler/sched_getscheduler 设置/获取进程的调度策略(task_struct中的policy)、实时优先级(task_struct中的rt_priority)。
+<2>sched_setparam/sched_getparam 设置/获取进程的实时优先级(sched_param中的rt_priority)。
+<3>sched_get_priority_max/sched_get_priority_min 返回给定调度策略的最大(MAX_USER_RT_PRIO-1)和最小(1)优先级。
+<4>对于一个普通的进程，nice函数可以将给定进程的静态优先级增加一个给定的量。只有root用户才能调用它时使用负值。
+nice函数会调用内核的set_user_nice函数，设置进程task_struct中的static_prio和prio。
 
 二、与处理器绑定有关的系统调用
 <1>linux调度程序提供了强制的处理器绑定机制。也就是说，虽然它尽力通过一种软的(或者说自然的)亲和性试图使进程尽量在同一个处理器上运行，
@@ -683,7 +685,13 @@ __dequeue_entity()函数实现。
 <2>task_struct中的cpus_allowed这个为掩码标志，该标志的每一位对应一个系统可用的处理器。
 
 三、放弃处理器时间
-
+linux通过sched_yield系统调用，提供了一种让进程显式地将处理器时间让给其他等待执行的进程的机制。
+<1>通过将当前进程从活动队列中移到过期队列中来实现。
+<2>不仅抢占了该进程，并将其放入优先级队列的最后面；还将其放入过期队列中，这样确保在一段时间内都不会再被执行。
+<3>由于实时进程不会过期，所以，它只能被移到其优先级队列的最后面；但不会放到过期队列中。
+<4>在linux早期版本中，sched_yield语义有所不同，进程只会被放置到其优先级队列的末尾，放弃的时间往往不会太长。
+<5>内核代码为了方便，可以直接调用yield函数。(先要确定进程确实处于可执行状态，然后在调用sched_yield)
+用户空间的应用程序直接使用sched_yield系统调用即可。
 
 第五章 系统调用
 在现代操作系统中，内核提供了用户进程与内核进行交互的一组接口。提供这些接口主要是为了保证系统的稳定可靠，避免应用程序肆意妄为。

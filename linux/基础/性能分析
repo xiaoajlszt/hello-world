@@ -1,4 +1,5 @@
 一、top  http://www.cnblogs.com/ggjucheng/archive/2012/01/08/2316399.html
+         http://blog.csdn.net/leo115/article/details/8568656
 top命令是linux下常用的性能分析工具，能够实时显示系统中各个进程的资源占用状况，类似于windows的任务管理器。
 
 1、参数含义：
@@ -31,14 +32,14 @@ load average: 41.29, 41.99, 42.47 //系统负载平均值。三个值分别为 1分钟、5分钟、1
 
 2)第三行显示CPU状态百分比。统计上次刷新到本次刷新之间的信息。分为以下几类：
 -大多数内核版本中显示如下：
-10.4 us   //
-75.5 sy   //内核空间占用CPU百分比
-0.0 ni    //用户进程空间内改变过优先级的进程占用CPU百分比
-8.0 id    //空闲CPU百分比
-0.0 wa    //等待输入输出的CPU时间百分比
-0.0 hi    //硬件CPU中断占用百分比
-0.5 si    //软中断占用百分比
-5.6 st    //虚拟机占用百分比
+10.4 us   //time running un-niced user processes 用户空间un-niced(为改变过nice值的)进程占用的CPU百分比
+75.5 sy   //time running kernel processes 内核空间进程占用CPU百分比
+0.0 ni    //time running niced user processes 用户进程空间niced(改变过nice值的)进程占用的CPU百分比
+8.0 id    //time spent in the kernel idle handler 空闲CPU百分比
+0.0 wa    //time waiting for I/O completion 等待输入输出的CPU时间百分比
+0.0 hi    //time spent servicing hardware interrupts 硬件CPU中断占用百分比
+0.5 si    //time spent servicing software interrupts 软中断占用百分比
+5.6 st    //time stolen from this vm by the hypervisor 
 
 <3>最后两行为内存信息：单位KB
 MEM:
@@ -108,9 +109,66 @@ top -c  //每隔5秒显式进程的资源占用情况，并显示进程的命令行参数(默认只有进程名)
 top -p 12345 -p 6789//每隔5秒显示pid是12345和pid是6789的两个进程的资源占用情况
 top -d 2 -c -p 123456 //每隔2秒显示pid是12345的进程的资源使用情况，并显式该进程启动的命令行参数
 
-5、其他
-输入大写P，则结果按CPU占用降序排序。输入大写M，结果按内存占用降序排序。
+5、其他  http://www.cnblogs.com/peida/archive/2012/12/24/2831353.html
+<1>输入大写P，结果按CPU占用降序排序。输入大写M，结果按内存占用降序排序。
+<2>输入b 打开/关闭 高亮显示当前运行进程
+<3>输入1 可监控每个逻辑CPU的状况
+<4>通过 shift > 或 shift < 可以向右或向左改变排列顺序(按哪一列来给进程排序)
+<5>在一个真实的SMP环境中，如果Irix Mode被设置成off，top将工作在Solaris Mode下，
+即一个任务的CPU利用率将以CPU的总数分开显示,要切换Irix/Solaris Mode，按“I"就行。
+I - Irix mode        On  (no, `solaris' smp)
+Also for multi-processor environments, if Irix mode is Off, top will operate in Solaris mode where a task's cpu usage will be divided by the total number of CPUs.
+You toggle Irix/Solaris modes with the `I' interactive command.
 
+6、top交互命令
+在top命令执行过程中可以使用的一些交互命令。这些命令都是单字母的，如果在命令行中使用了s选项，其中一些命令可能会被屏蔽。
+h 显示帮助画面，给出一些简短的命令总结说明
+k 终止一个进程。
+i 忽略闲置和僵死进程。这是一个开关式命令。
+q 退出程序
+r 重新安排一个进程的优先级别
+S 切换到累计模式
+s 改变两次刷新之间的延迟时间（单位为s），如果有小数，就换算成m s。输入0值则系统将不断刷新，默认值是5 s
+f或者F 从当前显示中添加或者删除项目
+o或者O 改变显示项目的顺序
+l 切换显示平均负载和启动时间信息
+m 切换显示内存信息
+t 切换显示进程和CPU状态信息
+c 切换显示命令名称和完整命令行
+M 根据驻留内存大小进行排序
+P 根据CPU使用百分比大小进行排序
+T 根据时间/累计时间进行排序
+W 将当前设置写入~/.toprc文件中 
+
+Global-defaults
+               A - Alt display      Off (full-screen)
+             * d - Delay time       1.5 seconds
+             * H - Threads mode     Off (summarize as tasks)
+               I - Irix mode        On  (no, `solaris' smp)
+             * p - PID monitoring   Off (show all processes)
+             * s - Secure mode      Off (unsecured)
+               B - Bold enable      On  (yes, bold globally)
+            
+Summary-Area-defaults
+               l - Load Avg/Uptime  On  (thus program name)
+               t - Task/Cpu states  On  (1+1 lines, see `1')
+               m - Mem/Swap usage   On  (2 lines worth)
+               1 - Single Cpu       Off (thus multiple cpus) 
+            
+Task-Area-defaults
+               b - Bold hilite      Off (use `reverse')
+             * c - Command line     Off (name, not cmdline)
+             * i - Idle tasks       On  (show all tasks)
+               J - Num align right  On  (not left justify)
+               j - Str align right  Off (not right justify)
+               R - Reverse sort     On  (pids high-to-low)
+             * S - Cumulative time  Off (no, dead children)
+             * u - User filter      Off (show euid only)
+             * U - User filter      Off (show any uid)
+               V - Forest view      On  (show as branches)
+               x - Column hilite    Off (no, sort field)
+               y - Row hilite       On  (yes, running tasks)
+               z - color/mono       On  (show colors)
 
 二、pidstat  http://blog.csdn.net/xluren/article/details/41312657
 			 http://blog.csdn.net/xluren/article/details/41312657
@@ -142,8 +200,10 @@ pidstat 2 10 //以2秒为采样周期，输出10次cpu使用统计信息。
 CPU：运行该任务的处理器编号。
 Command：该任务的命令名称。
 
-
-
+三、ps  //显示进程的当前状态
+-A/-e  显示所有进程
+-l     长格式
+-o     用户自定义格式
 
 
 
