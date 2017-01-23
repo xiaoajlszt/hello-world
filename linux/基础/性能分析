@@ -170,13 +170,12 @@ Task-Area-defaults
                y - Row hilite       On  (yes, running tasks)
                z - color/mono       On  (show colors)
 
-二、pidstat  http://blog.csdn.net/xluren/article/details/41312657
-			 http://blog.csdn.net/xluren/article/details/41312657
-pidstat用于监控全部和指定进程占用资源的情况，如CPU、内存、设备I/O、任务切换、线程等。
+二、pidstat  http://www.cnblogs.com/ggjucheng/archive/2013/01/13/2858874.html
+pidstat用于监控全部或指定进程占用资源的情况，如CPU、内存、设备I/O、任务切换、线程等。
 pidstat首次运行时显示自系统启动开始的各项统计信息，之后运行将显示自上次运行该命令以后的统计信息。
 用户可以通过指定统计的次数和时间来获得所需的统计信息。
 
-[root@opencos ~]# pidstat  //默认输出系统启动后所有活动进程的cpu统计信息：
+[root@opencos ~]# pidstat  //首次执行默认输出系统启动后所有活动进程的cpu统计信息：
 Linux 3.10.0-327.36.3.el7.x86_64 (opencos)      12/23/2016      _x86_64_        (8 CPU)
 
 05:07:26 PM   UID       PID    %usr %system  %guest    %CPU   CPU  Command
@@ -185,20 +184,105 @@ Linux 3.10.0-327.36.3.el7.x86_64 (opencos)      12/23/2016      _x86_64_        
 05:07:26 PM     0         3    0.00    0.00    0.00    0.00     0  ksoftirqd/0
 05:07:26 PM     0         7    0.00    0.00    0.00    0.00     0  migration/0
 05:07:26 PM     0        17    0.00    0.29    0.00    0.29     5  rcu_sched
-05:07:26 PM     0        18    0.00    0.03    0.00    0.03     5  rcuos/0
-05:07:26 PM     0        19    0.00    0.02    0.00    0.02     5  rcuos/1
-05:07:26 PM     0        20    0.00    0.02    0.00    0.02     5  rcuos/2
-05:07:26 PM     0        21    0.00    0.04    0.00    0.04     3  rcuos/3
+
+%usr：该进程在用户层的cpu使用率，和nice优先级无关。注意这个字段计算的cpu时间不包括进程运行虚拟处理器所花去的时间。
+%system：该进程在系统层的cpu使用率。
+%guest：该进程花费在虚拟机上的cpu使用率（运行在虚拟处理器）。
+%CPU：该进程总的cpu使用率。
+CPU：运行该任务的处理器编号。
+Command：该进程的命令名称。
 
 1、指定采样周期和采样次数
 pidstat 2 10 //以2秒为采样周期，输出10次cpu使用统计信息。
 
-%usr：该任务在用户层的cpu使用率，和 nice 优先级无关。注意这个字段计算的cpu时间不包括在虚拟处理器中花去的时间。
-%system：该任务在系统层的cpu使用率。
-%guest：该任务花费在虚拟机上的cpu使用率（运行在虚拟处理器）。
-%CPU：该任务总的cpu使用率。在SMP环境(多处理器)中，如果在命令行中输入-I参数的话，cpu使用率会除以你的cpu数量。
-CPU：运行该任务的处理器编号。
-Command：该任务的命令名称。
+2、针对特定进程统计(-p)
+
+3、针对SMP环境(-I)
+在SMP环境(多处理器)中，如果在命令行中输入-I参数的话，cpu使用率会除以你的cpu数量。(仅仅是%CPU列)
+[root@opencos project]# pidstat -C PLAT* 
+Linux 3.10.0-327.36.3.el7.x86_64 (opencos)      01/23/2017      _x86_64_        (8 CPU)
+
+04:45:41 PM   UID       PID    %usr %system  %guest    %CPU   CPU  Command
+04:45:41 PM     0     15445    0.19    0.39    0.00    0.58     5  PLAT_X86_64_D_V
+04:45:41 PM     0     15612    0.11    0.36    0.00    0.47     0  PLAT_X86_64_V01
+04:45:41 PM     0     15765    5.82    5.19    0.00   11.01     7  PLAT_CGSL_X86_6
+04:45:41 PM     0     15977    0.17    0.36    0.00    0.53     1  PLAT_X86_64_D_V
+04:45:41 PM     0     16233    0.21    0.44    0.00    0.66     4  PLAT_X86_64_D_V
+04:45:41 PM     0     16442    0.17    0.23    0.00    0.40     1  PLAT_X86_64_D_V
+04:45:41 PM     0     16703    0.21    0.42    0.00    0.63     3  PLAT_X86_64_D_V
+04:45:41 PM     0     16908    0.15    0.37    0.00    0.52     1  PLAT_X86_64_D_V
+
+[root@opencos project]# pidstat -I -C PLAT*   
+Linux 3.10.0-327.36.3.el7.x86_64 (opencos)      01/23/2017      _x86_64_        (8 CPU)
+
+04:45:59 PM   UID       PID    %usr %system  %guest    %CPU   CPU  Command
+04:45:59 PM     0     15445    0.19    0.39    0.00    0.08     1  PLAT_X86_64_D_V
+04:45:59 PM     0     15612    0.11    0.36    0.00    0.06     1  PLAT_X86_64_V01
+04:45:59 PM     0     15765    5.82    5.19    0.00    1.50     7  PLAT_CGSL_X86_6
+04:45:59 PM     0     15977    0.17    0.36    0.00    0.07     1  PLAT_X86_64_D_V
+04:45:59 PM     0     16233    0.21    0.44    0.00    0.09     2  PLAT_X86_64_D_V
+04:45:59 PM     0     16442    0.17    0.23    0.00    0.05     1  PLAT_X86_64_D_V
+04:45:59 PM     0     16703    0.21    0.42    0.00    0.09     0  PLAT_X86_64_D_V
+04:45:59 PM     0     16908    0.15    0.37    0.00    0.07     1  PLAT_X86_64_D_V
+
+4 -l
+完整显示进程command name和它的所有参数。
+
+5、-C str
+仅仅显示command name中包括字符串str的进程。str可以是正则表达式结构。
+
+6、cpu使用情况统计(-u)
+使用-u选项，pidstat将显示各个活动进程的cpu使用情况统计。pidstat -u与pidstat效果一样。
+
+7、内存使用情况统计(-r)
+使用-r选项，pidstat将显示page faults和内存使用率情况。
+Linux 3.10.0-327.36.3.el7.x86_64 (opencos)      01/23/2017      _x86_64_        (8 CPU)
+
+04:07:17 PM   UID       PID  minflt/s  majflt/s     VSZ    RSS   %MEM  Command
+04:07:17 PM     0         1      0.70      0.00  189056   4168   0.03  systemd
+04:07:17 PM     0       400      0.06      0.00  145640   5592   0.03  sshd
+04:07:17 PM     0       402      0.08      0.00  116704   3312   0.02  bash
+04:07:17 PM     0       509      0.04      0.00  334256   3268   0.02  aql
+
+minflt/s：每秒minor faults总数(不从磁盘请求加载内存页)     次缺页错误次数意即虚拟内存地址映射成物理内存地址产生的page fault次数。
+majflt/s：每秒major faults总数(要从磁盘请求加载内存页--swap情况)    当虚拟内存地址映射成物理内存地址时，相应的page在swap中，这样的page fault为major page fault。
+VSZ(virtual size)：该进程的虚拟内存使用量(KB)
+RSS(Resident Set Size)：该进程的non-swapped物理内存使用量(KB)
+%MEM：该进程使用物理内存百分比
+Command：该进程的命令名称
+
+注：一些思考：
+<1>每个进程的虚拟内存大小不一样？(理论上32位机器虚拟内存最大可以达到4G，64位。。)
+虚拟内存即进程地址空间。这是因为每个进程的内存区域(代码段、数据段、BSS段等)不一样。
+
+<2>每个进程的虚拟内存大小和其物理内存大小不一样？
+如LKD中举的例子一样。该进程的全部地址空间大约为1340KB，但是只有大约40KB的内存区域是可写和私有的。
+进程访问了1340KB的数据和代码空间，然而仅仅消耗了40KB的物理内存。
+
+如果一片内存范围是共享的或不可写的，那么内核只需要在内存中为文件保留一份映射。
+所以C库在物理内存中仅仅需要占用1212KB空间，而不需要为每个使用C库的进程在内存中都保存一个1212KB的空间。
+这种共享不可写内存的方法节约了大量的内存空间。
+
+<3>linux page fault  
+http://blog.csdn.net/vanquishedzxl/article/details/47029805   //一系列文章
+http://blog.csdn.net/gulianchao/article/details/9855389
+
+8、IO情况统计(-d)
+使用-d选项，我们可以查看进程IO的统计信息：
+
+Linux 3.10.0-327.36.3.el7.x86_64 (opencos)      01/23/2017      _x86_64_        (8 CPU)
+
+04:33:18 PM   UID       PID   kB_rd/s   kB_wr/s kB_ccwr/s  Command
+04:33:18 PM     0         1      5.25      0.01      0.00  systemd
+04:33:18 PM     0        78      0.00      0.01      0.00  khugepaged
+04:33:18 PM     0       402      0.00      0.00      0.00  bash
+
+kB_rd/s：进程(已经发生)每秒从磁盘读取的数据量(KB)
+kB_wr/s：进程(已经或即将发生)每秒向磁盘写入的数据量(KB)
+kB_ccwr/s：进程向磁盘写入的且已经被进程取消的数据量(KB)
+    This may occur when the task truncates some dirty page‐cache. In this case, some IO which another task has been accounted for will not be happening.
+Command：该进程的命令名称
+	
 
 三、ps  //显示进程的当前状态
 -A/-e  显示所有进程

@@ -109,7 +109,29 @@ eg: 1字节对齐后，该结构总长为13字节；去掉对齐后，总长为16字节。
 11、static
 http://www.cnblogs.com/stoneJin/archive/2011/09/21/2183313.html
 
-12、BYTE * 与 CHAR *
+12、switch中的打印：
+int main()
+{
+	int a = 100;
+
+	switch(a)
+	{
+		printf("enter switch!");
+		
+	    case 100:
+			printf("a=100!");
+			break;
+		default:
+			printf("default!");
+			break;
+	}
+	
+	return 0;
+}
+
+switch直接跳到case分支，该段代码中的 printf("enter switch!"); 是不会打印出来的！！！
+
+
 
 
 
