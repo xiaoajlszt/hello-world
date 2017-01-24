@@ -1,0 +1,15 @@
+1、SMP（Symmetric Multi-Processing）对称多处理机构
+   在中断处理程序中能避免并发访问的安全代码称作中断安全代码（interrupt-saft）
+   在多对称多处理的机器中能避免并发访问的安全代码称为SMP安全代码（SMP-saft）
+   在内核抢占时能避免并发访问的安全代码称为抢占安全代码（preempt-saft）
+   
+2、原子操作大部分使用汇编语言实现，因为c语言并不能实现这样的操作。
+   在x86的原子操作实现代码中，定义了LOCK宏，这个宏可以放在随后的内联汇编指令之前。
+   如果是SMP，LOCK宏被扩展为lock指令；否则被定义为空 -- 单CPU无需防止其它CPU的干扰，锁内存总线完全是在浪费时间。
+	#ifdef CONFIG_SMP
+	#define LOCK "lock ; "
+	#else
+	#define LOCK ""
+	#endif
+	
+3、PM模块pmADDCounterByStatisticType中使用了原子操作
