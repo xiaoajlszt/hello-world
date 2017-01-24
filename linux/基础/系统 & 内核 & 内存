@@ -220,3 +220,21 @@ tcp/ipÍ¨³£Ê¹ÓÃµÄ´°¿Ú×î´ó¿É´ïµ½ 65535 ×Ö½Ú£¬¶ÔÓÚ¸ßËÙÍøÂç£¬¸ÃÖµ¿ÉÄÜÌ«Ğ¡£¬ÕâÊ±ºòÈç¹
 
 10¡¢linuxÄÚ´æ¹ÜÀí
 http://blog.csdn.net/a675311/article/details/49301967
+
+11¡¢systemd    http://blog.jobbole.com/98671/
+<1>¶ÔÓÚÄÇĞ©Ö§³Ö systemd µÄÈí¼ş£¬°²×°µÄÊ±ºò£¬»á×Ô¶¯ÔÚ/usr/lib/systemd/systemÄ¿Â¼Ìí¼ÓÒ»¸öÅäÖÃÎÄ¼ş¡£
+<2>Èç¹ûÄãÏëÈÃ¸ÃÈí¼ş¿ª»úÆô¶¯£¬¾ÍÖ´ĞĞÏÂÃæµÄÃüÁî£¨ÒÔhttpd.serviceÎªÀı£©¡£
+   $ systemctl enable httpd
+   ÉÏÃæµÄÃüÁîÏàµ±ÓÚÔÚ/etc/systemd/systemÄ¿Â¼Ìí¼ÓÒ»¸ö·ûºÅÁ´½Ó£¬Ö¸Ïò/usr/lib/systemd/systemÀïÃæµÄhttpd.serviceÎÄ¼ş¡£
+   ÕâÊÇÒòÎª¿ª»úÊ±£¬SystemdÖ»Ö´ĞĞ/etc/systemd/systemÄ¿Â¼ÀïÃæµÄÅäÖÃÎÄ¼ş¡£ÕâÒ²ÒâÎ¶×Å£¬Èç¹û°ÑĞŞ¸ÄºóµÄÅäÖÃÎÄ¼ş·ÅÔÚ¸ÃÄ¿Â¼£¬¾Í¿ÉÒÔ´ïµ½¸²¸ÇÔ­Ê¼ÅäÖÃµÄĞ§¹û¡£
+   
+<3>Ïà¹ØÃüÁî
+$ sudo systemctl start httpd
+$ sudo systemctl status httpd
+$ sudo systemctl stop httpd.service
+$ sudo systemctl kill httpd.service
+$ sudo systemctl restart httpd.service
+# ÖØĞÂ¼ÓÔØÅäÖÃÎÄ¼ş
+$ sudo systemctl daemon-reload
+# ÖØÆôÏà¹Ø·şÎñ
+$ sudo systemctl restart foobar
