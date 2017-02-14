@@ -11,5 +11,3 @@
 	#else
 	#define LOCK ""
 	#endif
-	
-3、PM模块pmADDCounterByStatisticType中使用了原子操作
