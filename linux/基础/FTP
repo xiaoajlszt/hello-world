@@ -1,0 +1,64 @@
+一、sftp  
+1、centos 7下本身就存在一个sftp(/usr/libexec/openssh/sftp-server)。
+
+二、vsftpd
+1、a机器上 
+<1>安装vsftpd服务端  vsftpd.x86_64 : Very Secure Ftp Daemon
+<2>修改配置  vsftpd的配置，配置文件中限定了vsftpd用户连接控制配置：
+1)vsftpd.ftpusers 位于/etc/vsftpd目录下。它指定了哪些用户账户不能访问FTP服务器，例如root等。
+2)vsftpd.user_list 位于/etc/vsftpd目录下。该文件里的用户账户在默认情况下也不能访问FTP服务器，仅当vsftpd.conf配置文件里启用userlist_enable=NO选项时才允许访问。
+3)vsftpd.conf 位于/etc/vsftpd目录下。来自定义用户登录控制、用户权限控制、超时设置、服务器功能选项、服务器性能选项、服务器响应消息等FTP服务器的配置。
+<3>启动vsftp服务
+
+2、b机器上 
+<1>安装ftp客户端	 ftp.x86_64 : The standard UNIX FTP (File Transfer Protocol) client
+<2>连接并使用
+-bash-4.2# ftp 10.42.6.27
+Connected to 10.42.6.27 (10.42.6.27).
+220 (vsFTPd 3.0.2)
+Name (10.42.6.27:root): root
+331 Please specify the password.
+Password:
+230 Login successful.
+Remote system type is UNIX.
+Using binary mode to transfer files.
+
+ftp> help
+Commands may be abbreviated.  Commands are:
+
+!               debug           mdir            sendport        site
+$               dir             mget            put             size
+account         disconnect      mkdir           pwd             status
+append          exit            mls             quit            struct
+ascii           form            mode            quote           system
+bell            get             modtime         recv            sunique
+binary          glob            mput            reget           tenex
+bye             hash            newer           rstatus         tick
+case            help            nmap            rhelp           trace
+cd              idle            nlist           rename          type
+cdup            image           ntrans          reset           user
+chmod           lcd             open            restart         umask
+close           ls              prompt          rmdir           verbose
+cr              macdef          passive         runique         ?
+delete          mdelete         proxy           send
+
+三、FileZilla使用
+1、ftp方式连接 vsftpd服务
+2、sftp方式连接 sftp服务
+
+四、两种工作模式
+1、FTP支持两种模式，一种叫Standard(也就是PORT方式，主动方式)；一种是Passive(也就是PASV方式，被动方式)。
+
+2、主动模式要求客户端和服务器端同时打开并且监听一个端口以建立连接。
+在这种情况下，客户端由于安装了防火墙会产生一些问题。所以，创立了被动模式。
+被动模式只要求服务器端产生一个监听相应端口的进程，这样就可以绕过客户端安装了防火墙的问题。
+
+
+
+
+
+
+
+
+
+
