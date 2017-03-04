@@ -243,3 +243,10 @@ string(字符串)与octect string(字节串)： (octet，一种计算机语言，意思是因特网标准
 1、unsigned char *a = “12301233”； //string中间是不会有\0的
 2、unsigned char code_stream_req[] = {0x01,0x00,0x01,0xd0,0xc0,0x00,0x01,0x10,0x01,0x00,0x00,0x16,0x45,0x0a,0xa0,0x49}；
 octect string里面就会有\0，即0x00。
+sizeof(code_stream_req)结果为16
+strlen(code_stream_req)结果为1
+
+BYTE与CHAR
+BYTE是字节串，1就是1,2就是2。
+
+CHAR是字符串，‘1’是49。
