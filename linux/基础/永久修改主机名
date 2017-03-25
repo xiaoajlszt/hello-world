@@ -1,0 +1,3 @@
+1、centos 7永久修改主机名
+<1>修改/etc/hostname文件，把localhost.hostname改成你想要的值。
+<2>运行 su - 命令重载环境
