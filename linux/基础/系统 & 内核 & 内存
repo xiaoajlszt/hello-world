@@ -4,6 +4,10 @@
 <3> cat /etc/issue      //发行版本信息
 <4> lsb_release -a      //某些情况下要安装lsb
 
+red hat：
+<1>cat /etc/redhat-release
+<2>rpm -q redhat-release
+
 linux操作系统的模块操作命令
 <1> lsmod (list modules)
 	一个小程序用于显示/proc/modules的信息，当前内核已装载的系统模块。
