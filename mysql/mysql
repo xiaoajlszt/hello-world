@@ -1,0 +1,159 @@
+一、DDL语句
+0、基本操作
+show databases;          //显示库
+create database dbname;  //建库
+drop database dbname;    //删除库
+user dbname;             //选中库
+
+show tables;             //显示库中的所有数据表
+desc tablename;          //查看表定义
+show create table tablename; //查看创建表的SQL语句    \G 选项使得记录能够按照字段竖着排列
+drop table tablename;    //删除表
+
+
+1、创建表
+CREATE TABLE tablename(column_name_1 column_type_1 constraints,
+column_name_2 column_type_2 constraints, ... column_name_n column_type_n constraints)
+<1>因为MySQL的表名是以目录的形式存在于磁盘上，所以表名的字符可以用任何目录名允许的字符。
+<2>column_name是列的名字。
+<3>column_type是列的数据类型。
+<4>constraints是列的约束条件。
+
+2、修改表
+<1>修改表类型
+ALTER TABLE tablename MODIFY [COLUMN] column_definition [FIRST|AFTER col_name]
+<2>增加表字段
+ALTER TABLE tablename ADD [COLUMN] column_definition [FIRST|AFTER col_name]
+<3>删除表字段
+ALTER TABLE tablename DROP [COLUMN] col_name
+<4>字段改名
+ALTER TABLE tablename CHANGE [COLUMN] old_col_name column_definition [FIRST|AFTER col_name]
+<5>表改名
+ALTER TABLE tablename RENAME [TO] new_tablename
+
+二、DML语句
+DML操作是指针对数据库中表记录的操作，增删改查。
+INSERT INTO tablename (field1,field2,……fieldn) VALUES(value1,value2,……valuesn);
+UPDATE tablename SET field1=value1，field2=value2，……fieldn=valuen [WHERE CONDITION]
+DELETE FROM tablename [WHERE CONDITION]
+SELECT * FROM tablename [WHERE CONDITION]
+
+排序和限制
+<1>ORDER BY
+SELECT * FROM tablename [WHERE CONDITION] [ORDER BY field1 [DESC|ASC] ， field2[DESC|ASC]，……fieldn [DESC|ASC]]
+
+
+
+第7章 表类型(存储引擎)的选择
+1、用户可以根据应用的需要选择如何存储和索引数据、是否使用事务等。
+2、MySQL 5.0支持的存储引擎包括：MyISAM、InnoDB、BDB、MEMORY等。
+其中InnoDB和BDB提供事务安全表，其他存储引擎都是非事务安全表。
+
+3、参数default-table-type设置默认存储引擎。
+show variables like 'table_type'; //查看当前默认存储引擎
+show engines \G  //查看当前数据库支持的存储引擎
+show variables like 'have%'; //查看当前数据库支持的存储引擎
+
+
+
+----------------------------------------------------------------------------------------
+1、->
+记得语句结尾加;
+
+2、Host '10.43.241.216' is not allowed to connect to this MySQL servertime: 0.001！
+http://blog.csdn.net/dazhi_100/article/details/50553947
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'db10$ZTE' WITH GRANT OPTION;                
+Query OK, 0 rows affected (0.12 sec)
+
+3、LOAD DATA INFILE时报duplicate entry for key错误
+通常是数据中唯一索引冲突导致。
+load csv file error! csv file name=NoticeFile20170401155049.csv. ret=1!
+Duplicate entry '150778720309359-2017-04-03 15:50:51-2541236063' for key 'index_subscriber_time_policy', errno=1062
+
+----------------------------------------------------------------------------------------
+
+1、联合索引
+http://blog.csdn.net/lmh12506/article/details/8879916
+索引
+http://blog.csdn.net/xluren/article/details/32746183     
+
+2、有索引表
+
+
+3、mysql导入数据load data infile用法
+http://hunan.iteye.com/blog/752606
+
+请教下。。MySQL允许多个线程同时导入数据吗？会冲突吗？
+2017-04-11 16:01:47*[王涵毅10101452]说:
+可以，相当于多个线程同时insert
+2017-04-11 16:02:03*[王涵毅10101452]说:
+只要不是主键冲突就没关系
+2017-04-11 16:02:27*[肖鹏10168399]说:
+每个线程都要建立连接吗？
+2017-04-11 16:02:41*[王涵毅10101452]说:
+必须的
+2017-04-11 16:04:06*[肖鹏10168399]说:
+是不是InnoDB才支持这种同时导入呀，我在网上看到说这个是记录锁，其他的可能是表锁。。
+
+
+
+1、分区表
+2、大小表
+3、动态内存
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

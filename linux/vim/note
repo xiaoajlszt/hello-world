@@ -1,4 +1,12 @@
 一、vim基本命令  https://my.oschina.net/kutengshe/blog/464602
+0、问题：
+<1>中文乱码
+.vimrc中加入
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+set termencoding=utf-8
+set encoding=utf-8
+
+
 1、基本操作：
 <1> 0 数字0移动到一行的最前面字符
 	$ 移动到一行的最后字符
