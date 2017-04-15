@@ -1,0 +1,131 @@
+一、基本命令
+1、DDL(Data Definition Language)语句：
+数据定义语言，定义不同的数据段、数据库、表、列、索引等数据库对象的定义。
+常用语句关键字包括create、drop、alter等。
+
+show databases;          //显示库
+create database dbname;  //建库
+drop database dbname;    //删除库
+user dbname;             //选中库
+
+show tables;             //显示库中的所有数据表
+desc tablename;          //查看表定义
+show create table tablename; //查看创建表的SQL语句    \G 选项使得记录能够按照字段竖着排列
+drop table tablename;    //删除表
+
+select count(*) from tableName;  //查询表记录条目
+SELECT * FROM tablename [WHERE CONDITION];  //查询表中符合条件的记录
+
+
+<1>建表
+CREATE TABLE tablename(column_name_1 column_type_1 constraints,
+column_name_2 column_type_2 constraints, ... column_name_n column_type_n constraints)
+1)因为MySQL的表名是以目录的形式存在于磁盘上，所以表名的字符可以用任何目录名允许的字符。
+2)column_name是列的名字。
+3)column_type是列的数据类型。
+4)constraints是列的约束条件。
+
+<2>修改表
+ALTER TABLE tablename MODIFY [COLUMN] column_definition [FIRST|AFTER col_name]  //修改表类型
+ALTER TABLE tablename ADD [COLUMN] column_definition [FIRST|AFTER col_name]   //增加表字段
+ALTER TABLE tablename DROP [COLUMN] col_name   //删除表字段
+ALTER TABLE tablename CHANGE [COLUMN] old_col_name column_definition [FIRST|AFTER col_name]   //字段改名
+ALTER TABLE tablename RENAME [TO] new_tablename  //表改名
+
+2、DML(Data Manipulation Language)语句：
+数据操纵语句，用于添加、删除、更改和查询数据库记录，并检查数据完整性。
+常用的语句关键词主要包括insert、delete、update、select等。
+INSERT INTO tablename (field1,field2,……fieldn) VALUES(value1,value2,……valuesn);
+UPDATE tablename SET field1=value1，field2=value2，……fieldn=valuen [WHERE CONDITION]
+DELETE FROM tablename [WHERE CONDITION]
+SELECT * FROM tablename [WHERE CONDITION]
+
+二、表的存储引擎
+1、MySQL 5.0支持的存储引擎包括：MyISAM、InnoDB、BDB、MEMORY等。其中InnoDB和BDB提供事务安全表，其他存储引擎都是非事务安全表。
+参数default-table-type设置默认存储引擎。
+
+2、相关命令
+show variables like 'table_type'; //查看当前默认存储引擎
+show engines \G  //查看当前数据库支持的存储引擎
+show variables like 'have%'; //查看当前数据库支持的存储引擎
+
+show variables like '%innodb%';   //查看innodb相关配置参数
+show status like '%innodb%';  //查看innodb相关的运行时参数（比如当前正在打开的表的数量，当前已经打开的表的数量）
+show global status like 'open%tables';  //查看全局的运行时参数，加上global是对当前mysql服务器中运行的所有数据库实例进行统计。
+									不加global则只对当前数据库实例进行统计。
+									
+3、InnoDB的存储方式
+<1>使用共享空间存储
+这种方式创建的表结构保存在.frm文件中，数据和索引保存在innodb_data_home_dir和innodb_data_file_path定义的表空间中。可以是多个文件。
+
+<2>使用多表空间存储
+这种方式创建的表结构保存在.frm文件中，每个表的数据和索引单独保存在.ibd中。
+如果是分区表，每个分区对应单独的.ibd文件，可以在创建时指定每个分区的数据文件位置，以此来将表的IO均匀分布在多个磁盘上。
+
+1)要使用多表空间的存储方式，需要设置参数innodb_file_per_table，重新启动服务后生效。
+之后对于新建的表按照多表空间的方式创建，已有的表仍使用共享表空间存储。
+
+2)多表空间的数据文件没有大小限制，不需要设置初始大小，也不需要设置文件的最大限制、扩展大小等参数。
+
+3)使用多表空间特性的表，可以方便地进行单表备份和恢复操作。
+因为没有共享表空间的数据字典信息，直接复制.ibd和.frm文件恢复时是不能被正确识别的，可以使用以下命令将备份恢复到数据库中，
+ATLER TABLE tbl_name DISCARD TABLESPACE;
+ATLER TABLE tbl_name IMPORT TABLESPACE;
+但是这样的单表备份只能恢复到原来所在的数据库中，而不能恢复到其他的数据库中。
+如果需要恢复到目标数据库，则要通过mysqldump和mysqlimport来实现。
+
+4、相关配置参数
+1、innodb_read_io_threads\innodb_write_io_threads
+在MySQL5.5.X版本中，这两个参数取代了innodb_file_io_threads。分表表示InnoDB使用后台线程处理数据页上读写I/O请求的数量，默认值都是4。
+32个逻辑CPU时可以分别改为16。
+
+
+三、一些资料
+1、金海：
+<1>mysql分区表，分区自己维护增加和删除，时间序列是range那种类型。
+http://www.cnblogs.com/mliudong/p/3625522.html
+http://www.2cto.com/database/201503/380348.html
+
+<2>laodfile用法和技巧和性能
+http://blog.csdn.net/qmyzch/article/details/53141911   （设置缓存大小）
+http://blog.jobbole.com/85657/   性能测试
+
+<3>线程和配置
+http://book.2cto.com/201402/40300.html  据说5.1支持4核，5.5支持24核，5.6支持64核，io读写线程很关键。
+http://blog.csdn.net/u010433704/article/details/50524117  配置指南
+
+2、索引
+http://blog.csdn.net/lmh12506/article/details/8879916
+http://blog.csdn.net/xluren/article/details/32746183   
+
+
+四、一些问题：
+1、->
+记得语句结尾加;
+
+2、Host '10.43.241.216' is not allowed to connect to this MySQL servertime: 0.001！
+http://blog.csdn.net/dazhi_100/article/details/50553947
+mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'db10$ZTE' WITH GRANT OPTION;                
+Query OK, 0 rows affected (0.12 sec)
+
+3、LOAD DATA INFILE时报duplicate entry for key错误
+通常是数据中唯一索引冲突导致。
+load csv file error! csv file name=NoticeFile20170401155049.csv. ret=1!
+Duplicate entry '150778720309359-2017-04-03 15:50:51-2541236063' for key 'index_subscriber_time_policy', errno=1062
+
+4、int
+<1>int类型占4个字节32位，默认是有符号的。无符号范围为0-4,294,967,295，有符号范围为-2147483648-2147483647。
+<2>修改为usigned：alter table tablename modify 字段名 int zerofill
+<3>int(40);只是表示显示40宽度（不足前面加0），与实际数据库存储该字段所用的空间无关。
+通常int为int(11)，无符号int为int(10)
+PolicyId               | int(10) unsigned zerofill | YES  | MUL | NULL    |       |
+UserGrade              | int(11)                   | YES  |     | NULL    |       |
+
+5、多线程
+<1>MySQL允许多个线程同时导入数据，即多个线程同时insert，不会冲突。要给每个都线程建立连接。
+<2>mysql中有一种机制是表锁定和行锁定，为什么要出现这种机制，是为了保证数据的完整性。
+如果有二个sql都要修改同一张表的同一条数据，这个时候怎么办呢，是不是二个sql都可以同时修改这条数据呢？
+很显然mysql对这种情况的处理是，一种是表锁定（myisam存储引擎），一个是行锁定（innodb存储引擎）。
+表锁定表示你们都不能对这张表进行操作，必须等我对表操作完才行。
+行锁定也一样，别的sql必须等我对这条数据操作完了，才能对这条数据进行操作。
+如果数据太多，一次执行的时间太长，等待的时间就越长，这也是我们为什么要分表的原因。
