@@ -16,6 +16,9 @@ drop table tablename;    //删除表
 select count(*) from tableName;  //查询表记录条目
 SELECT * FROM tablename [WHERE CONDITION];  //查询表中符合条件的记录
 
+SELECT * FROM information_schema.PARTITIONS WHERE table_name='tablename';//查看表的分区
+select count(*) from tableName PARTITION (P01);
+
 
 <1>建表
 CREATE TABLE tablename(column_name_1 column_type_1 constraints,
@@ -79,6 +82,38 @@ ATLER TABLE tbl_name IMPORT TABLESPACE;
 在MySQL5.5.X版本中，这两个参数取代了innodb_file_io_threads。分表表示InnoDB使用后台线程处理数据页上读写I/O请求的数量，默认值都是4。
 32个逻辑CPU时可以分别改为16。
 
+2、innodb_thread_concurrency
+InnoDB会试图将InnoDB服务的使用的操作系统进程小于或等于这里所设定的数值。此参数默认值为 8。
+如果你的计算机系统有很多的处理器与磁盘系统，则可以将这个值设高一点以充分利用你的系统资源。建议设值为处理器数目+磁盘数目。
+在当前最新版本的mysql中，innodb_thread_concurrency的默认值为0，它表示默认情况下不限制线程并发执行的数量。 
+
+3、innodb_buffer_pool_size
+InnoDB用来高速缓冲数据和索引内存缓冲大小。更大的设置可以使访问数据时减少磁盘 I/O。这对Innodb表来说非常重要。Innodb相比MyISAM表对缓冲更为敏感。
+在一个专用的数据库服务器上可以将它设置为物理内存的80%。
+不要将它设置太大，因为物理内存的使用竞争可能会影响操作系统的页面调用。在my.cnf中以数字格式设置。
+
+4、innodb_log_file_size   
+日志组中的每个日志文件的大小(单位 MB)。
+如果 n 是日志组中日志文件的数目，那么理想的数值为 1M 至下面设置的缓冲池(buffer pool)大小的 1/n。
+较大的值，可以减少刷新缓冲池的次数，从而减少磁盘 I/O。但是大的日志文件意味着在崩溃时需要更长的时间来恢复数据。 
+日志文件总和必须小于2G，3.23.55和4.0.9以上为小于4G。在my.cnf中以数字格式设置。
+
+5、innodb_flush_log_at_trx_commit
+通常设置为 1，意味着在事务提交前日志已被写入磁盘，事务可以运行更长以及服务崩溃后的修复能力。
+如果你愿意减弱这个安全，或你运行的是比较小的事务处理，可以将它设置为0，以减少写日志文件的磁盘 I/O。这个选项默认设置为0。
+这个参数的含义是事务提交刷写磁盘的模式。为1，每个事务都进行写盘。为0时：log buffer将每秒一次地写入log file中，并且log file的flush(刷到磁盘)操作同时进行。
+
+
+参数	前一次测试	本次测试
+innodb_read_io_threads	4	8
+innodb_write_io_threads	4	16
+thread_concurrency	10	32
+innodb_log_file_size	10000M	600M
+innodb_log_files_in_group	2	3
+innodb_log_buffer_size	8M	16M
+innodb_flush_log_at_trx_commit	0	0
+innodb_buffer_pool_size	20000M	20000M
+
 
 三、一些资料
 1、金海：
@@ -94,9 +129,40 @@ http://blog.jobbole.com/85657/   性能测试
 http://book.2cto.com/201402/40300.html  据说5.1支持4核，5.5支持24核，5.6支持64核，io读写线程很关键。
 http://blog.csdn.net/u010433704/article/details/50524117  配置指南
 
+<4>分析总结：
+增加io线程以后，性能比第一次15万提升了20%，达到18万。
+直觉是索引还有些问题，所以第二次插入同一分区的时候性能下降明显（工程上可以规避插入新的分区即可）。
+我猜测你是用b树默认索引，索引填充因子和树分裂有关，因此出现大量毛刺导致性能下降。注意观察插入时刻的cpu占用率情况。
+尝试大页面的情况下，分区的第二次插入是否有所改善，若是则说明填充因子需要调整。
+我预计最终能每秒能达到25-30万左右。
+基础测试中任何疑点都不能放过，宁可慢，切记切记。
+
+你索引是b树还是哈希的？  可以参见这篇 http://blog.sina.com.cn/s/blog_6776884e0100pko1.html
+http://www.cnblogs.com/olinux/p/5161826.html   如果是整形，可以采用哈希索引。时间如果是字符串，一般只能用b树。如果列1用整形，等价于列二的时间，那么索引只要建一个即可，不需要复合索引。
+这篇关键：
+http://blog.csdn.net/great_tony/article/details/47280963
+InnoDB的主键选择与插入优化
+在使用InnoDB存储引擎时，如果没有特别的需要，请永远使用一个与业务无关的自增字段作为主键。
+经常看到有帖子或博客讨论主键选择问题，有人建议使用业务无关的自增主键，有人觉得没有必要，完全可以使用如学号或身份证号这种唯一字段作为主键。不论支持哪种论点，大多数论据都是业务层面的。如果从数据库索引优化角度看，使用InnoDB引擎而不使用自增主键绝对是一个糟糕的主意。
+上文讨论过InnoDB的索引实现，InnoDB使用聚集索引，数据记录本身被存于主索引（一颗B+Tree）的叶子节点上。这就要求同一个叶子节点内（大小为一个内存页或磁盘页）的各条数据记录按主键顺序存放，因此每当有一条新的记录插入时，MySQL会根据其主键将其插入适当的节点和位置，如果页面达到装载因子（InnoDB默认为15/16），则开辟一个新的页（节点）。
+如果表使用自增主键，那么每次插入新的记录，记录就会顺序添加到当前索引节点的后续位置，当一页写满，就会自动开辟一个新的页。如下图所示：
+
+这篇是innodb关于索引参数的优化：innodb_page_size，MERGE_THRESHOLD，innodb_fill_factor 主要这三个关键字
+http://blog.csdn.net/aeolus_pu/article/details/56833191
+
+
 2、索引
 http://blog.csdn.net/lmh12506/article/details/8879916
 http://blog.csdn.net/xluren/article/details/32746183   
+
+3、分区表操作
+http://blog.csdn.net/orangleliu/article/details/57088338    MySQL对数据表已有表进行分区表
+
+SELECT * FROM information_schema.PARTITIONS WHERE table_name='tablename';//查看表的分区
+select count(*) from tableName PARTITION (P01);
+ALTER TABLE policy_partition ADD PARTITION (PARTITION p08 VALUES LESS THAN (20170702000000)); //新增分区
+alter table policy_partition drop partition p8;  //删除分区
+
 
 
 四、一些问题：
