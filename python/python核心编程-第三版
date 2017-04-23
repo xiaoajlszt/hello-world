@@ -37,6 +37,51 @@ http://blog.chinaunix.net/uid-12014716-id-5691776.html
 
 4.3.4 不使用线程的情况
 
+4.3.5 Python的threading模块
+1、Python提供了多个模块支持多线程编程，包括thread、threading、Queue模块等。
+thread-提供了基本的线程和锁定支持
+threading-提供了更高级别、功能更全面的线程管理
+queue-可以创建一个队列数据结构，用于在多线程之间进行共享。
+
+2、推荐使用更高级别的threading模块，而不使用thread模块。
+其中一个重要原因是thread对进程何时退出没有控制，当主线程结束时，所有其他线程也都强制结束，不会发出警告或者进行适当的清理；threading能确保重要的子线程在进程退出前结束。
+
+4.4 thread模块
+1、thread模块提供了基本的同步数据结构，成为锁对象（lock object，也叫原语锁、简单锁、互斥锁、互斥和二进制信号量）。
+
+2、thread的核心函数是start_new_thread()，它的参数包括函数、函数参数以及可选的关键字参数。将专门派生新的线程来调用该函数。
+<1>start_new_thread(function,args,kwargs=None)
+<2>allocate_lock()  分配LockType锁对象
+<3>exit()  推出线程指令
+
+3、LockType锁对象的方法
+acquire(wait=None)  尝试获取锁对象
+locked()            如果获取了锁对象则返回True，否则返回False
+release()           释放锁
+
+4.5 threading模块
+
+
+
+第6章 数据库编程
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

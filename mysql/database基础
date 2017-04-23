@@ -1,4 +1,12 @@
-0、分布式数据库、关系型数据库、行式数据库、列式数据库
+0、类型
+<1>关系型数据库、非关系型数据库
+http://blog.csdn.net/robinjwong/article/details/18502195
+http://blog.csdn.net/lifuxiangcaohui/article/details/39891099
+
+<2>行式数据库、列式数据库
+http://blog.csdn.net/qq_35952082/article/details/68490536
+
+<3>关系型数据库也能分布式部署
 
 1、事实表和维度表
 
