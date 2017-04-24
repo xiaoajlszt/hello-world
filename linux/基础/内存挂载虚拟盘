@@ -1,6 +1,0 @@
-1、/dev/shm/
-<1>默认大小为内存的一半。
-
-2、tmpfs
-
-3、#mount  -t tmpfs -o size=20m  tmpfs /mnt/tmp
