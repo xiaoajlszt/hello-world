@@ -171,8 +171,11 @@ alter table policy_partition drop partition p8;  //删除分区
 
 2、Host '10.43.241.216' is not allowed to connect to this MySQL servertime: 0.001！
 http://blog.csdn.net/dazhi_100/article/details/50553947
+http://www.cnblogs.com/yuejin/archive/2013/11/12/3419467.html   //外网连接mysql
 mysql> GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY 'db10$ZTE' WITH GRANT OPTION;                
 Query OK, 0 rows affected (0.12 sec)
+
+mysql> flush privileges;
 
 3、LOAD DATA INFILE时报duplicate entry for key错误
 通常是数据中唯一索引冲突导致。
