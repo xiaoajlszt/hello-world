@@ -746,10 +746,21 @@ I/O size (minimum/optimal): 512 bytes / 512 bytes
 
 
 
+---------------------------------------------------------------------------------------
+WARNING: GPT (GUID Partition Table) detected on '/dev/sdd'! The util fdisk doesn't support GPT. Use GNU Parted.
+
+http://blog.csdn.net/wengtf/article/details/40398959
 
 
 
+https://www.ibm.com/developerworks/cn/linux/l-cn-pclvm-rstr/    //LVM灾难修复
 
+错误解决，如何成功启动
+http://blog.csdn.net/hunanchenxingyu/article/details/9533517
+https://segmentfault.com/a/1190000000749515
 
-
-
+---------------------------------------------------------------------------------------
+lvremove /dev/vg_rcp/lv_home
+vgreduce --removemissing /dev/vg_rcp   //删除vg_rcp中未知的pv
+lvcreate -l 1024 -n lv_home vg_rcp     //创建lv_home
+mkfs -t ext4 /dev/vg_rcp/lv_home       //新建的lv需要格式化
