@@ -22,6 +22,28 @@ select count(*) from tableName PARTITION (P01);
 show index from policy_big;  //查看索引
 show keys from policy_big;   //查看索引
 
+select count(*) from policy_little where PolicyId="254123614"; //字符串匹配
+select count(distinct(Subscriber)) from policy_little where PolicyId="254123614";  //去重后的个数
+
+select * from tableA where id not in (select id from tableB); //not in
+
+INSERT INTO policy_little SELECT * FROM policy_big PARTITION(p%02d); //insert into
+
+INSERT INTO policy_user (SELECT * FROM policy_little PARTITION(p01) where PolicyId not in (select PolicyId from policy_user) or Subscriber not in (select Subscriber from policy_user));
+
+insert ignore into policy_user SELECT * FROM policy_little PARTITION(p01); //忽略主键或唯一索引重复
+
+delete from policy_user;//删除表中数据
+
+/*创建索引*/
+CREATE INDEX index_name ON table_name (column_list)
+CREATE UNIQUE INDEX index_name ON table_name (column_list)
+
+/*删除索引*/
+DROP INDEX index_name ON talbe_name
+ALTER TABLE table_name DROP INDEX index_name
+ALTER TABLE table_name DROP PRIMARY KEY
+
 
 <1>建表
 CREATE TABLE tablename(column_name_1 column_type_1 constraints,
@@ -62,6 +84,7 @@ SELECT * FROM tablename [WHERE CONDITION] [ORDER BY field1 [DESC|ASC], field2 [D
 ORDER BY后面可以跟多个不同的排序字段，并且每个字段可以有不同的排列顺序。（若第一个字段相同，再按第二个字段排序。）
 
 eg：select * from tablename order by field1，field2 desc;
+注：GROUP BY强加了ORDER BY，如果要避免需要显示使用ORDER BY NULL。
 
 4)LIMIT
 对于排序后的记录，如果只希望显示一部分，可以用LIMIT关键字。
@@ -106,62 +129,6 @@ COMMIT--提交
 3)所有的 DML 语句都是要显式提交的，也就是说要在执行完DML语句之后，执行COMMIT。
 而其他的诸如 DDL 语句的，都是隐式提交的。也就是说，在运行那些非DML语句后，数据库已经进行了隐式提交，
 例如 CREATE TABLE，在运行脚本后，表已经建好了，并不在需要你再进行显式提交。在提交事务（commit）之前可以用rollback回滚事务。
-
-二、SQL优化
-1、优化SQL语句的一般步骤
-<1>通过show status命令了解各种SQL的执行频率
-show [session|global] status  //提供服务器状态信息。session(默认值)表示当前连接的统计结果；global表示自数据库上次启动的统计结果。
-1)show status like 'Com_%';
-Com_**表示每个**语句执行的次数。eg：Com_select\Com_insert\Com_update\Com_delete
-
-<2>定位执行效率较低的SQL语句
-
-<3>通过EXPLAIN分析低效SQL的执行计划
-通过EXPLAIN或DESC命令获取MYSQL如何执行SELECT语句的信息，包括SELECT语句执行过程中表如何连接和连接的顺序。
-mysql> explain select * from policy_little where PolicyId=1;
-+----+-------------+---------------+------+----------------+----------------+---------+-------+------+-------+
-| id | select_type | table         | type | possible_keys  | key            | key_len | ref   | rows | Extra |
-+----+-------------+---------------+------+----------------+----------------+---------+-------+------+-------+
-|  1 | SIMPLE      | policy_little | ref  | index_policyId | index_policyId | 5       | const |    5 | NULL  |
-+----+-------------+---------------+------+----------------+----------------+---------+-------+------+-------+
-1 row in set (0.05 sec)
-
-1)select_type：
-SIMPLE:简单表，不使用表连接或子查询
-PRIMARY:主查询，即外层的查询
-UNION:UNION中的第二个或后面的查询语句
-SUBQUERY:子查询中的第一个SELECT
-
-2)type：连接类型。性能由好到差，如下：
-system:表中仅有一行，即常量表
-const:单表中最多有一个匹配行，如primary key或者unique index
-eq_ref:
-ref:
-ref_or_null:
-index_merge:
-unique_subquery:
-index_subquery:
-range:
-index:
-all:
-
-3)possible_keys
-查询时可能使用的索引
-
-4)key
-表示实际使用的索引
-
-5)key_len
-索引字段的长度
-
-6)rows
-扫描行的数量
-
-7)Extra
-执行情况的说明和描述
-
-
-
 
 二、表的存储引擎
 1、MySQL 5.0支持的存储引擎包括：MyISAM、InnoDB、BDB、MEMORY等。其中InnoDB和BDB提供事务安全表，其他存储引擎都是非事务安全表。
