@@ -35,6 +35,21 @@ insert ignore into policy_user SELECT * FROM policy_little PARTITION(p01); //ºöÂ
 
 delete from policy_user;//É¾³ý±íÖÐÊý¾Ý
 
+//²éÑ¯rdb_test¿â¿Õ¼äÕ¼ÓÃÇé¿ö
+SELECT CONCAT(TRUNCATE(SUM(data_length)/1024/1024,2),'MB') AS data_size,
+CONCAT(TRUNCATE(SUM(max_data_length)/1024/1024,2),'MB') AS max_data_size,
+CONCAT(TRUNCATE(SUM(data_free)/1024/1024,2),'MB') AS data_free,
+CONCAT(TRUNCATE(SUM(index_length)/1024/1024,2),'MB') AS index_size
+FROM information_schema.tables WHERE TABLE_SCHEMA = 'rdb_test';
+
+//²éÑ¯POLICY_4INDX_NOPRIM±í¿Õ¼äÕ¼ÓÃÇé¿ö
+SELECT CONCAT(TRUNCATE(SUM(data_length)/1024/1024,2),'MB') AS data_size,
+CONCAT(TRUNCATE(SUM(max_data_length)/1024/1024,2),'MB') AS max_data_size,
+CONCAT(TRUNCATE(SUM(data_free)/1024/1024,2),'MB') AS data_free,
+CONCAT(TRUNCATE(SUM(index_length)/1024/1024,2),'MB') AS index_size
+FROM information_schema.tables WHERE TABLE_NAME = 'POLICY_4INDX_NOPRIM';
+
+
 /*´´½¨Ë÷Òý*/
 CREATE INDEX index_name ON table_name (column_list)
 CREATE UNIQUE INDEX index_name ON table_name (column_list)
