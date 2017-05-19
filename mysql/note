@@ -311,7 +311,8 @@ http://blog.csdn.net/czw698/article/details/42294171   //亿级别MySQL使用
 <2>设为0.0.0.0表示所有IP都能访问。
 
 
-
+七、官网API
+https://dev.mysql.com/doc/refman/5.6/en/mysql-init.html
 
 
 

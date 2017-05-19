@@ -1,0 +1,40 @@
+一、相关函数
+1、VA_LIST  //可变参数
+http://blog.chinaunix.net/uid-20937170-id-5749018.html
+头文件：#include <stdarg.h>
+
+#ifdef _M_ALPHA
+typedef struct {
+char *a0; /* pointer to first homed integer argument */
+int offset; /* byte offset of next parameter */
+} va_list;
+#else
+typedef char * va_list;
+#endif
+
+_M_ALPHA是指DEC ALPHA（Alpha AXP）架构。所以一般情况下va_list所定义变量为字符指针。
+
+2、vsnprintf  //将可变参数格式化输出到一个字符数组。
+<1>头文件
+#include <stdarg.h>
+<2>函数声明
+int _vsnprintf(char* str, size_t size, const char* format, va_list ap);
+<3>参数：
+char *str [out],把生成的格式化的字符串存放在这里。
+size_t size [in], str可接受的最大字符数[1]  (非字节数，UNICODE一个字符两个字节),防止产生数组越界。
+const char *format [in], 指定输出格式的字符串，它决定了你需要提供的可变参数的类型、个数和顺序。
+va_list ap [in], va_list变量. va:variable-argument:可变参数。
+<4>备注
+linux环境下是:vsnprintf，VC6环境下是:_vsnprintf。
+
+3、printf、sprintf对齐
+%-20s //左对齐，若实际小于20位，按实际输出
+%+20d //右对齐
+
+
+4、gettimeofday、localtime
+头文件/usr/include/sys/time.h
+
+5、basename  //返回路径中的文件名部分
+头文件：#include <libgen.h>   
+函数声明：char *basename(char *path);
