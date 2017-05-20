@@ -24,3 +24,8 @@ socket(socket_family, socket_type, protocol=0)
 二、套接字对象(内置)方法
 
 三、创建TCP服务器
+http://blog.csdn.net/chuanchuan608/article/details/17915959  //例子有误
+
+四、创建UDP服务器
+
+2.5 SocketServer模块
