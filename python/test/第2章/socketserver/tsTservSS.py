@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from SocketServer import (TCPServer as TCP, StreamRequestHandler as SRH)
+from socketserver import (TCPServer as TCP, StreamRequestHandler as SRH)
 from time import ctime
 
 HOST = ''
@@ -10,7 +10,7 @@ ADDR = (HOST, PORT)
 class MyRequestHandler(SRH):
     def handle(self):
         print("...connected from:%s", self.client_address)
-        self.wfile.write('[%s] %s' % (ctime(), self.rfile.readline()))
+        self.wfile.write(('[%s] %s' % (ctime(), self.rfile.readline())).encode())
 
 tcpServ = TCP(ADDR, MyRequestHandler)
 print("waiting for connection...")
