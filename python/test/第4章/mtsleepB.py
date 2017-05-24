@@ -3,7 +3,7 @@
 import thread
 from time import sleep,ctime
 
-loops =  [4,2]
+loops = [4,2]
 
 def loop(nloop,nsec,lock):
     print 'start loop', nloop, 'at:', ctime()

@@ -262,3 +262,12 @@ $ sudo systemctl restart httpd.service
 $ sudo systemctl daemon-reload
 # 重启相关服务
 $ sudo systemctl restart foobar
+
+12、关闭CPU超频
+进入BIOS，选择设置中的 Load Default optimal（读取默认设置），确认后退出。
+
+13、关闭超线程
+进入BIOS，选择设置中的 Hyper-Threading Technology 选项，将其设置为[Disabied]，确认后退出。
+Advanced -> Intel RC Group -> Processor Configuration -> Hyper-Threading[ALL]
+
+

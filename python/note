@@ -2,6 +2,26 @@
 https://github.com/jobbole/awesome-python-cn  //ÖĞÎÄ
 https://github.com/vinta/awesome-python       //Ó¢ÎÄ
 
+----------------------------------------------------------------
+python3.6 ±àÒë°²×° https://my.oschina.net/tasker/blog/831092
+<1>ÏÂÔØ  https://www.python.org/downloads/release/python-360/
+<2>cd /usr/local/src
+(wget https://www.python.org/ftp/python/3.6.0/Python-3.6.0.tgz)
+1)tar -zxvf /usr/local/src/Python-3.6.0.tgz && cd Python-3.6.0
+
+2)mkdir /usr/local/python3
+./configure --prefix=/usr/local/python3 --with-thread
+make && make altinstall  
+//ÕâÀïÊ¹ÓÃmake altinstall°²×°ÔÚ/usr/local/python3/binÄ¿Â¼ÏÂ£¬Èç¹ûÊ¹ÓÃmake install£¬½«»á°²×°ÔÚ/usr/bin/Ä¿Â¼ÖĞ¡£
+
+3)# ¹Ø¼üÒ»²½£¬½¨Á¢Á´½Ó 
+ln -s /usr/local/python3/bin/python3.6 /usr/bin/python3          # ¿ÉÖ±½ÓÊ¹ÓÃ "python3"
+ln -s /usr/local/python3/bin/pip3.6  /usr/bin/pip3               # ¿ÉÖ±½ÓÊ¹ÓÃ "pip3"
+
+4)# ×îºó²âÊÔÏÂ 
+python3
+pip3
+----------------------------------------------------------------
 1¡¢#!/usr/bin/Python Óë #!/usr/bin/env python
 ½Å±¾ÓïÑÔµÄµÚÒ»ĞĞ£¬Ä¿µÄ¾ÍÊÇÖ¸³ö£¬ÎÄ¼şÖĞµÄ´úÂëÓÃÊ²Ã´¿ÉÖ´ĞĞ³ÌĞòÈ¥Ö´ĞĞ¡£
 
@@ -49,5 +69,8 @@ passÒ²³£ÓÃÓÚÎª¸´ºÏÓï¾ä±àĞ´Ò»¸ö¿ÕµÄÖ÷Ìå£¬±ÈÈçËµÏëÒ»¸öwhileÓï¾äµÄÎŞÏŞÑ­»·£¬Ã¿´Îµü´
 <3>passÓï¾äÓÃ·¨×Ü½á:
 ¿ÕÓï¾ä£¬Ê²Ã´Ò²²»×ö
 ÔÚÌØ±ğµÄÊ±ºòÓÃÀ´±£Ö¤¸ñÊ½»òÊÇÓïÒåµÄÍêÕûĞÔ
+
+4¡¢try...except
+http://www.cnblogs.com/Lival/p/6203111.html
 
 

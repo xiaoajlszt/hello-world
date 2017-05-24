@@ -22,3 +22,5 @@ http://www.linuxidc.com/Linux/2015-03/114942.htm  //进入救援模式
 (u盘救援选择hard disk；由于使用了lvm，任意选择一个系统所在的分区，跳过/mnt/sysimage挂载，之后进入shell再手动mount)
 http://blog.csdn.net/windowsxpwyd/article/details/6579686  //救援模式下需要手动挂载lv
 http://tonychiu.blog.51cto.com/656605/769934/
+
+----------------------------------------------------------------------------------------

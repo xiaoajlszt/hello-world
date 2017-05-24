@@ -743,3 +743,60 @@ Disk /dev/vda: 85.9 GB, 85899345920 bytes, 167772160 sectors
 Units = sectors of 1 * 512 = 512 bytes
 Sector size (logical/physical): 512 bytes / 512 bytes
 I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+-------------------------------------------------------------------------------------------------------
+一、新建vg和lv  http://www.111cn.net/sys/linux/115210.htm
+0、显示
+# lvs //查看LV列表和基础信息
+# lvdisplay //查看LV详细信息
+
+# pvs //查看LV列表和基础信息
+# pvdisplay //查看LV详细信息
+
+1、使用三块 8 GB 的磁盘（/dev/sdb、/dev/sdc 和 /dev/sdd）分别创建三个物理卷。
+既可以直接在整个设备上创建 PV，也可以先分区在创建。
+在这里我们选择第一种方式，如果你决定使用第二种，要确保每个分区的类型都是 8e。
+# pvcreate /dev/sdb /dev/sdc /dev/sdd
+
+2、vgcreate
+# vgcreate vg00 /dev/sdb /dev/sdc  //创建vg00卷组，且包含sdb和sdc磁盘空间，后续可以增加
+
+3、lvcreate
+参数 -n 用于为 LV 指定名称，而 -L 用于设定固定的大小，还有 -l （小写的 L）在 VG 的预留空间中用于指定百分比大小的空间。
+# lvcreate -n vol_projects -L 10G vg00
+# lvcreate -n vol_backups -l 100%FREE vg00
+当谈到创建逻辑卷，空间的分配必须考虑到当下和以后的需求。根据每个逻辑卷的用途来命名是一个好的做法。
+
+4、在使用每个逻辑卷之前，需要先在上面创建文件系统。
+这里我们拿ext4来做举例，因为对于每个LV的大小，ext4既可以增大又可以减小（相对的xfs就只允许增大）：
+# mkfs.ext4 /dev/vg00/vol_projects
+# mkfs.ext4 /dev/vg00/vol_backups
+
+5、调整逻辑卷
+vol_backups 中的空间即将用完，而 vol_projects 中还有富余的空间。
+由于 LVM 的特性，我们可以轻易的减小后者的大小（比方说 2.5 GB），
+并将其分配给前者，与此同时调整每个文件系统的大小。
+# lvreduce -L -2.5G -r /dev/vg00/vol_projects   //-r:resizefs
+# lvextend -l +100%FREE -r /dev/vg00/vol_backups
+在调整逻辑卷的时候，其中包含的减号 (-) 或加号 (+) 是十分重要的。否则 LV 将会被设置成指定的大小，而非调整指定大小。
+
+6、扩充卷组(如果需要的话)
+# vgextend vg00 /dev/sdd
+
+7、在启动和需求时挂载逻辑卷
+<1>我们需要找出它的 UUID（用于识别一个格式化存储设备的唯一且不变的属性）。
+要做到这点，可使用 blkid 加每个设备的路径来实现：
+# blkid /dev/vg00/vol_projects
+# blkid /dev/vg00/vol_backups
+
+<2>为每个lv创建挂载点
+# mkdir /home/projects
+# mkdir /home/backups
+
+<3>在/etc/fstab中加入相应的条目
+UUID=b85df913-580f-461c-844f-546d8cde4646 /home/projects  ext4  defaults 0 0
+UUID=e1929239-5087-44b1-9396-53e09db6eb9e /home/backups	  ext4  defaults 0 0
+
+<4>挂载LV
+mount -a //自动挂载 /etc/fstab 里面的内容
+mount | grep home  //查看
