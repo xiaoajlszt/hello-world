@@ -753,6 +753,8 @@ I/O size (minimum/optimal): 512 bytes / 512 bytes
 # pvs //查看LV列表和基础信息
 # pvdisplay //查看LV详细信息
 
+# vgdisplay -v
+
 1、使用三块 8 GB 的磁盘（/dev/sdb、/dev/sdc 和 /dev/sdd）分别创建三个物理卷。
 既可以直接在整个设备上创建 PV，也可以先分区在创建。
 在这里我们选择第一种方式，如果你决定使用第二种，要确保每个分区的类型都是 8e。
@@ -782,6 +784,8 @@ vol_backups 中的空间即将用完，而 vol_projects 中还有富余的空间。
 
 6、扩充卷组(如果需要的话)
 # vgextend vg00 /dev/sdd
+
+# vgreduce vg00 /dev/sdd  //从vg中移除sdd
 
 7、在启动和需求时挂载逻辑卷
 <1>我们需要找出它的 UUID（用于识别一个格式化存储设备的唯一且不变的属性）。

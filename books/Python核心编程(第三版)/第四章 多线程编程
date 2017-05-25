@@ -129,6 +129,50 @@ stack_size(size=0)	返回新创建线程的栈大小；或为后续创建的线程设定栈的大小为size
 
 4.6 单线程和多线程执行对比
 
+4.7 多线程实践
+1、图书排名示例
+<1>_main()返回之后(脚本最后一行)，或者使用atexit.register()来注册一个退出函数。
+
+<2>移植到Python3
+将python安装包下的Tools/Scripts下面的2to3拷贝到需要转换文件目录中。
+2to3 foo.py		//只显示原始2.x脚本与生成的3.x脚本之间的区别
+2to3 -w foo.py 	//-w标志让2to3工具使用新生成的3.x脚本重写原始脚本，并将2.x脚本重命名为foo.py.bak
+
+2、同步原语
+锁/互斥、信号量
+
+竞争条件
+https://en.wikipedia.org/wiki/Race_condition
+
+线程同步
+http://en.wikipedia.org/wiki/Critical_section
+
+进程同步
+http://en.wikipedia.org/wiki/Synchronization_(computer_ science)
+
+3、锁
+<1>锁有两种状态：锁定和未锁定。而且它也只支持两个函数：获得锁和释放锁。
+1)当多线程争夺锁时，允许第一个获得锁的线程进入临界区，并执行代码。
+之后达到的线程将被阻塞，直到第一个线程执行结束，退出临界区，并释放锁。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

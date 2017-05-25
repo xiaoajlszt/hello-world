@@ -1,0 +1,14 @@
+re(regex)
+
+一、re模块函数
+compile(pattern, flags=0) //使用任何可选的标记来编译正则表达式的模型，然后返回一个正则表达式对象
+
+二、re模块函数和正则表达式对象的方法
+1、match(pattern，string，flags=0) 
+尝试使用带有可选的标记的正则表达式的模式来匹配字符串。如果匹配成功，就返回匹配对象；如果失败，就返回None。
+
+2、search(pattern，string，flags=0) 
+使用可选标记搜索字符串中第一次出现的正则表达式模式。如果匹配成功，则返回匹配对象；如果失败，则返回None。
+
+3、findall(pattern，string [, flags])
+查找字符串中所有（非重复）出现的正则表达式模式，并返回一个匹配列表。
