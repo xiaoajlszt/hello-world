@@ -76,4 +76,49 @@ http://www.cnblogs.com/Lival/p/6203111.html
 5、_showRanking()
 函数名最前面的单下划线表示这是一个特殊函数，只能被本模块的代码使用，不能被其他使用本文件作为库或者工具模块的应用导入。
 
+6、random模块
+<1>randrange() //返回指定递增基数集合中的一个随机数，基数缺省值为1
+random.randrange ([start,] stop [,step])
+参数
+start -- 指定范围内的开始值，包含在范围内。
+stop -- 指定范围内的结束值，不包含在范围内。
+step -- 指定递增基数。
+返回值
+从给定的范围返回随机项。
 
+<2>randint()  //Return random integer in range [a, b], including both end points
+def randint(self, a, b):
+	return self.randrange(a, b+1)
+
+random.randint(12, 20) #生成的随机数n: 12 <= n <= 20 
+random.randint(20, 20) #结果永远是20 
+random.randint(20, 10) #该语句是错误的
+
+7、range和xrange
+<1>range
+函数说明：range([start,] stop[, step])，根据start与stop指定的范围以及step设定的步长，生成一个列表。 
+>>> range(10)
+[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+>>> range(2,10)
+[2, 3, 4, 5, 6, 7, 8, 9]
+>>> range(2,10,2)
+[2, 4, 6, 8]
+
+<2>xrange
+函数说明：和range的用法完全相同，但是返回的是一个生成器。 
+
+但是要生成很大的数字序列的时候，用xrange会比range性能优很多，因为不需要一上来就开辟一块很大的内存空间，
+这两个基本上都是在循环的时候用。
+
+再循环中尽量使用xrange，这样性能可以得到提高，除非你要返回一个列表。
+
+注：python 3.x中将xrange和range合并，合并后的range与之前的xrange相同。
+
+8、print '',这里的逗号，可以让后面要输出的内容不换行。会用空格隔开。
+print 'Refilling candy...',
+try:
+	candytray.release()
+except ValueError:
+	print 'full, skipping'
+else:
+	print 'OK'
