@@ -1,3 +1,78 @@
+安装：
+http://blog.csdn.net/superchanon/article/details/8546254/     //两种安装总结
+http://www.cnblogs.com/xxoome/p/5864912.html				  //通用安装总结的很好，可能出现的问题总结的很好
+
+注意点：
+0、RPM安装需要  https://dev.mysql.com/downloads/mysql/
+mysql-community-server-5.7.18-1.el7.x86_64.rpm		//RPM Package, MySQL Server
+mysql-community-client-5.7.18-1.el7.x86_64.rpm		//RPM Package, Client Utilities
+mysql-community-common-5.7.18-1.el7.x86_64.rpm		//RPM Package, MySQL Configuration
+mysql-community-libs-compat-5.7.18-1.el7.x86_64.rpm	//RPM Package, Compatibility Libraries
+
+RPM安装可能需要
+mysql-community-libs-5.7.18-1.el7.x86_64.rpm		//RPM Package, Shared Libraries
+mysql-community-devel-5.7.18-1.el7.x86_64.rpm		//RPM Package, Development Libraries
+
+通用安装需要
+mysql-5.7.18-linux-glibc2.5-x86_64.tar.gz
+
+1、centos需要先卸载mariadb才能安装mysql
+http://blog.csdn.net/xizaihui/article/details/53041603
+
+2、安装之后mysql起不来，查看/var/log/mysqld.log，发现：
+[ERROR] InnoDB: The innodb_system data file 'ibdata1' must be writable
+可知需要设置权限： chmod -R 777 /var/lib/mysql
+
+3、rpm方式安装的路径：
+/usr/bin				Client programs and scripts
+/usr/sbin				The mysqld server
+/var/lib/mysql			Log files, databases
+/usr/share/info			Manual in Info format
+/usr/share/man			Unix manual pages
+/usr/include/mysql		Include (header) files
+/usr/lib/mysql			Libraries
+/usr/share/mysql		Miscellaneous support files, 
+						including error messages, character set files, sample configuration files, SQL for database installation
+/usr/share/sql-bench	Benchmarks
+
+4、mysql第一次登陆
+<1>使用随机密码
+随机密码在当前用户根目录下的文件.mysql_secret中，登陆后，通过SET PASSWORD = PASSWORD('new password');修改密码。
+//但是我使用该文件中的密码依旧登陆失败。
+
+<2>修改配置文件/etc/my.cnf   http://www.linuxidc.com/Linux/2016-10/136522.htm
+1)在mysqld之后添加skip-grant-tables;
+2)重启mysql;	service  mysqld  restart
+3)直接登陆mysql而不需要密码;	mysql -u root  (直接点击回车)
+4)mysql> update mysql.user set authentication_string=password('root123') where user='root';
+5)flush privileges;		刷新MySQL的系统权限相关表
+6)退出mysql，去掉my.cnf中的skip-grant-tables;
+7)重启mysql;
+8)登陆mysql，执行任何命令会报错
+ERROR 1820 (HY000): You must reset your password using ALTER USER statement before executing this statement.
+执行：SET PASSWORD = PASSWORD('root123');
+
+若出现出现：ERROR 1819 (HY000): Your password does not satisfy the current policy requirements
+需要执行两个参数，取消mysql默认的密码强度：
+set global validate_password_policy=0; 
+set global validate_password_mixed_case_count=2;
+之后再执行 SET PASSWORD = PASSWORD('root123');
+
+5、python2.7进入命令行，执行import MySQLdb，报错：
+Traceback (most recent call last):
+  File "<stdin>", line 1, in <module>
+ModuleNotFoundError: No module named 'MySQLdb'
+
+需要安装 MySQL-python.x86_64。
+
+6、安装 MySQL-python.x86_64 报错：
+有缺少的需求 libmysqlclient.so.18()(64bit)
+
+需要安装 mysql-community-libs-compat-5.7.18-1.el7.x86_64.rpm
+
+
+
+-----------------------------------------------------------------------------------
 一、基本命令
 1、DDL(Data Definition Language)语句：
 数据定义语言，定义不同的数据段、数据库、表、列、索引等数据库对象的定义。

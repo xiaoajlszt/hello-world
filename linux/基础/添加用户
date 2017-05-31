@@ -36,3 +36,20 @@ adduser和useradd
 <4>从/etc/SKEL目录下拷贝文件到家目录，完成初始化
 <5>建立新用户的密码
 <6>如果其存在的话，还会执行一个脚本。
+
+5、安装Mysql时
+groupadd mysql
+useradd -r -g mysql -s /bin/false mysql 
+注：Because the user is required only for ownership purposes, not login purposes, 
+the useradd command uses the -r and -s /bin/false options to create a user that does not have login permissions to your server host. 
+Omit these options if your useradd does not support them.
+ -r (--system)创建一个系统账户。
+	useradd 不会为这种用户创建主目录，无论 /etc/login.defs (CREATE_HOME) 中是的默认设置是怎样。
+	如果想为要创建的系统账户创建主目录，需要指定 -m 选项。
+ -g (--gid GROUP)用户初始登陆组的组名或号码。组名必须已经存在。组号码必须指代已经存在的组。
+	如果没有指定， useradd 的行为将依赖于 /etc/login.defs 文件中的 USERGROUPS_ENAB 参数。
+	如果此参数设置为了 yes (或者在命令行上指定了-U/--user-group)，将会为用户创建一个组，组名和登录名相同。
+	如果选项设置为了 no (或者在命令行上指定了 -N/--no-user-group)，useradd会把新用户的主组设置为 /etc/default/useradd 中 GROUP 变量指定的值，
+	再或者默认是 100。
+ -s (--shell SHELL)用户的登录 shell 名。
+	默认为留空，让系统根据 /etc/default/useradd 中的 SHELL 变量选择默认的登录 shell，默认为空字符串。
