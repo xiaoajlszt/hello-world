@@ -268,11 +268,15 @@ http://blog.csdn.net/zhaoyw2008/article/details/8012757
   set t_Co=256
   set background=dark
   colorscheme molokai
+背景颜色和代码补全插件颜色重复时，可以增加上述配置。
 
 18、winmanager
 let g:winManagerWindowLayout = "FileExplorer,BufExplorer"
 let g:winManagerWidth = 20
 nmap <silent> <F7> :WMToggle<cr>
+
+19、pydiction
+python语法补全
 
 20、YouCompleteMe(代码补全神器)  https://github.com/Valloric/YouCompleteMe#fedora-linux-x64
 <1>下载  

@@ -1,0 +1,68 @@
+1、概念
+一边循环一边计算的机制称为生成器(generator)。不必创建完整的list，从而节省大量的空间。
+
+2、创建生成器
+<1>只要把列表生成式的[]改为()
+>>> L = [x * x for x in range(10)]
+>>> L
+[0, 1, 4, 9, 16, 25, 36, 49, 64, 81]
+>>> g = (x * x for x in range(10))
+>>> g
+<generator object <genexpr> at 0x1022ef630>
+
+<2>如果一个函数定义中包含yield关键字，那么这个函数就不再是一个普通函数，而是一个generator。
+def fib(max):
+    n, a, b = 0, 0, 1
+    while n < max:
+        yield b
+        a, b = b, a + b
+        n = n + 1
+    return 'done'
+	
+>>> f = fib(6)
+>>> f
+<generator object fib at 0x104feaaa0>
+
+generator函数每次调用next()时执行，遇到yield语句返回，再次执行时从上次返回的yield语句处继续执行。
+
+但是用for循环调用generator时，发现拿不到generator的return语句的返回值。
+>>> for n in fib(6):
+...     print(n)
+
+如果想要拿到返回值，必须捕获StopIteration错误，返回值包含在StopIteration的value中：
+>>> g = fib(6)
+>>> while True:
+...     try:
+...         x = next(g)
+...         print('g:', x)
+...     except StopIteration as e:
+...         print('Generator return value:', e.value)
+...         break
+...
+g: 1
+g: 1
+g: 2
+g: 3
+g: 5
+g: 8
+Generator return value: done
+
+3、获得元素值
+<1>可以通过next()函数获得generator的下一个返回值。
+generator保存的是算法，每次调用next(g)，就计算出g的下一个元素值，直到计算到最后一个元素。没有更多元素时，抛出StopIteration的错误。
+
+<2>使用for循环，因为generator也是可迭代对象。同时不需要关心StopIteration的错误。
+>>> g = (x * x for x in range(10))
+>>> for n in g:
+...     print(n)
+
+
+
+
+
+
+
+
+
+
+

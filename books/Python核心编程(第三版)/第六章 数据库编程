@@ -77,7 +77,38 @@ execute(op[,args])		执行数据库查询或命令
 <2>如果不希望有太多的交互操作，比如希望少写一些SQL语句或者尽可能少地参与数据库管理的细节，可以考虑ORM。
 
 7、使用数据适配器的示例
+cxn = MySQLdb.connect(user='root',passwd='root123') 
+cxn.query('CREATE DATABASE test')
+...
+cxn.commit()		//commit()方法是可选的，因为MySQL默认开启了自动提交。
+cxn.close()
 
+8、数据库适配器示例应用
+<1>移植到Python3
+1)Python2和Python3最大的一个区别是print。2中它是一条语句；3中它是一个内置函数。
+作为两者的替代，可以使用distutils.log.warn()函数。该函数在2和3中是一致的，我们将其重命名为printf()。
+
+2)2中的内置函数raw_input()，在3中变更为input()。
+比较麻烦的是2中也有一个input()函数，但是因为存在安全风险被3移除了。
+我们将使用scanf()来调用该函数。
+
+3)异常的变化
+2： except Exception,instance
+3:	except Exception as instance
+
+4)基于C语言编写的主要MySQL-Python适配器(包名为MySQLdb)还没有移植到Python3中。
+我们需要另一个MySQL适配器，称为MySQL Connection/Python，其包名为mysql.connector。
+//需要pip3.6 install mysql-connector或者安装mysql-connector-python-2.1.6-1.el7.x86_64.rpm
+
+
+6.3 ORM
+如果你更愿意操纵Python对象而不是SQL查询，并且仍希望使用关系型数据库，那么你可能更倾向于使用ORM。
+
+1、考虑对象，而不是SQL
+将SQL语句进行了抽象化处理，将其实现为Python中的对象。
+数据库表被转化为Python类，其中数据列作为属性，而数据库操作则会作为方法。
+
+2、Python和ORM
 
 
 

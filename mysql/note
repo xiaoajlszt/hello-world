@@ -12,6 +12,8 @@ mysql-community-libs-compat-5.7.18-1.el7.x86_64.rpm	//RPM Package, Compatibility
 RPM安装可能需要
 mysql-community-libs-5.7.18-1.el7.x86_64.rpm		//RPM Package, Shared Libraries
 mysql-community-devel-5.7.18-1.el7.x86_64.rpm		//RPM Package, Development Libraries
+mysql-connector-python-2.1.6-1.el7.x86_64.rpm		//RPM Package, Python
+
 
 通用安装需要
 mysql-5.7.18-linux-glibc2.5-x86_64.tar.gz
