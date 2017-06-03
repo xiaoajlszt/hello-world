@@ -9,6 +9,10 @@ Python中，字符串、整数等都是不可变的，可以作为key。list是可变的，不能作为key。
 2、定义dict：
 d = {'Michael': 95, 'Bob': 75, 'Tracy': 85}
 
+>>> a = dict(name="xiaoming",age=12)
+>>> a
+{'name': 'xiaoming', 'age': 12}
+
 增加数据
 d['Adam'] = 67
 

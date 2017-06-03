@@ -77,7 +77,7 @@ UnicodeEncodeError: 'ascii' codec can't encode characters in position 0-1: ordin
 
 3、反之，从网络或磁盘中读取字节流，那么读到的数据就是bytes。
 要把bytes转变为str，就需要用decode()方法。
->>> b'ABC'.decode('ascii')
+>>> b'ABC'.decode('ascii')  //decode()的结果Unicode编码的字符串
 'ABC'
 >>> b'\xe4\xb8\xad\xe6\x96\x87'.decode('utf-8')
 '中文'
