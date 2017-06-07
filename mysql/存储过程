@@ -13,9 +13,6 @@ http://blog.csdn.net/liuxiao723846/article/details/42869999
 
 4、FOUND_ROWS()函数
 
-
-5、MYSQL中不支持表名，列名为变量。可以通过 PREPARE, EXECUTE 来执行事先拼接好的字符串中的SQL语句。
-
 6、SQL STATE
 <1>02000为发生下述异常之一：
  - SELECT INTO 语句或 INSERT 语句的子查询的结果为空表；
@@ -28,6 +25,41 @@ http://blog.csdn.net/liuxiao723846/article/details/42869999
 DECLARE var1  INT DEFAULT 0;  主要用在存储过程中，或者是给存储传参数中。
 
 8、union
+
+9、prepare
+http://maoyifa100.iteye.com/blog/1900305
+MYSQL中不支持表名，列名为变量。可以通过 PREPARE, EXECUTE 来执行事先拼接好的字符串中的SQL语句。
+<1>语法
+PREPARE statement_name FROM sql_text /*定义*/   
+EXECUTE statement_name [USING variable [,variable...]] /*执行预处理语句*/   
+DEALLOCATE PREPARE statement_name /*删除定义*/   
+
+<2>例子
+mysql> SET @a=1;  
+mysql> PREPARE STMT FROM "SELECT * FROM tbl LIMIT ?";   
+mysql> EXECUTE STMT USING @a;   
+mysql> SET @skip=1; SET @numrows=5;   
+mysql> PREPARE STMT FROM "SELECT * FROM tbl LIMIT ?, ?";   
+mysql> EXECUTE STMT USING @skip, @numrows;
+
+<3>注意点
+A： PREPARE stmt_name FROM preparable_stmt;预定义一个语句，并将它赋给 stmt_name ，stmt_name 是不区分大小写的。
+B： 即使 preparable_stmt 语句中的 ? 所代表的是一个字符串，你也不需要将 ? 用引号包含起来。 
+C： 如果新的 PREPARE 语句使用了一个已存在的 stmt_name ，那么原有的将被立即释放！ 即使这个新的 PREPARE 语句因为错误而不能被正确执行。
+D： PREPARE stmt_name 的作用域是当前客户端连接会话可见。 
+E： 要释放一个预定义语句的资源，可以使用 DEALLOCATE PREPARE 句法。 
+F： EXECUTE stmt_name 句法中，如果 stmt_name 不存在，将会引发一个错误。 
+G： 如果在终止客户端连接会话时，没有显式地调用 DEALLOCATE PREPARE 句法释放资源，服务器端会自己动释放它。 
+H： 在预定义语句中，CREATE TABLE, DELETE, DO, INSERT, REPLACE, SELECT, SET, UPDATE, 和大部分的 SHOW 句法被支持。
+I： PREPARE 语句不可以用于存储过程，自定义函数！但从 MySQL 5.0.13 开始，它可以被用于存储过程，仍不支持在函数中使用！
+
+<4>其他
+了解了PREPARE的用法，再用变量做表名就很容易了。
+不过在实际操作过程中还发现其他一些问题，比如变量定义，declare变量和set @var=value变量的用法以及参数传入的变量。 
+
+测试发现，set @var=value这样定义的变量直接写在字符串中就会被当作变量转换，
+declare的变量和参数传入的变量则必须用CONCAT来连接。
+具体的原理没有研究。 
 
 二、在Navicat中调试
 1、默认端口 5258
