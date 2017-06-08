@@ -265,18 +265,22 @@ http://blog.csdn.net/zhaoyw2008/article/details/8012757
 <4> 在新竖直tab中打开  ,bv
 
 17、molokai插件  //用于VIM的配色方案
-  set t_Co=256
+  set t_Co=256  
   set background=dark
   colorscheme molokai
 背景颜色和代码补全插件颜色重复时，可以增加上述配置。
+
+注：set t_Co=256 //t_Co即terminal Color之意
+该语句可以使vim开启256色，开启256颜色之后，colorschema在vim里好看了许多，而且与gvim显示的差别不大。
 
 18、winmanager
 let g:winManagerWindowLayout = "FileExplorer,BufExplorer"
 let g:winManagerWidth = 20
 nmap <silent> <F7> :WMToggle<cr>
 
-19、pydiction
-python语法补全
+19、pydiction //python语法补全
+let g:pydiction_location = '~/.vim/bundle/pydiction/complete-dict'
+let g:pydiction_menu_height = 20
 
 20、YouCompleteMe(代码补全神器)  https://github.com/Valloric/YouCompleteMe#fedora-linux-x64
 <1>下载  

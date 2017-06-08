@@ -187,8 +187,7 @@ for n in fib(6):
 	print(n)
 但是使用for循环调用generator时，拿不到generator中return语句的返回值。
 
-<3>要想拿到返回值，必须捕获StopIteration错误，返回值包含在StopIteration的value中
-
+<3>要想拿到返回值，必须捕获StopIteration错误，返回值包含在StopIteration的value中。
 
 五、迭代器(Iterator)
 1、可以直接作用于for循环的数据类型：
@@ -212,7 +211,6 @@ True
 可以把这个数据流看做是一个有序序列，但我们却不能提前知道序列的长度，只能不断通过next()函数实现按需计算下一个数据，
 所以Iterator的计算是惰性的，只有在需要返回下一个数据时它才会计算。
 Iterator甚至可以表示一个无限大的数据流，例如全体自然数。而使用list是永远不可能存储全体自然数的。
-
 
 
 
