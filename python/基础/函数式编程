@@ -129,20 +129,86 @@ def f(x):
 >>> now.__name__
 'now'
 
-如果要加强now()函数的功能，但又不希望修改函数的定义，这种在代码运行期间动态增加功能的方式称为"装饰器"(Decorator)。
+2、如果要加强now()函数的功能，但又不希望修改函数的定义，这种在代码运行期间动态增加功能的方式称为"装饰器"(Decorator)。
+本质上，decorator就是一个返回函数的高阶函数。(接收函数作为参数，并返回函数)
 
+def log(func):
+    def wrapper(*args, **kw):
+        print('call %s():' % func.__name__)
+        return func(*args, **kw)
+    return wrapper
 
+@log
+def now():
+    print('2015-03-25')
+	
+借助@语法，将decorator置于函数定义处。
+调用now()，不仅会运行now本身，还会在now函数前打印日志：
+>>> now()
+call now():
+2015-3-25
 
+注：把@log放到now()函数的定义出，相当于执行了 now = log(now)。
+	wrapper()函数的参数定义是(*agrs,**kw)，因此，wrapper()函数可以接收任意参数的调用。
 
+3、如果decorator本身需要传入参数，就需要编写一个返回decorator的高阶函数。
+def log(text):
+    def decorator(func):
+        def wrapper(*args, **kw):
+            print('%s %s():' % (text, func.__name__))
+            return func(*args, **kw)
+        return wrapper
+    return decorator	
 
+@log('execute')
+def now():
+    print('2015-3-25')
+	
+执行结果：
+>>> now()
+execute now():
+2015-3-25
 
+和两层嵌套的decorator相比，3层嵌套等价于：
+now = log('execute')(now) //首先执行log('execute')，再调用返回的decorator参数是now。最终返回wrapper函数。
 
+4、上述两种使用方式，导致decorator装饰后的函数，它们的属性：
+>>> now.__name__
+'wrapper'
 
+这是因为wrapper()函数名就是wrapper，所以还需要把原始函数的__name__属性复制到wrapper函数中。否则，有些依赖函数签名的代码执行就会报错。
+可以使用Python内置的functools.wraps实现。在定义wrapper()的前面加上@functools.wraps(func)即可。
+import functools
+def log(func):
+    @functools.wraps(func)
+    def wrapper(*args, **kw):
+        print('call %s():' % func.__name__)
+        return func(*args, **kw)
+    return wrapper
 
+六、偏函数(Partial function)
+1、functools.partial的作用是，把一个函数的某些参数固定住(也就是设置默认值)，返回一个新的函数。
+<1>int()函数可以把字符串转换为整数，默认按十进制转换。
+>>> int('12345')
+12345
 
+<2>int()函数还通过额外的base参数，如果传入base就可以做N进制转换。
+>>> int('12345', base=8)
+5349
+>>> int('12345', 16)
+74565
 
+<3>偏函数实现int2函数
+>>> import functools
+>>> int2 = functools.partial(int, base=2)
+>>> int2('1000000')
+64
+>>> int2('1010101')
+85
 
-
+注意到int2函数，仅仅是把base参数重新设定默认值为2，但也可以在函数调用时传入其他值：
+>>> int2('1000000', base=10)
+1000000
 
 
 

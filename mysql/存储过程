@@ -13,22 +13,42 @@ http://blog.csdn.net/liuxiao723846/article/details/42869999
 
 4、FOUND_ROWS()函数
 
-6、SQL STATE
+5、SQL STATE
 <1>02000为发生下述异常之一：
  - SELECT INTO 语句或 INSERT 语句的子查询的结果为空表；
  - 在搜索的 UPDATE 或 DELETE 语句内标识的行数为零；
  - 在 FETCH 语句中引用的游标位置处于结果表最后一行之后。
 
-7、declare 和 set 定义变量的区别
+6、declare 和 set 定义变量的区别
 <1>使用set或select直接赋值，变量名以@开头，可以在一个会话的任何地方声明，作用域是整个会话，称为会话变量。
 <2>以 DECLARE 关键字声明的变量，只能在存储过程中使用，称为存储过程变量，例如：
 DECLARE var1  INT DEFAULT 0;  主要用在存储过程中，或者是给存储传参数中。
 
-8、union
+7、union
+
+8、CONCAT
+mysql CONCAT(str1,str2,…)
+<1>concat函数有一个特点就是如果有一个值为NULL，就返回为NULL。
+
+<2>为此可以使用IFNULL判断字符串是否为NULL。
+ISNULL(check_expression,replacement_value)
+check_expression 可以是任何类型的。replacement_value必须与check_expresssion具有相同的类型。
+检查参数check_expression是否为NULL。如果check_expression为NULL，将返回replacement_value。
+
+注：空字符''不是NULL
 
 9、prepare
+MYSQL中不支持表名，列名为变量。可以通过 PREPARE, EXECUTE 执行事先拼接好的字符串中的SQL语句。
+
 http://maoyifa100.iteye.com/blog/1900305
-MYSQL中不支持表名，列名为变量。可以通过 PREPARE, EXECUTE 来执行事先拼接好的字符串中的SQL语句。
+http://www.cnblogs.com/xpyan/p/3975597.html //表名拼接时不能用policy_rcp_?这种形式，需要用CONCAT的方式拼接。(0609)
+SET @InsertData = CONCAT('insert into test (id,name) select t2.id,t2.name from test_',total,' t2 on duplicate key update name=t2.name');
+PREPARE stmt FROM @InsertData;  
+EXECUTE stmt; 
+SET @dropTable = CONCAT('DROP TABLE test_',total,';');
+PREPARE stmt1 FROM @dropTable;  
+EXECUTE stmt1; 
+
 <1>语法
 PREPARE statement_name FROM sql_text /*定义*/   
 EXECUTE statement_name [USING variable [,variable...]] /*执行预处理语句*/   
