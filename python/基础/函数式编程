@@ -210,6 +210,15 @@ def log(func):
 >>> int2('1000000', base=10)
 1000000
 
+2、创建偏函数，实际上可以接收函数对象、*args、**kw三个参数。
+<1>int2('1000000', base=10) 相当于
+kw = {'base':2}
+int('1000000',**kw)
+
+<2>max2 = functools.partial(max,10)
+实际上会把10作为*agrs的一部分加到左边，即max2(5,6,7)相当于
+args = (10,5,6,7)
+max(*args)
 
 
 

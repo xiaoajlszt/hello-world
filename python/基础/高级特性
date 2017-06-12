@@ -103,7 +103,7 @@ False
 
 3、与for循环一样引入多个变量
 >>> d = dict(x='A',y='B',z='C') 
->>> [k+'='+v for k,v in d.items()]
+>>> [k+'='+v for k,v in d.items()]  //+字符拼接
 ['x=A', 'y=B', 'z=C']
 
 

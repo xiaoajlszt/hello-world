@@ -23,11 +23,34 @@ c.close()
 二、asyncio
 asyncio是python3.4引入的标准库，直接内置了对异步IO的支持。
 
-1、asyncio的编程模型就是一个消息循环。
+1、asyncio实现hello world
+import asyncio
+
+@asyncio.coroutine
+def hello():
+    print("Hello world!")
+    # 异步调用asyncio.sleep(1):
+    r = yield from asyncio.sleep(1)
+    print("Hello again!")
+
+# 获取EventLoop:
+loop = asyncio.get_event_loop()
+# 执行coroutine
+loop.run_until_complete(hello())
+loop.close()
+
+<1>asyncio的编程模型就是一个消息循环。
 我们从asyncio模块中直接获取一个EventLoop的引用，然后把需要执行的协程扔到EventLoop中执行，就实现了异步IO。
 
-
-
+<2>yield from语法可以调用另一个generator。asyncio.sleep()也是一个coroutine。
+------------------------------------------------------------------------------------------
+补充：
+1、yield from  http://blog.csdn.net/u010161379/article/details/51645264
+允许一个generator将其部分操作委派给另一个generator。
+使生成器能够容易地分为多个拥有send和throw方法的子生成器，就像一个大函数分为多个子函数。
+<1>虽然yield from设计的目的是向子生成器委派操作任务，但yield from可以向任意的可迭代对象委派操作。
+可迭代对象(子生成器)产生的值直接返给调用者。
+------------------------------------------------------------------------------------------
 
 
 
