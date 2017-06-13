@@ -162,16 +162,22 @@ def application(environ, start_response):
 environ：一个包含所有HTTP请求信息的dict对象
 start_response：一个发送HTTP响应的函数
 
+
+返回值:
+b'<h1>Hello, web!</h1>'将作为HTTP响应的Body发送给浏览器
+
 解释：
 Header只能发送一次，也就是只能调用一次start_response()函数。
 该函数接收两个参数，一个是HTTP响应码；另一个是list表示HTTP Header，每个Header用一个包含两个str的tuple表示。
 
+<2>有了WSGI，我们关心的就是如何从environ这个dict对象中获取HTTP的请求信息，然后构造HTML，再通过start_response()发送给Header，最后返回Body。
+application()函数由WSGI服务器来调用。
 
+4、wsgiref
+Python内置了wsgiref模块，它是用纯Python编写打WSGI服务器的参考实现。仅供开发和测试使用，不考虑任何运行效率。
 
-
-
-
-
+5、无论多么复杂的Web应用程序，入口都是WSGI处理函数。
+复杂的Web应用程序，光靠一个WSGI函数来处理还是太底层了，我们需要在WSGI之上再抽象出Web框架，进一步简化Web开发。
 
 
 
