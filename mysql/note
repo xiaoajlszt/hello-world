@@ -361,15 +361,7 @@ mysql> flush privileges;
 load csv file error! csv file name=NoticeFile20170401155049.csv. ret=1!
 Duplicate entry '150778720309359-2017-04-03 15:50:51-2541236063' for key 'index_subscriber_time_policy', errno=1062
 
-4、int
-<1>int类型占4个字节32位，默认是有符号的。无符号范围为0-4,294,967,295，有符号范围为-2147483648-2147483647。
-<2>修改为usigned：alter table tablename modify 字段名 int zerofill
-<3>int(40);只是表示显示40宽度（不足前面加0），与实际数据库存储该字段所用的空间无关。
-通常int为int(11)，无符号int为int(10)
-PolicyId               | int(10) unsigned zerofill | YES  | MUL | NULL    |       |
-UserGrade              | int(11)                   | YES  |     | NULL    |       |
-
-5、多线程
+4、多线程
 <1>MySQL允许多个线程同时导入数据，即多个线程同时insert，不会冲突。要给每个都线程建立连接。
 <2>mysql中有一种机制是表锁定和行锁定，为什么要出现这种机制，是为了保证数据的完整性。
 如果有二个sql都要修改同一张表的同一条数据，这个时候怎么办呢，是不是二个sql都可以同时修改这条数据呢？

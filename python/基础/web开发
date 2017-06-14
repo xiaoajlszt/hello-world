@@ -180,21 +180,50 @@ PythonÄÚÖÃÁËwsgirefÄ£¿é£¬ËüÊÇÓÃ´¿Python±àÐ´´òWSGI·þÎñÆ÷µÄ²Î¿¼ÊµÏÖ¡£½ö¹©¿ª·¢ºÍ²âÊ
 ¸´ÔÓµÄWebÓ¦ÓÃ³ÌÐò£¬¹â¿¿Ò»¸öWSGIº¯ÊýÀ´´¦Àí»¹ÊÇÌ«µ×²ãÁË£¬ÎÒÃÇÐèÒªÔÚWSGIÖ®ÉÏÔÙ³éÏó³öWeb¿ò¼Ü£¬½øÒ»²½¼ò»¯Web¿ª·¢¡£
 
 
+Îå¡¢Ê¹ÓÃweb¿ò¼Ü
+WSGIÌá¹©µÄ½Ó¿ÚËäÈ»±ÈHTTP½Ó¿Ú¸ß¼¶²»ÉÙ£¬µ«ºÍWeb AppµÄ´¦ÀíÂß¼­Ïà±È£¬»¹ÊÇ±È½ÏµÍ¼¶¡£
+ÎÒÃÇÐèÒªÔÚWSGI½Ó¿ÚÖ®ÉÏ½øÒ»²½³éÏó£¬ÈÃÎÒÃÇ×¨×¢ÓÚÓÃÒ»¸öº¯Êý´¦ÀíÒ»¸öURL¡£
+Web¿ò¼ÜÊµÏÖURLµ½º¯ÊýµÄÓ³Éä¡£
+
+1¡¢Flask¿ò¼Ü
+<1>pip install flask
+<2>FlaskÍ¨¹ýPythonµÄ×°ÊÎÆ÷ÔÚÄÚ²¿×Ô¶¯µØ°ÑURLºÍº¯Êý¸ø¹ØÁªÆðÀ´¡£
+<3>FlaskÍ¨¹ýrequest.form['name']»ñÈ¡±íµ¥µÄÄÚÈÝ(´ÓHTTPÇëÇó»ñÈ¡ÓÃ»§Êý¾Ý)¡£
+Web¿ò¼Ü¶¼Ìá¹©ÁË×Ô¼ºµÄAPIÀ´ÊµÏÖÕâÐ©¹¦ÄÜ¡£
+
+2¡¢³ýÁËFlask£¬³£¼ûµÄPython Web¿ò¼Ü»¹ÓÐ£º
+<1>Django:È«ÄÜÐÍweb¿ò¼Ü
+<2>web.py:Ð¡ÇÉµÄweb¿ò¼Ü
+<3>Bottle:ºÍFlaskÀàËÆµÄweb¿ò¼Ü
+<4>Tornado:FacebookµÄ¿ªÔ´Òì²½web¿ò¼Ü
+
+ÓÐÁËWeb¿ò¼Ü£¬ÎÒÃÇÔÚ±àÐ´WebÓ¦ÓÃÊ±£¬×¢ÒâÁ¦¾Í´ÓWSGI´¦Àíº¯Êý×ªÒÆµ½URL+¶ÔÓ¦µÄ´¦Àíº¯Êý¡£
 
 
+Áù¡¢Ê¹ÓÃÄ£°å
+Web App²»½ö½öÊÇ´¦ÀíÂß¼­£¬Õ¹Ê¾¸øÓÃ»§µÄÒ³ÃæÒ²·Ç³£ÖØÒª¡£Éú³É¸´ÔÓµÄHTMLÒ³ÃæÄÑ¶ÈºÜ´ó£¬ËùÒÔ£¬Ä£°å¼¼Êõ³öÏÖÁË¡£
 
+1¡¢Ê¹ÓÃÄ£°å£¬ÎÒÃÇÐèÒªÔ¤ÏÈ×¼±¸Ò»¸öHTMLÎÄµµ¡£
+Õâ¸öÎÄµµ²»ÊÇÆÕÍ¨HTMLÎÄµµ£¬ËüÇ¶ÈëÁËÒ»Ð©±äÁ¿ºÍÖ¸Áî¡£¸ù¾ÝÎÒÃÇ´«ÈëµÄÊý¾Ý£¬Ìæ»»µÃµ½×îÖÕµÄHTML·¢ËÍ¸øÓÃ»§¡£
 
+Õâ¾ÍÊÇMVC:Model-View-Controller,Ä£ÐÍ-ÊÓÍ¼-¿ØÖÆÆ÷£º
+<1>Controller£º¼´Python´¦ÀíURLµÄº¯Êý£¬Ëü¸ºÔðÒµÎñÂß¼­£¬±ÈÈç¼ì²éÓÃ»§ÃûÊÇ·ñ´æÔÚ£¬È¡³öÓÃ»§ÐÅÏ¢µÈ¡£
+<2>View£º¼´°üº¬±äÁ¿µÄÄ£°å£¬Ëü¸ºÔðÏÔÊ¾Âß¼­£¬Í¨¹ý¼òµ¥µØÌæ»»Ò»Ð©±äÁ¿£¬Êä³ö×îÖÕµÄHTML¡£
+<3>Model£ºModelÓÃÓÚ´«¸øView£¬ViewÔÚÌæ»»±äÁ¿Ê±£¬¾Í¿ÉÒÔ´ÓModelÖÐÈ¡³öÏàÓ¦µÄÊý¾Ý¡£
+ÒòÎªPythonÖ§³Ö¹Ø¼ü×Ö²ÎÊý£¬ºÜ¶àWeb¿ò¼ÜÔÊÐí´«Èë¹Ø¼ü×Ö²ÎÊý£¬ÔÚ¿ò¼ÜÄÚ²¿×é×°³öÒ»¸ödict×÷ÎªModel¡£
 
+2¡¢FlaskÍ¨¹ýrender_template()º¯ÊýÊµÏÖÄ£°åµÄäÖÈ¾¡£PythonÓÐ¶àÖÖÄ£°å£¬FlaskÄ¬ÈÏÖ§³ÖµÄjinja2¡£
+<1>pip install jinja2
 
+3¡¢Ä£°åµÄÓÅÊÆ
+<1>Í¨¹ýMVC£¬ÎÒÃÇÔÚPython´úÂëÖÐ´¦ÀíM£ºModelºÍC£ºController£¬¶øV£ºViewÊÇÍ¨¹ýÄ£°å´¦ÀíµÄ¡£
+ÕâÑù£¬ÎÒÃÇ¾Í³É¹¦µØ°ÑPython´úÂëºÍHTML´úÂë×î´óÏÞ¶ÈµØ·ÖÀëÁË¡£
+<2>Ê¹ÓÃÄ£°åµÄÁíÒ»´óºÃ´¦ÊÇ£¬Ä£°å¸ÄÆðÀ´ºÜ·½±ã£¬¶øÇÒ£¬¸ÄÍê±£´æºó£¬Ë¢ÐÂä¯ÀÀÆ÷¾ÍÄÜ¿´µ½×îÐÂµÄÐ§¹û¡£
 
-
-
-
-
-
-
-
-
+4¡¢³ýÁËJinja2£¬³£¼ûµÄÄ£°å»¹ÓÐ£º
+Mako£ºÓÃ<% ... %>ºÍ${xxx}µÄÒ»¸öÄ£°å£»
+Cheetah£ºÒ²ÊÇÓÃ<% ... %>ºÍ${xxx}µÄÒ»¸öÄ£°å£»
+Django£ºDjangoÊÇÒ»Õ¾Ê½¿ò¼Ü£¬ÄÚÖÃÒ»¸öÓÃ{% ... %}ºÍ{{ xxx }}µÄÄ£°å¡£
 
 
 
