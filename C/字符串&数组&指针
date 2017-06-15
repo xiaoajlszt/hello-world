@@ -240,9 +240,9 @@ void main()
 
 ----------------------------------------------------------------------------------------------------------------------
 string(字符串)与octect string(字节串)： (octet，一种计算机语言，意思是因特网标准使用八位组。)
-1、unsigned char *a = “12301233”； //string中间是不会有\0的
+1、unsigned char *a = “12301233”； //string中间是不会有0值的
 2、unsigned char code_stream_req[] = {0x01,0x00,0x01,0xd0,0xc0,0x00,0x01,0x10,0x01,0x00,0x00,0x16,0x45,0x0a,0xa0,0x49}；
-octect string里面就会有\0，即0x00。
+octect string里面就会有0值，即0x00。
 sizeof(code_stream_req)结果为16
 strlen(code_stream_req)结果为1
 
@@ -250,3 +250,29 @@ BYTE与CHAR
 BYTE是字节串，1就是1,2就是2。
 
 CHAR是字符串，‘1’是49。
+
+-----------------------------------------------------------------------------------------------------------------------
+char与unsigned char:
+<1>unsigned char通常被定义为BYTE。
+
+<2>eg
+include <string.h>
+int main()
+{
+	char a[] = "中文";
+	unsigned char b[] = "中文";
+
+	printf("a=%s\tb=%s\n",a,b);
+	printf("len a=%d\t len b=%d\n", strlen(a), strlen((char *)b));
+	printf("a[0]=%d	a[1]=%d a[2]=%d a[3]=%d\n", a[0],a[1],a[2],a[3]);
+	printf("b[0]=%d	b[1]=%d b[2]=%d b[3]=%d\n", b[0],b[1],b[2],b[3]);
+
+	return 0;
+}
+
+a=中文  b=中文
+len a=4  len b=4
+a[0]=-42 a[1]=-48 a[2]=-50 a[3]=-60
+b[0]=214 b[1]=208 b[2]=206 b[3]=196
+
+可见，每个字节实际值是一样的，只不过char中认为首位为符号位，出现负数的情况。

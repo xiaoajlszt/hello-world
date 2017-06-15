@@ -153,7 +153,6 @@ http://blog.csdn.net/dotphoenix/article/details/4345174
 3、...的作用
    ...在C宏中称为Variadic Macro，也就是变参宏。比如： 
 	#define myprintf(templt,...) fprintf(stderr,templt,__VA_ARGS__)
-	// 或者 #define myprintf(templt,args...) fprintf(stderr,templt,args)
 
 ------------------------------------------------------------------------------------------------------------------------------------
 
