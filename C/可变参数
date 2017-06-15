@@ -66,43 +66,64 @@ arg_ptr就是前面定义的va_list类型的变量；argN表示最后一个固定参数。例如示例中的fm
 <1>C99以前，可变参数表还是只能应用在真正的函数中，不能使用在宏中。
 <2>C99允许定义可变参数宏，使用保留名 __VA_ARGS__ 把可变参数表传递给宏。
 eg #define LOG(format, ...) fprintf(stdout, format, __VA_ARGS__)
-----------------------------------------------------------------------------------------
-#define debug(…) printf(__VA_ARGS__) //最好定义为#define debug(…) printf(##__VA_ARGS__)
-----------------------------------------------------------------------------------------
 C99引入了对参数个数可变的函数式宏的正式支持。在宏"原型"的末尾加上...,宏定义中的伪宏 __VA_ARGS__ 就会在调用时替换成可变参数。 
 
-2、GCC：
+2、GUN C：
 在GUN C中，宏可以接受可变数目的参数，就像函数一样。
 GCC始终支持复杂的宏，它使用一种不同的语法(与C99相比)，可以给可变参数一个名字，就如同其它参数一样。可读性更强并且更容易进行描述。
 eg:
-#define LOG(format, args...) 	fprintf(stdout, format, args) 
-eg：
 #define pr_debug(fmt,arg...)	printk(KERN_DEBUG fmt, ##arg)
+eg:
+#define LOG(format, args...) 	fprintf(stdout, format, args) 
 
-3、可变参数宏中的##
-...指可变参数。这类宏在被调用时，...表示零个或多个符号(包括其中的逗号)，被调用时，在宏体中，那些符号序列集合将代替__VA_ARGS__标识符。
+3、可变参数宏中的## 	//存疑，后续确认
+...指可变参数。这类宏在被调用时，...表示零个或多个符号(包括其中的逗号)，被调用时，那些符号序列集合将代替__VA_ARGS__标识符。
+
+<1>在标准C中，不能省略可变参数，但可以传递一个空参数。
+eg: debug ("A message") //因为字符串后面没有逗号，所以是非法的
+增加逗号后，在上面的例子中，编译器仍然会有问题，因为宏展开后会有个多余的逗号。
+(GUN C在这种情况下可以完全忽略可变参数。)
+
+<2>为了解决这个问题，标准C中建议使用##。
+比较好的书写格式为：#define debug(format, ...) fprintf (stderr, format, ## __VA_ARGS__)
+这样，如果可变参数被忽略或为空，##将使预处理器去除掉它前面的那个逗号。
+
+三、打印输出
+1、打印函数
+#include <stdio.h>
+int printf(const char *format, ...); //输出到标准输出
+int fprintf(FILE *stream, const char *format, ...); //输出到文件/标准输出
+int sprintf(char *str, const char *format, ...); //输出到str
+int snprintf(char *str, size_t size, const char *format, ...); //输出到str
+
+以下函数功能与上面的一一对应，只是在函数调用时，把...对应的变量用va_list替代。在调用函数前ap要通过va_start()宏来动态获取。
+
+#include <stdarg.h>
+int vprintf(const char *format, va_list ap); //输出到标准输出
+int vfprintf(FILE *stream, const char *format, va_list ap); //输出到文件/标准输出
+int vsprintf(char *str, const char *format, va_list ap); //输出到str
+int vsnprintf(char *str, size_t size, const char *format, va_list ap); //输出到str
+
+注：linux环境下是:vsnprintf，VC6环境下是:_vsnprintf。其他类似。
+
+2、printf、sprintf对齐
+%-20s //左对齐，若实际小于20位，按实际输出
+%+20d //右对齐
+
+3、time、gettimeofday、localtime
+<1>gettimeofday()头文件/usr/include/sys/time.h
+   localtime()/usr/include/time.h
+//通过 man 函数名 来查询
+
+<2>time()和gettimeofday()
+两个都是glibc获取时间的函数,gettimeofday支持返回微妙的精度,time返回秒的精度,在性能上有差别吗???
+基本上没有性能差别, 因为time其实就是把gettimeofday包装了一层。
+但是测试过程中发现 time比gettimeofday性能好了一点点, 可能是time函数的接口形式简单吧, 堆栈处理的快。
+
+4、basename  //返回路径中的文件名部分
+头文件：#include <libgen.h>   
+函数声明：char *basename(char *path);
 
 
-/////////////////////////////////////////////////////////
-http://blog.csdn.net/yucan1001/article/details/7059723
-在标准C里，你不能省略可变参数，但是你却可以给它传递一个空的参数。例如，下面的宏调用在ISO C里是非法的，因为字符串后面没有逗号：
-debug ("A message")
-GNU CPP在这种情况下可以让你完全的忽略可变参数。在上面的例子中，编译器仍然会有问题（complain），因为宏展开后，里面的字符串后面会有个多余的逗号。
-为了解决这个问题，CPP使用一个特殊的‘##’操作。书写格式为：
-#define debug(format, ...) fprintf (stderr, format, ## __VA_ARGS__)
-这里，如果可变参数被忽略或为空，‘##’操作将使预处理器（preprocessor）去除掉它前面的那个逗号。如果你在宏调用时，确实提供了一些可变参数，GNU CPP也会工作正常，它会把这些可变参数放到逗号的后面。象其它的pasted macro参数一样，这些参数不是宏的扩展。
 
-
-怎样写参数个数可变的宏
-一种流行的技巧是用一个单独的用括弧括起来的的 ``参数" 定义和调用宏, 参数在 宏扩展的时候成为类似 printf() 那样的函数的整个参数列表。
-    #define DEBUG(args) (printf("DEBUG: "), printf args)
-
-    if(n != 0) DEBUG(("n is %d\n", n));
-明显的缺陷是调用者必须记住使用一对额外的括弧。
-gcc 有一个扩展可以让函数式的宏接受可变个数的参数。 但这不是标准。另一种 可能的解决方案是根据参数个数使用多个宏 (DEBUG1, DEBUG2, 等等), 或者用 逗号玩个这样的花招:
-    #define DEBUG(args) (printf("DEBUG: "), printf(args))
-    #define _ ,
-
-    DEBUG("i = %d" _ i);
-C99 引入了对参数个数可变的函数式宏的正式支持。在宏 ``原型" 的末尾加上符号 ... (就像在参数可变的函数定义中), 宏定义中的伪宏 __VA_ARGS__ 就会在调用是 替换成可变参数。 
   	
