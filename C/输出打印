@@ -1,20 +1,5 @@
 Ò»¡¢Ïà¹Øº¯Êı
-1¡¢va_list  //¿É±ä²ÎÊı
-http://blog.chinaunix.net/uid-20937170-id-5749018.html
-Í·ÎÄ¼ş£º#include <stdarg.h>
-
-#ifdef _M_ALPHA
-typedef struct {
-char *a0; /* pointer to first homed integer argument */
-int offset; /* byte offset of next parameter */
-} va_list;
-#else
-typedef char * va_list;
-#endif
-
-_M_ALPHAÊÇÖ¸DEC ALPHA£¨Alpha AXP£©¼Ü¹¹¡£ËùÒÔÒ»°ãÇé¿öÏÂva_listËù¶¨Òå±äÁ¿Îª×Ö·ûÖ¸Õë¡£
-
-2¡¢×Ö·û´òÓ¡
+1¡¢×Ö·û´òÓ¡
 #include <stdio.h>
  int printf(const char *format, ...); //Êä³öµ½±ê×¼Êä³ö
  int fprintf(FILE *stream, const char *format, ...); //Êä³öµ½ÎÄ¼ş
@@ -29,7 +14,7 @@ _M_ALPHAÊÇÖ¸DEC ALPHA£¨Alpha AXP£©¼Ü¹¹¡£ËùÒÔÒ»°ãÇé¿öÏÂva_listËù¶¨Òå±äÁ¿Îª×Ö·ûÖ¸Õ
  int vsprintf(char *str, const char *format, va_list ap);
  int vsnprintf(char *str, size_t size, const char *format, va_list ap);
 
-3¡¢vsnprintf  //½«¿É±ä²ÎÊı¸ñÊ½»¯Êä³öµ½Ò»¸ö×Ö·ûÊı×é¡£
+2¡¢vsnprintf  //½«¿É±ä²ÎÊı¸ñÊ½»¯Êä³öµ½Ò»¸ö×Ö·ûÊı×é¡£
 <1>Í·ÎÄ¼ş
 #include <stdarg.h>
 <2>º¯ÊıÉùÃ÷
@@ -41,34 +26,6 @@ const char *format [in], Ö¸¶¨Êä³ö¸ñÊ½µÄ×Ö·û´®£¬Ëü¾ö¶¨ÁËÄãĞèÒªÌá¹©µÄ¿É±ä²ÎÊıµÄÀàĞ
 va_list ap [in], va_list±äÁ¿. va:variable-argument:¿É±ä²ÎÊı¡£
 <4>±¸×¢
 linux»·¾³ÏÂÊÇ:vsnprintf£¬VC6»·¾³ÏÂÊÇ:_vsnprintf¡£
-
----------------------------------------------------------------------------------
-¿É±ä²ÎÊıÁĞ±íva_listºêËµÃ÷£º
-	void va_start(va_list ap, last);       
-	void va_end(va_list ap);
-va_startÓëva_endÊÇ³É¶Ô±»µ÷ÓÃµÄ£º¿ªÊ¼µÄÊ±ºò±»µ÷ÓÃva_start£¬»ñµÃ¸÷Êä³ö±äÁ¿µØÖ·£»½áÊøµÄÊ±ºò±»µ÷ÓÃva_end£¬ÊÍ·ÅÏàÓ¦µÄ×ÊÔ´¡£
-
-eg Í¨¹ıvsnprintf()ÊµÏÖsnprintf()¹¦ÄÜ£º£¨¸ü¶àÏêÇé¿É²ÎÔÄlinux man va_startÊÖ²á£©
-
-#include <stdio.h>
-#include <stdarg.h>
-int my_snprintf(char *s, int size, const char *fmt, ...) //¸Ã×Ô¶¨Òåº¯Êı£¬ÓëÏµÍ³Ìá¹©µÄsnprintf()º¯ÊıÏàÍ¬¡£
-{
-    va_list ap;
-    int n=0;
-    va_start(ap, fmt); //»ñµÃ¿É±ä²ÎÊıÁĞ±í
-    n=vsnprintf (s, size, fmt, ap); //Ğ´Èë×Ö·û´®s
-    va_end(ap); //ÊÍ·Å×ÊÔ´
-    return n; //·µ»ØĞ´ÈëµÄ×Ö·û¸öÊı
-}
-
-int main() {
-    char str[1024];
-    my_snprintf( str, sizeof(str), "%d,%d,%d,%d",5,6,7,8);
-    printf("%s\n",str);
-    return 0;
-}
----------------------------------------------------------------------------------
 
 3¡¢printf¡¢sprintf¶ÔÆë
 %-20s //×ó¶ÔÆë£¬ÈôÊµ¼ÊĞ¡ÓÚ20Î»£¬°´Êµ¼ÊÊä³ö

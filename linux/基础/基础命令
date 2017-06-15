@@ -47,3 +47,10 @@ test123:x:10000:10000::/home/test123:/bin/bash
 <3>su
 -c command：变更账号，并执行command指令后再变回原来的使用者。
 
+5、man
+<1>查看命令用法  man command
+<2>查看内核函数用法  man getlocaltime
+<3>查看内核头文件	
+man time.h 		 对应time.h		(在默认路径/usr/include/中)
+man sys_time.h   对应sys/time.h (在默认路径/usr/include/中)
+

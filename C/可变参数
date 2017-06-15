@@ -1,0 +1,108 @@
+一、可变参数函数
+1、使用示例 ：
+通过vsnprintf()实现snprintf()功能：（更多详情可参阅linux man va_start手册）
+
+#include <stdio.h>
+#include <stdarg.h>
+int my_snprintf(char *s, int size, const char *fmt, ...) //该自定义函数，与系统提供的snprintf()函数相同。
+{
+    va_list ap;
+    int n=0;
+    va_start(ap, fmt); //获得可变参数列表
+    n=vsnprintf(s, size, fmt, ap); //写入字符串s
+    va_end(ap); //释放资源
+    return n; //返回写入的字符个数
+}
+
+int main() {
+    char str[1024];
+    my_snprintf( str, sizeof(str), "%d,%d,%d,%d",5,6,7,8);
+    printf("%s\n",str);
+    return 0;
+}
+
+2、可变参数列表va_list (va即：variable-argument)
+<0> 头文件
+#include <stdarg.h>
+
+<1> va_list
+指针类型，用于指向可变参数。
+--------------------------------------------------------------------------------------
+#ifdef _M_ALPHA
+typedef struct {
+char *a0; /* pointer to first homed integer argument */
+int offset; /* byte offset of next parameter */
+} va_list;
+#else
+typedef char * va_list;
+#endif
+
+_M_ALPHA是指DEC ALPHA（Alpha AXP）架构。所以一般情况下va_list所定义变量为字符指针。
+---------------------------------------------------------------------------------------
+va_start与va_end成对被调用：开始调用va_start，获得各变量地址；结束调用va_end，释放相应的资源。
+
+<2> void va_start(va_list arg_ptr, argN) 
+arg_ptr就是前面定义的va_list类型的变量；argN表示最后一个固定参数。例如示例中的fmt。 
+当调用va_start后arg_ptr指向第一个可变参数。
+
+功能：以固定参数的地址为起点确定变参的内存起始地址，获取第一个参数的首地址。
+返回值：无。
+
+<3> type va_arg(va_list arg_ptr,type)
+每调用一次va_arg就会返回可变参数列表的下一个参数，并且下一个参数类型为type。
+不断调用va_arg，可以获取所有的可变参数。 
+
+功能：获取下一个参数的地址。
+返回值：根据传入参数类型决定返回值类型。
+
+<4> void va_end(va_list arg_ptr) 
+清空参数列表, 并置参数指针arg_ptr无效。
+
+功能：将arg_ptr指针置0。
+返回值：无。
+
+二、可变参数函数式宏
+1、ANSI C(标准C):
+<1>C99以前，可变参数表还是只能应用在真正的函数中，不能使用在宏中。
+<2>C99允许定义可变参数宏，使用保留名 __VA_ARGS__ 把可变参数表传递给宏。
+eg #define LOG(format, ...) fprintf(stdout, format, __VA_ARGS__)
+----------------------------------------------------------------------------------------
+#define debug(…) printf(__VA_ARGS__) //最好定义为#define debug(…) printf(##__VA_ARGS__)
+----------------------------------------------------------------------------------------
+C99引入了对参数个数可变的函数式宏的正式支持。在宏"原型"的末尾加上...,宏定义中的伪宏 __VA_ARGS__ 就会在调用时替换成可变参数。 
+
+2、GCC：
+在GUN C中，宏可以接受可变数目的参数，就像函数一样。
+GCC始终支持复杂的宏，它使用一种不同的语法(与C99相比)，可以给可变参数一个名字，就如同其它参数一样。可读性更强并且更容易进行描述。
+eg:
+#define LOG(format, args...) 	fprintf(stdout, format, args) 
+eg：
+#define pr_debug(fmt,arg...)	printk(KERN_DEBUG fmt, ##arg)
+
+3、可变参数宏中的##
+...指可变参数。这类宏在被调用时，...表示零个或多个符号(包括其中的逗号)，被调用时，在宏体中，那些符号序列集合将代替__VA_ARGS__标识符。
+
+
+/////////////////////////////////////////////////////////
+http://blog.csdn.net/yucan1001/article/details/7059723
+在标准C里，你不能省略可变参数，但是你却可以给它传递一个空的参数。例如，下面的宏调用在ISO C里是非法的，因为字符串后面没有逗号：
+debug ("A message")
+GNU CPP在这种情况下可以让你完全的忽略可变参数。在上面的例子中，编译器仍然会有问题（complain），因为宏展开后，里面的字符串后面会有个多余的逗号。
+为了解决这个问题，CPP使用一个特殊的‘##’操作。书写格式为：
+#define debug(format, ...) fprintf (stderr, format, ## __VA_ARGS__)
+这里，如果可变参数被忽略或为空，‘##’操作将使预处理器（preprocessor）去除掉它前面的那个逗号。如果你在宏调用时，确实提供了一些可变参数，GNU CPP也会工作正常，它会把这些可变参数放到逗号的后面。象其它的pasted macro参数一样，这些参数不是宏的扩展。
+
+
+怎样写参数个数可变的宏
+一种流行的技巧是用一个单独的用括弧括起来的的 ``参数" 定义和调用宏, 参数在 宏扩展的时候成为类似 printf() 那样的函数的整个参数列表。
+    #define DEBUG(args) (printf("DEBUG: "), printf args)
+
+    if(n != 0) DEBUG(("n is %d\n", n));
+明显的缺陷是调用者必须记住使用一对额外的括弧。
+gcc 有一个扩展可以让函数式的宏接受可变个数的参数。 但这不是标准。另一种 可能的解决方案是根据参数个数使用多个宏 (DEBUG1, DEBUG2, 等等), 或者用 逗号玩个这样的花招:
+    #define DEBUG(args) (printf("DEBUG: "), printf(args))
+    #define _ ,
+
+    DEBUG("i = %d" _ i);
+C99 引入了对参数个数可变的函数式宏的正式支持。在宏 ``原型" 的末尾加上符号 ... (就像在参数可变的函数定义中), 宏定义中的伪宏 __VA_ARGS__ 就会在调用是 替换成可变参数。 
+  	
