@@ -1,0 +1,37 @@
+MySQL支持对MyISAM和MEMORY存储引擎的表进行表级锁定；
+		 对BDB存储引擎的表进行页级锁定；
+		 对InnoDB存储引擎的表进行行级锁定。
+默认情况下，表锁和行锁都是自动获得的，不需要额外的命令。
+某些情况下，用户需要明确地进行锁表或事务的控制，以便确保整个事务的完整性，此时就需要使用事务控制和锁定语句来完成。
+
+1、LOCK TABLE和UNLOCK TABLE
+<1>使用方式：
+1)LOCK TABLES可以锁定当前线程使用的表。如果表被某个线程锁定，其他线程会等待，直到可以获取所有锁定为止。
+2)UNLOCK TABLES可以释放当前线程获得的所有锁定。
+3)线程执行另一个LOCK TABLES时，或与服务器的连接被关闭时，所有由该线程锁定的表都被隐式地解锁。
+
+<2>使用示例：
+session1、session2表示两个连接(两个线程)。
+<1>session1获取表的READ锁定。  LOCK TABLE tablename READ;
+此时session1和session2都可以查询该表的记录。
+
+<2>若session2要更新表内容，就会等待获得锁。
+
+2、事务控制
+<1>MySQL通过SET AUTOCOMMIT、START TRANSACTION、COMMIT和ROLLBACK等语句支持本地事务。
+SET AUTOCOMMIT = {0 | 1}
+START TRANSACTION | BEGIN [WORK]
+COMMIT [WORK] [AND [NO] CHAIN] [[NO] RELEASE]
+ROLLBACK [WORK] [AND [NO] CHAIN] [[NO] RELEASE]
+
+<2>默认情况下，MySQL是自动提交的(Autocommit)。
+1)如果需要通过明确的Commit和Rollback来提交和回滚事务，那么就需要通过明确的事务控制命令来开始事务。(这点与Oracle不同)
+
+2)START TRANSACTION或BEGIN语句可以开始一项新的事务；
+  
+3)COMMIT和ROLLBACK用于提交或回滚事务；CHAIN和RELEASE子句分别用来定义在事务提交或回滚后的操作。
+CHAIN会立即启动一个新事务，并且和之前的事务具有相同的隔离级别；
+RELEASE则会立即断开和客户端的连接。
+
+4)SET AUTOCOMMIT可以修改当前连接的提交方式
+如果设置了SET AUTOCOMMIT=0，那么之后所有的事务都需要通过明确的命令进行提交或回滚。
