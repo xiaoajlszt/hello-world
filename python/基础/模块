@@ -23,8 +23,62 @@ __init__.py可以是空文件，也可以有Python代码。因为__init__.py本身就是一个模块，模
 <5>自己创建的模块不能和Python自带的模块名冲突。否则将无法导入系统自带的模块。
 
 二、使用模块
-1、Python内置了很多模块
+1、Python内置了很多模块，只要安装完毕，这些模块就可以立刻使用。
+-----------------------------------------------------------------
+注：1、Python模块的标准文件模板：
 
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+
+' a test module '
+
+__author__ = 'Michael Liao'
+
+<1>第1行和第2行是标准注释:
+第1行注释可以让这个hello.py文件直接在Unix/Linux/Mac上运行;
+第2行注释表示.py文件本身使用标准UTF-8编码。
+
+<2>第4行是一个字符串，表示模块的文档注释，任何模块代码的第一个字符串都被视为模块的文档注释。
+
+<3>第6行使用__author__变量写入作者信息。
+
+2、if __name__=='__main__':的作用
+<1>“Make a script both importable and executable”
+意思就是说让你写的脚本模块既可以导入到别的模块中用，另外该模块自己也可执行。
+
+<2>举例：
+1)新建一个module模块
+#module.py
+def main():
+  print "we are in %s"%__name__
+  
+if __name__ == '__main__':
+  main()
+
+2)直接执行该py文件：
+>>>python3 module.py
+执行结果：打印出"we are in __main__"。说明if语句中的内容被执行了，调用了main()。
+
+3)在另一个py文件中引用该模块：
+#anothermodle.py
+>>>from module import main
+>>>main()
+
+执行结果：打印出"we are in module"。说明if语句中的内容没有被执行。
+这样既可以让模块自己执行，也可以被其他模块引入，并且不会执行main函数2次。这才是关键!
+
+总结一下：
+如果直接执行某个.py文件时，该文件中的__name__ == '__main__'是True；
+如果从另外一个.py文件中通过import导入该.py文件时，__name__的值就是该.py文件的名字，而不是__main__。
+
+这个功能还有一个用处：调试代码时，可以在if __name__ == '__main__'中加入调试代码，
+外部模块调用的时候不执行调试代码，如果要排查问题，可以直接执行该模块文件，调试代码就能够正常运行。
+-----------------------------------------------------------------
+
+<1>sys模块中的argv变量用list存储了命令行的所有参数。
+argv列表中至少有一个元素，因为第一个参数永远是该py文件的文件名。
+eg：运行python3 hello.py获得的sys.argv就是['hello.py']；
+	运行python3 hello.py Michael获得的sys.argv就是['hello.py', 'Michael]。
 
 三、安装第三方模块
 1、通过包管理工具pip安装第三方模块。
