@@ -1,3 +1,11 @@
+补充：ftp\ftps\sftp\vsftpd  //2017.06.20
+ftp是一种文件传输协议。
+sftp是基于ssh协议的加密ftp传输协议。
+vsftpd是一款ftp服务器，支持ftp协议，不支持sftp协议。
+
+参见：http://blog.csdn.net/cuker919/article/details/6403925
+	  http://blog.csdn.net/shmilychan/article/details/51848850
+
 一、sftp  
 1、centos 7下本身就存在一个sftp(/usr/libexec/openssh/sftp-server)。
 
