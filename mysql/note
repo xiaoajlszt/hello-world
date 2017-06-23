@@ -193,11 +193,171 @@ FROM tablename
 [WITH ROLLUP]   //可选，表明是否对分类聚合后的结果进行再汇总。
 [HAVING where_condition]  //表明对分类后的结果再进行条件过滤。
 
-6)表连接
+3、GROUP BY接多个字段
+表示要对这些字段进行分类聚合。
+
+mysql> SELECT* FROM mytest1;                                         
++------+-------+------+-------+
+| id   | name  | age  | class |
++------+-------+------+-------+
+|    1 | Lin   |   10 |     1 |
+|    2 | Jim   |   11 |     1 |
+|    3 | Zhang |   11 |     2 |
+|    4 | Wang  |   10 |     2 |
+|    5 | Xu    |   11 |     1 |
+|    6 | Xu    |   10 |     1 |
++------+-------+------+-------+
+
+<1>先age，再class
+mysql> SELECT age,class,count(1) FROM mytest1 GROUP BY age,class;
++------+-------+----------+
+| age  | class | count(1) |
++------+-------+----------+
+|   10 |     1 |        2 |
+|   10 |     2 |        1 |
+|   11 |     1 |        2 |
+|   11 |     2 |        1 |
++------+-------+----------+
+4 rows in set (0.00 sec)
+
+<2>先class，再age
+mysql> SELECT age,class,count(1) FROM mytest1 GROUP BY class,age;
++------+-------+----------+
+| age  | class | count(1) |
++------+-------+----------+
+|   10 |     1 |        2 |
+|   11 |     1 |        2 |
+|   10 |     2 |        1 |
+|   11 |     2 |        1 |
++------+-------+----------+
+4 rows in set (0.00 sec)
+
+可见：只会对每个字段都相同的条目进行聚合。
+
+----------------------------------------------------------------------------------
+补充：
+GROUP BY 关键字 :表示要进行分类聚合的字段。
+WITH ROLLUP 	:表示对分类聚合后的结果进行再汇总。
+<1>select count(1) from emp;	//统计表中数据条目
+<2>select deptno,count(1) from emp group by deptno;		//统计表中每个deptno值对应的条目
+<3>select deptno,count(1) from emp group by deptno with rollup;		//统计表中每个deptno值对应的条目，并且统计表中数据条目
+----------------------------------------------------------------------------------
+
+4、表连接
 当需要同时显示多个表中的字段时，就可以用表连接来实现这样的功能。
-分为内连接和外连接，内连接仅仅选出两张表中互相匹配的记录，而外连接会选出其他不匹配的记录。
-	
-	
+
+<1>表连接分为内连接和外连接：
+1)内连接仅仅选出两张表中互相匹配的记录;
+2)外连接还会选出其他不匹配的记录。
+
+<2>外连接又分为左连接和右连接：
+1)左连接：包含所有的左边表中的记录，甚至是右边表中没有和它匹配的记录；
+2)右连接：包含所有的右边表中的记录，甚至是左边表中没有和它匹配的记录。
+
+<3>举例：
+1)内连接
+mysql> select * from emp;
++--------+------------+---------+--------+
+| ename  | hiredate   | sal     | deptno |
++--------+------------+---------+--------+
+| zzx    | 2000-01-01 | 2000.00 | 1      |
+| lisa   | 2003-02-01 | 4000.00 | 2      |
+| bjguan | 2004-04-02 | 5000.00 | 1      |
+| bzshen | 2005-04-01 | 4000.00 | 3      |
++--------+------------+---------+--------+
+
+mysql> select * from dept;
++--------+----------+
+| deptno | deptname |
++--------+----------+
+| 1      | tech     |
+| 2      | sale     |
+| 3      | hr       |
++--------+----------+
+
+//输出
+mysql> select ename,deptname from emp,dept where emp.deptno=dept.deptno;
++--------+----------+
+| ename  | deptname |
++--------+----------+
+| zzx    | tech     |
+| lisa   | sale     |
+| bjguan | tech     |
+| bzshen | hr       |
++--------+----------+
+
+2)左连接
+mysql> select * from emp;
++--------+------------+---------+--------+
+| ename  | hiredate   | sal     | deptno |
++--------+------------+---------+--------+
+| zzx    | 2000-01-01 | 2000.00 | 1      |
+| lisa   | 2003-02-01 | 4000.00 | 2      |
+| bjguan | 2004-04-02 | 5000.00 | 1      |
+| bzshen | 2005-04-01 | 4000.00 | 3      |
+| dony   | 2005-02-05 | 2000.00 | 4      |
++--------+------------+---------+--------+
+
+mysql> select * from dept;
++--------+----------+
+| deptno | deptname |
++--------+----------+
+| 1      | tech     |
+| 2      | sale     |
+| 3      | hr       |
++--------+----------+
+
+//输出
+mysql> select ename,deptname from emp left join dept on emp.deptno=dept.deptno;
++--------+----------+
+| ename  | deptname |
++--------+----------+
+| zzx    | tech     |
+| lisa   | sale     |
+| bjguan | tech     |
+| bzshen | hr       |
+| dony   |          |
++--------+----------+
+
+3)右连接
+可以将上面的左连接语句，改写为如下右连接：
+mysql> select ename,deptname from dept right join emp on dept.deptno=emp.deptno;
+查询结果保持不变。(因为交换了表的顺序，这里的右连接其实就是上面的左连接)
+
+5、子查询
+某些情况下，查询条件是另一个SELECT语句的结果，这时需要用到子查询。
+子查询的关键字主要包括：in、not in、=、!=、exists、not exists等。
+
+<1>in:
+select * from emp where deptno in(select deptno from dept);
+
+<2>如果子查询的记录数唯一，还可以用=替代in：
+mysql> select * from emp where deptno = (select deptno from dept);
+ERROR 1242 (21000): Subquery returns more than 1 row
+mysql> select * from emp where deptno = (select deptno from dept limit 1);
+
+<3>某些情况下，子查询可以转换为表连接：
+select * from emp where deptno in(select deptno from dept);
+转换为：
+select emp.* from emp ,dept where emp.deptno=dept.deptno;
+
+注：表连接在很多情况下用于优化子查询。
+
+6、记录联合
+若要将多个表的数据按照一定的条件查询出来，并显示合并后的结果。此时，就需要用到union和union all。
+
+<1>语法：
+SELECT * FROM t1
+UNION|UNION ALL
+SELECT * FROM t2
+...
+UNION|UNION ALL
+SELECT * FROM tn;
+
+<2>UNION和UNION ALL的主要区别：
+UNION ALL将结果集直接合并在一起；
+UNION将UNION ALL的结果再进行一次DISTINCT，得到去重后的结果。
+
 /*****************************************************************************************************/
 
 3、DCL(Data Control Language)用于授予或回收数据库的某种特权，并控制数据库操纵事务发生的时间及效果，对数据库实行监控等。

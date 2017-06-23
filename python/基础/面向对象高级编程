@@ -1,1 +1,22 @@
 一、使用__slots__
+1、动态绑定允许在程序运行过程中给class加上功能(属性、方法)：
+class Student(object):
+    pass
+	
+>>> def set_score(self, score):
+...     self.score = score
+...
+>>> Student.set_score = set_score
+
+通常情况下set_score方法可以直接定义在class中。
+
+2、使用__slots__
+<1>Python允许在定义class时，定义一个特殊的__slots__变量，来限制该class实例能添加的属性。
+class Student(object):
+    __slots__ = ('name', 'age') # 用tuple定义允许绑定的属性名称
+	
+<2>__slots__定义的属性仅对当前类的实例起作用，对子类的实例不起作用。
+除非在子类中也定义__slots__，这样，子类实例允许定义的属性就是自身的__slots__加上父类的__slots__。
+
+二、使用@property
+调用Python内置@property装饰器，可以把一个方法变成属性。

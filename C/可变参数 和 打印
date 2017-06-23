@@ -92,7 +92,7 @@ eg: debug ("A message") //因为字符串后面没有逗号，所以是非法的
 比较好的书写格式为：#define debug(format, ...) fprintf (stderr, format, ## __VA_ARGS__)
 这样，如果可变参数被忽略或为空，##将使预处理器去除掉它前面的那个逗号。
 
-三、打印输出
+三、界面输出
 1、打印函数
 #include <stdio.h>
 int printf(const char *format, ...); //输出到标准输出
@@ -128,6 +128,35 @@ int vsnprintf(char *str, size_t size, const char *format, va_list ap); //输出到s
 头文件：#include <libgen.h>   
 函数声明：char *basename(char *path);
 
+四、字符串处理函数
+1、strcpy
+<1>原型：char *strcpy(char *dest, const char *src);
+<2>说明：把src字符串复制到dest指向的地址空间，并返回dest。
+<3>限制：src和dest所指内存区域不可以重叠；dest必须有足够的空间来容纳src的字符串。
+<4>结束符说明：如果dest空间足够大，就会把src中的字符串结束符拷贝到dest中。
 
+2、stncpy
+<1>原型：char *strncpy(char *dest,char *src,size_t n);
+<2>说明：把src字符串中的前n个字节复制到dest指向的地址空间，并返回dest。
+<3>结束符说明：
+n小于src长度时：将src的前n个字符复制到dest中，dest结尾不自动添加'\0'，需要手动添加'\0'。
+n等于src长度时：将src的前n个字符复制到dest中，dest结尾不自动添加'\0'，需要手动添加'\0'。
+n大于src长度时：将src的前n个字符复制到dest中(以'\0'填充直至n)，会将src中的字符串结束符拷贝到dest中。
+
+3、sprintf
+<1>原型：int sprintf( char *buffer, const char *format, [ argument] … );
+<2>说明：把格式化的字符串写入缓冲区中。返回写入buffer的字符数(不计入'\0')，出错返回-1。
+<3>结束符说明：如果buf空间足够大，就会把src中的字符串结束符拷贝到buf中。
+
+4、snprintf
+<1>原型：int snprintf(char *str, size_t size, const char *format, ...)
+<2>说明：成功返回欲写入的字符串长度，失败返回负值。
+<3>结束符说明：
+如果格式化后的字符串长度 < size，则将此字符串全部复制到str中，并给其后添加一个字符串结束符('\0')；
+如果格式化后的字符串长度 >= size，则只将其中的(size-1)个字符复制到str中，并给其后添加一个字符串结束符('\0')。
+
+
+注：
+1、strcpy\sprintf：同样可以做字符串拷，strcpy的效率要高于sprintf。
 
   	

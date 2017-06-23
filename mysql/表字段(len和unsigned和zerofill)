@@ -1,3 +1,24 @@
+0、INT(len)与VARCHAR(len)的区别
+<1>对于INT，这里的len只是表示显示宽度。(可以配合zerofill使用，不足长度时数字前面填充0)
+<2>对于VARCHAR，这里的len表示允许输入的最大宽度。如果超出，插入记录失败。
+eg：
+mysql> desc mytest1;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| id    | int(11)     | YES  |     | NULL    |       |
+| name  | varchar(10) | YES  |     | NULL    |       |
+| age   | int(11)     | YES  |     | NULL    |       |
+| class | varchar(3)  | YES  |     | NULL    |       |
+| grade | int(2)      | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+
+mysql> INSERT INTO mytest1 VALUES(2,"Lin Tao",10,"1",100);//grade超出2，仍可以正常插入                             
+Query OK, 1 row affected (0.08 sec)
+
+mysql> INSERT INTO mytest1 VALUES(2,"Lin Tao",10,"1000",1);//class超出3，插入失败！
+ERROR 1406 (22001): Data too long for column 'class' at row 1
+
 1、unsigned
 CREATE TABLE tablename(id INT UNSIGNED)；
 ALTER TABLE tablename MODIFY id INT UNSIGNED;

@@ -189,6 +189,8 @@ s = Student('Bob')
 s.score = 90
 
 2、可以直接在class中定义属性，该属性是类属性。
+class Student(object):
+    name = 'Student'
 
 3、实例属性和类属性不要使用相同的名称，相同名称的实例属性将屏蔽掉类属性，
 只有当删除实例属性(del s.name)后，才能访问到类属性。
