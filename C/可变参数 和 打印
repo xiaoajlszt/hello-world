@@ -155,6 +155,66 @@ n大于src长度时：将src的前n个字符复制到dest中(以'\0'填充直至n)，会将src中的字符串
 如果格式化后的字符串长度 < size，则将此字符串全部复制到str中，并给其后添加一个字符串结束符('\0')；
 如果格式化后的字符串长度 >= size，则只将其中的(size-1)个字符复制到str中，并给其后添加一个字符串结束符('\0')。
 
+5、strtol与atoi
+http://blog.sina.com.cn/s/blog_6c26d57b01012l0x.html
+long int strtol(const char *nptr,char **endptr,int base);
+int atoi(const char *nptr);
+<1>头文件均为 #include <stdlib.h>
+
+<2>由于atoi返回值为int，处理范围有限，必要的时候可以使用strtol将字符串转换为整数。
+
+对于nptr指向的字符串，其开头和结尾处的空格被忽视，字符串中间的空格被视为非法字符。
+
+strtol()函数检测到第一个非法字符时，立即停止检测，其后的所有字符都会被当作非法字符处理。
+合法字符串会被转换为long int, 作为函数的返回值。
+非法字符串，即从第一个非法字符的地址，被赋给endptr。
+
+1)参数endptr：
+多数情况下，endptr设置为NULL, 即不返回非法字符串。
+
+2)参数base：范围为0、2~36，决定了字符串以被转换为整数的权值。
+可以被转换的合法字符依据base而定，eg:
+当base为2时，合法字符为‘0’，‘1’；
+base为8时，合法字符为‘0’，‘1’，……‘7’；
+base为10时，合法字符为‘0’，‘1’，……‘9’；
+base 为16时，合法字符为‘0’，‘1’，……‘9’，‘a’，……‘f’；
+base为24时，合法字符为‘0’，……‘9’，‘a’，……‘n’，
+base为36时，合法字符为‘0’，……‘9’，‘a’，……‘z’；等等。
+不区分大小写，当字符合法时，‘0’，……‘9’依次被转换为十进制的0～9，‘a’，……‘z’一次北转换为十进制的10～35。
+
+另外，如果base为0，且字符串不是以0x(或者0X)开头，则按十进制进行转化。
+如果base为0或者16，并且字符串以0x（或者0X）开头，那么，x（或者X）被忽略，字符串按16进制转化。
+如果base不等于0和16，并且字符串以0x(或者0X)开头，那么x被视为非法字符。
+
+<3>举例
+1) 引入原因
+char *a = "4294967295";
+printf("%d\n",atoi(a));
+printf("%ld\n",strtol(a,NULL,10));
+printf("%d\n",strtol(a,NULL,10));
+printf("%u\n",strtol(a,NULL,10));
+int b = (int)strtol(a,NULL,10);
+printf("%d\n", b);
+unsigned c = (int)strtol(a,NULL,10);
+printf("%u\n",c);
+
+结果：
+-1
+4294967295
+-1
+4294967295
+-1
+4294967295
+
+2) 返回错误
+char buffer[20]="10379cend$3";
+char *stop;
+printf("%d\n",strtol(buffer, &stop, 2));
+printf("%s\n", stop);
+输出结果：
+2
+379cend$3
+
 
 注：
 1、strcpy\sprintf：同样可以做字符串拷，strcpy的效率要高于sprintf。

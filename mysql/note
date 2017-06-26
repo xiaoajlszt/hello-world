@@ -360,28 +360,6 @@ UNION将UNION ALL的结果再进行一次DISTINCT，得到去重后的结果。
 
 /*****************************************************************************************************/
 
-3、DCL(Data Control Language)用于授予或回收数据库的某种特权，并控制数据库操纵事务发生的时间及效果，对数据库实行监控等。
-GRANT--授权
-ROLLBACK--回滚
-COMMIT--提交
-
-4、提交数据有三种类型：显式提交、隐式提交及自动提交。
-<1>显式提交
-用 COMMIT 命令直接完成的提交为显式提交。
-<2>隐式提交
-用 SQL 命令间接完成的提交为隐式提交。
-这些命令是：ALTER\AUDIT\COMMENT\CONNECT\CREATE\DISCONNECT\DROP\EXIT\GRANT\NOAUDIT\QUIT\REVOKE\RENAME
-<3>自动提交
-若把AUTOCOMMIT设置为 ON ，则在插入、修改、删除语句执行后，系统将自动进行提交，这就是自动提交。其格式为:SQL> SET AUTOCOMMIT ON;
-     
-<4>COMMIT/ROLLBACK这两个命令用的时候要小心。 COMMIT/ROLLBACK都是用在执行DML语句（INSERT/DELETE/UPDATE/SELECT）之后的。
-1)DML语句执行完之后，处理的数据都会放在回滚段中（除了SELECT语句）,等待用户进行提交（COMMIT）或者回滚 （ROLLBACK），
-当用户执行COMMIT/ROLLBACK后，放在回滚段中的数据就会被删除。
-2)SELECT语句执行后，数据都存在共享池。提供给其他人查询相同的数据时，直接在共享池中提取，不用再去数据库中提取，提高了数据查询的速度。
-3)所有的 DML 语句都是要显式提交的，也就是说要在执行完DML语句之后，执行COMMIT。
-而其他的诸如 DDL 语句的，都是隐式提交的。也就是说，在运行那些非DML语句后，数据库已经进行了隐式提交，
-例如 CREATE TABLE，在运行脚本后，表已经建好了，并不在需要你再进行显式提交。在提交事务（commit）之前可以用rollback回滚事务。
-
 二、表的存储引擎
 1、MySQL 5.0支持的存储引擎包括：MyISAM、InnoDB、BDB、MEMORY等。其中InnoDB和BDB提供事务安全表，其他存储引擎都是非事务安全表。
 参数default-table-type设置默认存储引擎。
