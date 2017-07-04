@@ -110,9 +110,34 @@ int vsnprintf(char *str, size_t size, const char *format, va_list ap); //输出到s
 
 注：linux环境下是:vsnprintf，VC6环境下是:_vsnprintf。其他类似。
 
-2、printf、sprintf对齐
+2、printf、sprintf
+<1>关于“S格式符”的用法的简单说明：
+eg:
 %-20s //左对齐，若实际小于20位，按实际输出
 %+20d //右对齐
+
+1)％ms ：输出的字符串占m列，如果字符串本身长度大于m，则突破m的限制，将字符串全部输出；若串长度小于m，则在左边补空格。
+2)％-ms：如果字符串长度小于m，则在m列范围内，字符串向左靠，右补空格。
+3)％m.ns：输出占m列，但只取字符串中左端n个字符。这n个字符输出在m列范围的右侧，左补空格。
+eg:printf("%5.5s", "12345678");
+输出 12345
+4)％-m.ns：其中的m、n的含义同上，n个字符输出在m列范围的左侧，右补空格。如果n>m，则m自动取n值，即保证n个字符正常输出。
+
+<2>int sprintf( char *buffer, const char *format, [ argument] … );
+1)参数1和2不能重复：
+char buf[100] = "12345%s";
+sprintf(buf,buf,"abcd");
+VS中会报错，Linux下buf中的结果会出现不可预知的错误。
+
+2)可以覆盖buf中的值，并且buf足够大，结果会加\0。
+char buf[100] = "12345";
+sprintf(buf,"%s","abcd");
+
+3)可以采用这种方式将a中的值和buf中的值合并，并且能替换a中的%s。
+char a[] = "abcdef%s"
+char buf[100] = "12345";
+sprintf(buf + strlen(buf),a,"abcd");
+
 
 3、time、gettimeofday、localtime
 <1>gettimeofday()头文件/usr/include/sys/time.h
