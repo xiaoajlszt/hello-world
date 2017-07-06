@@ -34,3 +34,13 @@ spinWords( "This is another test" )=> returns "This is rehtona test"
 def spin_words(sentence):
     return re.sub(r"\w{5,}", lambda w: w.group(0)[::-1], sentence)
 	
+
+3、将一个句子中的英文转换为对应的数值，非英文字符跳过。
+eg：A/a : 1   B/b : 2 .....
+AB : 1 2
+
+def alphabet_position(text):
+    return ' '.join(str(ord(c) - 96) for c in text.lower() if c.isalpha())
+	
+//解释：join表示将列表中的字段连接为字符串。' '.join 表示用空格连接。''.join 表示无间隔连在一起。
+	ord()表示将字母转换为对应的ASCII码值。
