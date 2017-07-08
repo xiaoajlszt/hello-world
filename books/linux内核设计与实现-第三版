@@ -1591,14 +1591,21 @@ struct vm_area_struct *mmap_cache; //最近使用的内存区域
 所以C库在物理内存中仅仅需要占用1212KB空间，而不是为每个使用C库的进程在内存中都保存一个1212KB的空间。
 
 2)由于内存未被共享，所以只要一有进程写该处数据，那么该处数据就将被拷贝出来(写时拷贝，copy-on-write,COW)，然后才被更新。
-eg：string str1 = "hello world";
-    string str2 = str1;
-//str1和str2存放数据的地址是一样的。	
-	str1[1] = 'q';
-	str2[1] = 'w'
-//str1的地址发生了变化，str2的地址还是原来的。
 
-这就是C++中COW技术的应的，不过VS2005似乎不再支持COW了。	
+实际上COW技术不仅仅在Linux进程上有应用，其他例如C++的String在有的IDE环境下也支持COW技术：
+    string str1 = "hello world\n";  
+    string str2 = str1;  
+    printf("str1:%x  str2:%x\n", str1.c_str(), str2.c_str());  
+    str2.clear();  
+    str2 = "hello\n";  
+    printf("str1:%x  str2:%x\n", str1.c_str(), str2.c_str()); 
+	
+打印结果：
+str1:9b59014  str2:9b59014
+str1:9b59014  str2:9b5904c
+
+//str1, str2一开始指向同一内存地址，当str2内容改变后，则str2的地址发生改变。
+这有点像设计模式中单例懒惰模式，只有需要对象时才new对象。同理，只有写入东西时才进行内存的再分配。
 
 
 15.4 操作内存区域  linux/mm.h
