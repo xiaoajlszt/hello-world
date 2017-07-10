@@ -8,9 +8,9 @@
 1¡¢¶ÔÓÚÄÚºË¶øÑÔ£¬ËùÓÐ´ò¿ªµÄÎÄ¼þ¶¼Í¨¹ýÎÄ¼þÃèÊö·ûÒýÓÃ¡£
 <1>ÎÄ¼þÃèÊö·ûÊÇÒ»¸ö·Ç¸ºÕûÊý£¬µ±´ò¿ªÒ»¸öÏÖÓÐÎÄ¼þ»ò´´½¨Ò»¸öÐÂÎÄ¼þÊ±£¬ÄÚºËÏò½ø³Ì·µ»ØÒ»¸öÎÄ¼þÃèÊö·û¡£
 
-<2>UNIXÏµÍ³ÄÚºË°ÑÎÄ¼þÃèÊö·û0(STDIN_FILENO )Óë½ø³ÌµÄ±ê×¼ÊäÈë¹ØÁª£»	
-				           1(STDOUT_FILENO)Óë      ±ê×¼Êä³ö¹ØÁª£»	
-						   2(STDERR_FILENO)Óë      ±ê×¼´íÎó¹ØÁª¡£
+<2>UNIXÏµÍ³shell°ÑÎÄ¼þÃèÊö·û0(STDIN_FILENO )Óë½ø³ÌµÄ±ê×¼ÊäÈë¹ØÁª£»	
+				            1(STDOUT_FILENO)Óë      ±ê×¼Êä³ö¹ØÁª£»	
+                            2(STDERR_FILENO)Óë      ±ê×¼´íÎó¹ØÁª¡£
 ÕâÐ©³£Á¿ÔÚÍ·ÎÄ¼þ<unistd.h>ÖÐ¡£
 
 <3>ÎÄ¼þÃèÊö·ûµÄ·¶Î§0~OPEN_MAX-1¡£
@@ -53,12 +53,24 @@ O_SYNC		Ê¹Ã¿´ÎwriteµÈ´ýÎïÀíI/O²Ù×÷Íê³É£¬°üÀ¨ÓÉ¸Ãwrite²Ù×÷ÒýÆðµÄÎÄ¼þÊôÐÔ¸üÐÂËùÐèµ
 O_TRUNC		Èç¹û´ËÎÄ¼þ´æÔÚ£¬¶øÇÒÎªÖ»Ð´»ò¶Á-Ð´³É¹¦´ò¿ª£¬Ôò½«Æä³¤¶È½Ø¶ÏÎª0¡£
 O_TTY_INIT	Èç¹û´ò¿ªÒ»¸ö»¹Î´´ò¿ªµÄÖÐ¶ËÉè±¸£¬ÉèÖÃ·Ç±ê×¼termios²ÎÊýÖµ¡£
 
-O_DSYNC		
+O_DSYNC		Ê¹Ã¿´ÎwriteÒªµÈ´ýÎïÀíI/O²Ù×÷Íê³É£¬µ«ÊÇÈç¹û¸ÃÐ´²Ù×÷²»Ó°Ïì¶ÁÈ¡¸ÕÐ´ÈëµÄÊý¾Ý£¬Ôò²»ÐèÒªµÈ´ýÎÄ¼þÊôÐÔ±»¸üÐÂ¡£
+            O_DSYNCºÍO_SYNC±êÖ¾ÓÐÎ¢ÃîµÄÇø±ð£¬½öµ±ÎÄ¼þÊôÐÔÐèÒª¸üÐÂÒÔ·´Ó³ÎÄ¼þÊý¾Ý±ä»¯Ê±£¬
+            O_DSYNC±êÖ¾²ÅÓ°ÏìÎÄ¼þÊôÐÔ£¬¶øÉèÖÃO_SYNC±êÖ¾ºó£¬Êý¾ÝºÍÊôÐÔ×ÜÊÇÍ¬²½¸üÐÂ¡£
+O_RSYNC     Ê¹Ã¿Ò»¸öÒÔÎÄ¼þÃèÊö·û×÷Îª²ÎÊý½øÐÐµÄread²Ù×÷µÈ´ý£¬Ö±ÖÁËùÓÐ¶ÔÎÄ¼þÍ¬Ò»²¿·Ö¹ÒÆðµÄÐ´²Ù×÷¶¼Íê³É¡£
 
+2¡¢ÓÉopenºÍopenatº¯Êý·µ»ØµÄÎÄ¼þÃèÊö·ûÒ»¶¨ÊÇ×îÐ¡µÄÎ´ÓÃÃèÊö·ûÊýÖµ¡£
+ÕâÒ»µã±»Ä³Ð©Ó¦ÓÃ³ÌÐòÓÃÀ´ÔÚ±ê×¼ÊäÈë¡¢±ê×¼Êä³ö¡¢±ê×¼´íÎóÉÏ´ò¿ªÐÂµÄÎÄ¼þ¡£(ÏÈ¹Ø±Õ±ê×¼Êä³ö£¬È»ºóÔÚ´ò¿ªÁíÒ»¸öÎÄ¼þ)
 
+3¡¢fd²ÎÊýÇø·ÖopenºÍopenat
+<1>path²ÎÊýÖ¸¶¨µÄÊÇ¾ø¶ÔÂ·¾¶£¬ÕâÖÖÇé¿öÏÂ£¬fd²ÎÊý±»ºöÂÔ£¬openatº¯Êý¾ÍÏàµ±ÓÚopenº¯Êý;
+<2>path²ÎÊýÖ¸¶¨µÄÊÇÏà¶ÔÂ·¾¶£¬fd²ÎÊýÖ¸³öÁËÏà¶ÔÂ·¾¶ÃûÔÚÎÄ¼þÏµÍ³ÖÐµÄ¿ªÊ¼µØÖ·¡£fd²ÎÊýÊÇÍ¨¹ý´ò¿ªÏà¶ÔÂ·¾¶ÃûËùÔÚµÄÄ¿Â¼À´»ñÈ¡µÄ;
+<3>path²ÎÊýÖ¸¶¨µÄÊÇÏà¶ÔÂ·¾¶£¬fd²ÎÊý¾ßÓÐÌØÊâÖµAT_FDCWD£¬ÕâÖÖÇé¿öÏÂ£¬Â·¾¶ÃûÔÚµ±Ç°¹¤×÷Ä¿Â¼ÖÐ»ñÈ¡¡£
 
-
-
+openatÏ£Íû½â¾ö£º
+<1>ÈÃÏß³Ì¿ÉÒÔÊ¹ÓÃÏà¶ÔÂ·¾¶Ãû´ò¿ªÄ¿Â¼ÖÐµÄÎÄ¼þ£¬¶ø²»ÔÙÖ»ÄÜ´ò¿ªµ±Ç°¹¤×÷Ä¿Â¼¡£
+<2>¿ÉÒÔ±ÜÃâTOCTTOU´íÎó¡£(time-of-check-to-time-of-use)
+Èç¹ûÁ½¸ö»ùÓÚÎÄ¼þµÄº¯Êýµ÷ÓÃ£¬ÆäÖÐµÚ¶þ¸öµ÷ÓÃÒÀÀµÓÚµÚÒ»¸öµ÷ÓÃµÄ½á¹û£¬ÄÇÃ´³ÌÐòÊÇ´àÈõµÄ¡£
+ÒòÎªÕâÁ½¸öµ÷ÓÃ²¢²»ÊÇÔ­×Ó²Ù×÷£¬ÔÚÁ½¸öº¯Êýµ÷ÓÃÖ®¼äÎÄ¼þ¿ÉÄÜ¸Ä±äÁË£¬ÕâÑùÒ²¾ÍÔì³ÉÁËµÚÒ»¸öµ÷ÓÃ½á¹û²»ÔÙÓÐÐ§¡£
 
 
 
