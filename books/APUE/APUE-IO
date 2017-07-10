@@ -1,0 +1,81 @@
+第3章 文件I/O
+3.1 引言
+1、本章描述的函数经常被称为不带缓冲的I/O(与第5章中的标准I/O函数相对)。
+<1>不带缓冲是指每个read和write都调用内核中的一个系统调用。
+<2>这些不带缓冲的I/O函数不是ISO C的组成部分。它们是POSIX(可移植操作系统接口)的组成部分。
+
+3.2 文件描述符
+1、对于内核而言，所有打开的文件都通过文件描述符引用。
+<1>文件描述符是一个非负整数，当打开一个现有文件或创建一个新文件时，内核向进程返回一个文件描述符。
+
+<2>UNIX系统内核把文件描述符0(STDIN_FILENO )与进程的标准输入关联；	
+				           1(STDOUT_FILENO)与      标准输出关联；	
+						   2(STDERR_FILENO)与      标准错误关联。
+这些常量在头文件<unistd.h>中。
+
+<3>文件描述符的范围0~OPEN_MAX-1。
+OPEN_MAX是允许每个进程最多打开的文件数。目前内核中已经没有这个参数，而是通过资源限制(/etc/security/limits.conf)来限制最大文件描述符数目。
+
+3.3 函数open和openat
+1、调用open或openat函数打开或创建一个文件
+#include <fcntl.h>
+int open(const char *path, int oflag, ... /*mode_t mode*/);
+int openat(int fd, const char *path, int oflag, ... /*mode_t mode*/);
+<1>说明
+1)...表示余下的参数的数量及其类型是可变的。
+2)对于open而言仅当创建新文件时才使用mode参数。
+
+<2>参数：
+oflag：通过|运算组合：
+
+O_RDONLY	只读打开
+O_WRONLY	只写打开
+O_RDWR		读写打开
+O_EXEC		只执行打开
+O_SEARCH	只搜索打开(应用于目录)
+
+以上五个必须指定且只能指定一个。下面常量是可选的：
+
+O_APPEND	每次写时都追加到文件的尾端
+O_CLOEXEC	把FD_CLOEXEC常量设置为文件描述符标志
+O_CREAT		若文件不存在则创建它。
+			使用此选项时，open/openat函数需同时说明参数mode，用于指明该新文件的访问权限。
+O_DIRECTORY	如果path引用的不是目录，则出错
+O_EXCL		如果同时指定了O_CREAT，且文件已经存在，则报错。
+			用于测试一个文件是是否存在，如果不存在，则创建该文件，这使测试和创建两者称为一个原子操作。
+eg：ret = open("/home/xiaopeng/python/1", O_RDONLY | O_EXCL | O_CREAT); 存在返回负数，不存在返回正数。
+
+O_NOCTTY	如果path引用中端设备，则不讲该设备分配作为此进程的控制中端。
+O_NOFOLLOW	如果path引用的是一个符号链接，则出错。
+O_NONBLOCK	如果path引用的是一个FIFO、一个块特殊文件或一个字符特殊文件，则此选项为文件的本次打开操作和后续的I/O操作设置非阻塞方式。
+
+O_SYNC		使每次write等待物理I/O操作完成，包括由该write操作引起的文件属性更新所需的I/O。
+O_TRUNC		如果此文件存在，而且为只写或读-写成功打开，则将其长度截断为0。
+O_TTY_INIT	如果打开一个还未打开的中端设备，设置非标准termios参数值。
+
+O_DSYNC		
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
