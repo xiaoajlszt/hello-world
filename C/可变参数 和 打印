@@ -23,7 +23,16 @@ int main() {
 
 2、可变参数列表va_list (va即：variable-argument)
 <0> 头文件
-#include <stdarg.h>
+#include <stdarg.h> 
+这里的stdarg.h位于/usr/lib/gcc/x86_64-redhat-linux/4.8.2/include/stdarg.h，是由gcc提供的。
+
+因此，在windows下执行pclint时会报错，需要将这部分错误忽略掉。
+	/*lint -save -e10 -e40 -e522 -e718*/
+	va_list ap;
+	va_start(ap, fmt);
+	vsnprintf(strbuf, sizeof(strbuf), fmt, ap);
+	va_end(ap);
+	/*lint -restore*/
 
 <1> va_list
 指针类型，用于指向可变参数。
