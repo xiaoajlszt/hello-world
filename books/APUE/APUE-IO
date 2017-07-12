@@ -244,16 +244,36 @@ Linux没有把相关数据结构分为i节点和v节点，而是采用一个与文件系统相关的i节点和一个
 
 3.11 原子操作
 1、追加到一个文件
+每个进程都已经打开了该文件，但并未使用O_APPEND标志。每个进程还需要调用lseek和write。
+<1>任何要求多于一个函数调用的操作都不是原子操作，因为在两个函数调用之间，内核有可能会临时挂起进程。
+<2>UNIX系统为这样的操作提供了一种原子操作方法，即在打开文件时设置O_APPEND标志。
 
+2、函数pread和pwrite
+1、SUS包括了XSI扩展，该扩展允许原子性地定位并执行I/O，pread、pwrite就是这种扩展。
+#include <unistd.h>
+ssize_t pread(int fd, void *buf, size_t nbytes, off_t offset); //返回读到的字节数，若已经到文件尾，返回0；出错返回-1。
+ssize_t pwrite(int fd, const void *buf, size_t nbytes, off_t offset); //若成功，返回已写的字节数，若出错，返回-1。
 
+<1>调用pread相当于调用lseek后调用read，但是pread又与这种顺序调用有如下区别：
+1)调用pread时，无法中断其定位和读操作;
+2)不更新当前文件偏移量。
 
+<2>调用pwrite相当于调用lseek后调用write，但也有类似的区别。
 
+3、创建一个文件
+对于open函数同时指定O_CREAT、O_EXEC选项时，检查文件是否存在和创建文件这两个操作是作为一个原子操作执行的。
 
+3.12 函数dup和dup2
+1、下面两个函数都可以用于复制一个现有的文件描述符：
+#include <unistd.h>
+int dup(int fd);
+int dup2(int fd, int fd2);
+若成功，返回新的文件描述符;若出错，返回-1。
 
+<1>由dup返回的新文件描述符一定是当前可用文件描述符中的最小值。
+对于dup2,可以用fd2参数指定新描述符的值。
 
-
-
-
+<2>这些函数返回的新文件描述符与参数fd共享同一个文件表项。
 
 
 
