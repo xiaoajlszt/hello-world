@@ -1,6 +1,6 @@
 µÚ2ÕÂ UNIX±ê×¼¼°ÊµÏÖ
 2.2 UNIX±ê×¼»¯
-1¡¢ISO C 
+1¡¢ISO C -- C±ê×¼ 
 <1>1989ÄêÏÂ°ëÄê£¬C³ÌÐòÉè¼ÆÓïÑÔµÄANSI±ê×¼X3.159-1989µÃµ½Åú×¼¡£´Ë±ê×¼Ò²±»²ÉÄÉÎª¹ú¼Ê±ê×¼ISO/IEC 9899:1990¡£
 1)ANSI(ÃÀ¹ú¹ú¼Ò±ê×¼Ñ§»á)ÊÇISO(¹ú¼Ê±ê×¼»¯×éÖ¯)ÖÐ´ú±íÃÀ¹úµÄ³ÉÔ±¡£ IEC(¹ú¼Êµç×Ó¼¼ÊõÎ¯Ô±»á)
 2)ISO C±ê×¼ÓÉISO/IECµÄC³ÌÐòÉè¼ÆÓïÑÔ¹ú¼Ê±ê×¼¹¤×÷×éÎ¬»¤ºÍ¿ª·¢¡£
@@ -11,7 +11,7 @@
 
 <4>c±ê×¼ÒÑ¾­ÔÚ2011Äê¸üÐÂ¡£
 
-2¡¢IEEE POSIX
+2¡¢IEEE POSIX -- ²Ù×÷ÏµÍ³±ê×¼
 <1>POSIXÊÇÒ»¸ö×î³õÓÉIEEE(µçÆøºÍµç×Ó¹¤³ÌÊ¦Ð­»á)ÖÆ¶¨µÄ±ê×¼×å¡£
 POSIXÖ¸µÄÊÇ¿ÉÒÆÖ²²Ù×÷ÏµÍ³½Ó¿Ú£¬¸Ã±ê×¼µÄÄ¿µÄÊÇÌáÉýÓ¦ÓÃ³ÌÐòÔÚ¸÷ÖÖUNIXÏµÍ³»·¾³Ö®¼äµÄ¿ÉÒÆÖ²ÐÔ¡£
 1)Ëü¶¨ÒåÁË·ûºÏPOSIX±ê×¼µÄ(POSIX compliant)²Ù×÷ÏµÍ³±ØÐëÌá¹©µÄ¸÷ÖÖ·þÎñ¡£
@@ -21,6 +21,10 @@ POSIXÖ¸µÄÊÇ¿ÉÒÆÖ²²Ù×÷ÏµÍ³½Ó¿Ú£¬¸Ã±ê×¼µÄÄ¿µÄÊÇÌáÉýÓ¦ÓÃ³ÌÐòÔÚ¸÷ÖÖUNIXÏµÍ³»·¾³Ö®¼äµ
 
 <3>POSIX.1°üº¬ÁËISO C±ê×¼¿âº¯ÊýÒÔ¼°Ò»Ð©¶îÍâµÄº¯Êý¡£
 
-3¡¢Single UNIX Specification
+3¡¢Single UNIX Specification -- ²Ù×÷ÏµÍ³±ê×¼
 SUS£¬µ¥Ò»UNIX¹æ·¶£¬ÊÇPOSIX.1±ê×¼µÄÒ»¸ö³¬¼¯£¬Ëü¶¨ÒåÁËÒ»Ð©¸½¼Ó½Ó¿ÚÀ©Õ¹ÁËPOSIX.1¹æ·¶Ìá¹©µÄ¹¦ÄÜ¡£
 POSIX.1Ïàµ±ÓÚSUSÖÐµÄ»ù±¾¹æ·¶²¿·Ö¡£
+
+×¢£º
+1¡¢GNU¡¢UNIX¡¢LINUXµÄÀúÊ·
+http://blog.chinaunix.net/uid-29084017-id-4887641.html
