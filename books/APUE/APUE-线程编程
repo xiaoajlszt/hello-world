@@ -186,6 +186,68 @@ int pthread_detach(pthread_t tid);
 <1>如果线程不希望被阻塞，可以使用pthread_mutex_trylock尝试对互斥量进行加锁。
 <2>对互斥量进行解锁，需要调用pthread_mutex_unlock。   
 
+2、避免死锁
+<1>如果线程试图对同一个互斥量加锁两次，那么自身就会陷入死锁状态。
+<2>程序中使用一个以上的互斥量时，如果允许一个线程一直占有第一个互斥量，并且试图锁住第二个互斥量时处于阻塞状态；
+而拥有第二个互斥量的线程也在试图锁住第一个互斥量，就会产生死锁。
+1)通过仔细控制互斥量加锁的顺序来避免死锁的发生。
+2)如果涉及了太多的锁和数据结构，可用的函数并不能把它转换成简单的层次。这种情况下，可以先释放占有的锁，然后过一段时间再试。
+可以使用pthread_mutex_trylock接口避免死锁，如果返回成功，就可以前进；如果不能获取锁，可以先释放已经占有的锁，做好清理工作，一段时间后再试。
+
+<3>多线程软件设计，如果锁的粒度太粗，就会出现很多线程阻塞等待相同的锁，这样会影响并发性；
+如果锁的粒度太细，那么过多的锁开销会使系统性能受到影响，并且代码会很复杂。需要在两者之间找到正确的平衡。
+
+3、函数pthread_mutex_timedlock
+当线程试图获取一个已加锁的互斥量时，该函数允许绑定线程阻塞时间。当达到超时时间时，函数不会对互斥量进行加锁，而是返回错误码ETIMEOUT。
+#include <pthread.h>
+#include <time.h>
+int pthread_mutex_timelock(pthread_mutex_t *restrict mutex, const struct timespec *restrict tsptr);
+//超时使用的是绝对时间(而不是如愿意阻塞Y秒这样的相对时间)，用秒和纳秒来描述时间。
+
+4、读写锁
+读写锁与互斥量类似，读写锁允许更高的并行性。读写锁有3种状态：读模式下加锁状态、写模式下加锁状态、不加锁状态。
+<1>一次只有一个线程可以占有写模式的读写锁，但是有多个线程可以同时占有读模式的读写锁。
+<2>当读写锁是写加锁状态时，所有试图对这个锁加锁的线程都会被阻塞；
+   当读写锁是读加锁状态时，所有试图以读模式对它进行加锁的线程都可以得到访问权，试图以写模式进行加锁的线程都会阻塞；
+   当存在试图以写模式和读模式加锁的线程同时阻塞时，读写锁通常会优先让写模式加锁线程执行。
+<3>读写锁非常适用于读次数远大于写次数的情况。
+
+读写锁也叫共享互斥锁。读模式锁住称为以共享模式锁住；写模式锁住称为以互斥模式锁住。
+<1>读写锁在使用之前必须初始化；释放它们底层的内存之前必须销毁。
+int pthread_rwlock_init(pthread_rwlock_t *restrict rwlock, const pthread_rwlockattr_t *restrict attr);
+int pthread_rwlock_destory(pthread_rwlock_t *rwlock);
+读写锁通常用pthread_rwlock_init进行初始化，如果希望读写锁有默认的属性，可以传入NULL指针给attr。
+如果默认属性足够的话，也可用PTHREAD_RWLOCK_INITIALIZER常量初始化静态分配的读写锁。
+
+<2>
+int pthread_rwlock_rdlock(pthread_rwlock_t *rwlock); //在读模式下锁定读写锁
+int pthread_rwlock_wrlock(pthread_rwlock_t *rwlock); //在写模式下锁定读写锁
+int pthread_rwlock_unlock(pthread_rwlock_t *rwlock); //解(读/写模式)锁
+
+<3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
