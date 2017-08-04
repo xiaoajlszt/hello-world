@@ -224,7 +224,48 @@ int pthread_rwlock_rdlock(pthread_rwlock_t *rwlock); //在读模式下锁定读写锁
 int pthread_rwlock_wrlock(pthread_rwlock_t *rwlock); //在写模式下锁定读写锁
 int pthread_rwlock_unlock(pthread_rwlock_t *rwlock); //解(读/写模式)锁
 
-<3>
+<3>各种实现可能会对共享模式下可获取的读写锁的次数进行限制，所以要检查pthread_rwlock_rdlock的返回值。
+
+<4>读写锁原语的条件版本：
+#include <pthread.h>
+int pthread_rwlock_tryrdlock(pthread_rwlock_t *rwlock);
+int pthread_rwlock_trywrlock(pthread_rwlock_t *rwlock);
+//可以获取锁时，返回0；否则，返回错误EBUSY。这两个函数可用于遵守某种锁层次但还不能完全避免死锁的情况。
+
+5、带有超时的读写锁
+与互斥量一样，SUS提供了带有超时的读写锁加锁函数，避免应用程序在获取读写锁时陷入永久阻塞状态。
+#include <pthread.h>
+#include <time.h>
+int pthread_rwlock_timedrdlock(pthread_rwlock_t *restrict rwlock, const struct timespec *restrict tsptr);
+int pthread_rwlock_timedwrlock(pthread_rwlock_t *restrict rwlock, const struct timespec *restrict tsptr);
+//如果超时不能获取锁，这两个函数将返回ETIMEDOUT错误。超时时间是绝对时间，而不是相对时间。
+
+6、条件变量(pthread_cond_t)
+<1>条件变量给多个线程提供了一个会和的场所。条件变量和互斥量一起使用时，允许线程以无竞争的方式等待特定的条件发生。
+1)条件本身是由互斥量保护的。线程在改变条件状态之前必须首先锁住互斥量，其他线程在获得互斥量之前不会察觉到这种改变。
+2)使用条件变量之前必须先对它进行初始化:
+静态分配的条件变量可以使用常量PTHREAD_COND_INITIALIZER初始化；
+动态分配的条件变量需要使用pthread_cond_init函数进行初始化。
+3)释放条件变量的底层内存空间之前，可以使用pthread_cond_destory函数对条件变量进行反初始化。
+
+<2>等待条件变量变为真：
+#include <pthread.h>
+int pthread_cond_wait(pthread_cond_t *restrict cond, pthread_mutex_t *restrict mutex);
+int pthread_cond_timedwait(pthread_cond_t *restrict cond, pthread_mutex_t *restrict mutex, const struct timespec *restrict tsptr);
+
+1)互斥量对条件进行保护。调用者把锁住的互斥量传给函数，函数然后自动把调用线程放在等待条件的线程列表上，对互斥量解锁。
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

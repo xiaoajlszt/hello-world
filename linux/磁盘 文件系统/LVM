@@ -816,7 +816,8 @@ LVMÍ¨¹ıstrpingÀ´Ìá¸ßÏµÍ³·ÃÎÊÊı¾İµÄËÙ¶È¡£strping¼¼Êõ½«LVµÄÊı¾İ·Ö²¼µ½²»Í¬PVÉÏ·ÃÎÊÕ
 ÄÇÃ´¼ÙÉè¸Ã´ÅÕó¶ÔÓ¦µÄÉè±¸Îª/dev/sda£¬ÎÒÃÇ¿ÉÒÔ½«¸ÃÉè±¸¸ñÊ½»¯ºó(¿ÉÒÔ²»»¯·Ö³É¶à¸ö·ÖÇø)ÖÆ³Épv£¬Ö®ºó¹Òµ½vg£¬ÔÚ·Ö¸øÄ³¸ölv¡£
 ÕâÑùÔÚÊ¹ÓÃÕâ¸ölvÊ±Êµ¼ÊÊ¹ÓÃµÄ¾ÍÊÇÕâ¸ö´ÅÕó£¬²¢ÇÒ´ÅÕóÄÚ²¿µÄ¶à¸öÓ²ÅÌÖ®¼ä¿ÉÒÔ²¢ĞĞ¶ÁĞ´¡£
 
-¸öÈË¸Ğ¾õ²»ĞèÒªÊ¹ÓÃLVM£¬Ö±½Ó¹ÒÔØ´ÅÕóÉè±¸¾Í¿ÉÒÔÁË¡£LVMµÄÎ¨Ò»ÓÅÊÆ¿ÉÄÜÊÇ·½±ãÒÔºóÀ©³ä¡£
+//¸öÈË¸Ğ¾õ²»ĞèÒªÊ¹ÓÃLVM£¬Ö±½Ó¹ÒÔØ´ÅÕóÉè±¸¾Í¿ÉÒÔÁË¡£LVMµÄÎ¨Ò»ÓÅÊÆ¿ÉÄÜÊÇ·½±ãÒÔºóÀ©³ä¡£
+//Èç/dev/sdaÕâÑùµÄÉè±¸ÊÇ²»ÄÜÖ±½ÓmountµÄ£¬±ØĞë·ÖÇø¸ñÊ½»¯Ö®ºó²ÅÄÜ¹ÒÔØ¡£
 
 3¡¢LVMÔÖÄÑĞŞ¸´
 https://www.ibm.com/developerworks/cn/linux/l-cn-pclvm-rstr/
@@ -829,3 +830,35 @@ Hot-spare
 
 https://www.v2ex.com/t/188873  //²ÒÍ´½ÌÑµ
 http://bbs.51cto.com/thread-1158162-1.html  //²ÒÍ´½ÌÑµ
+
+--------------------------------------------------------------------------------
+²¹³ä2017.08.05 
+1¡¢³¬¹ı2/4TµÄ´ÅÅÌÊ¹ÓÃparted·ÖÇø
+http://www.cnblogs.com/hyang0/p/6434300.html
+<1>parted /dev/sdc  //Ïàµ±ÓÚÏÈpartedÔÙselect /dev/sdc
+
+<2>mklabel gpt  	 //½«MBR´ÅÅÌ¸ñÊ½»¯ÎªGPT (Ïà·´²Ù×÷:(parted) mklable msdos //½«GPT´ÅÅÌ×ª»»ÎªMBR´ÅÅÌ£¬fdiskÊ¹ÓÃµÄÊÇMBR´ÅÅÌ)
+					 //MBRºÍGPTÊÇ²»Í¬µÄ´ÅÅÌ·ÖÇø·½Ê½
+					 
+<3>mkpart primary 0 15T  //0-15Ò»¸ö·ÖÇø
+   mkpart primary 15T -1 //Ê£ÓàµÄÒ»¸ö·ÖÇø
+   Èç¹û£ºmkpart primary 0 -1£¬±íÊ¾½«Õû¸ö´ÅÅÌ»¯ÎªÒ»¸ö·ÖÇø
+   
+<4>p	//´òÓ¡´ÅÅÌĞÅÏ¢
+Model: Adaptec data (scsi)
+Disk /dev/sdc: 16.0TB
+Sector size (logical/physical): 512B/512B
+Partition Table: gpt
+Disk Flags: 
+
+Number  Start    End      Size    File system  Name     ±êÖ¾
+ 1      17.4kB   5000GB   5000GB               primary
+ 2      5000GB   10000GB  5000GB               primary
+ 3      10000GB  16.0TB   5999GB               primary
+ 
+<5>quit //ÍË³ö
+Information: You may need to update /etc/fstab. 
+
+<6>partprobe /dev/sdc
+
+<7>Ö®ºóÍ¨¹ıLVM¹ÒÔØ¸÷¸ö¾í£¬Ïê¼ûLVMËµÃ÷ÎÄµµ¡£
