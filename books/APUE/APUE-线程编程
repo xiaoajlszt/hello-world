@@ -370,24 +370,29 @@ int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize); //stacksi
 1、互斥量属性
 int pthread_mutexattr_init(pthread_mutexattr_t *attr);
 int pthread_mutexattr_destory(pthread_mutexattr_t *attr);
+<1>进程共享属性
+int pthread_mutexattr_getpshared(const pthread_mutexattr_t *restrict attr, int *restrict pshared);
+int pthread_mutexattr_setpshared(pthread_mutexattr_t *attr, int pshared);
+
+1)同一个进程中的多个线程可以访问同一个同步对象，这种情况下，进程共享互斥量属性设置为PTHREAD_PROCESS_PRIVATE。
+2)允许相互独立的多个进程把同一个内存数据块映射到它们各自独立的地址空间中。
+如果进程共享互斥量属性设置为PTHREAD_PROCESS_SHARED，从多个进程彼此之间共享的内存数据块中分配的互斥量就可以用于这些进程的同步。
 
 
+<2>健壮属性
+互斥量的健壮属性与在多个进程间共享的互斥量有关。当持有互斥量的进程终止时，需要解决互斥量状态恢复问题。
+int pthread_mutexatrr_getrobust(const pthread_mutexattr_t *restrict attr, int *restrict robust);
+int pthread_mutexatrr_setrobust(pthread_mutexattr_t *attr, int robust);
+
+<3>类型属性
 
 
+12.5 重入
+1、多个控制线程在相同的时间可能调用相同的函数。
+<1>如果一个函数在相同的时间点可以被多个线程安全地调用，就称该函数是线程安全的。
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+2、如果一个函数对多个线程来说是可重入的，就说这个函数是线程安全的。但这并不能说明对信号处理程序来说该函数也是可重入的。
+如果函数对异步信号处理程序的重入是安全的，那么就可以说函数是异步信号安全的。
 
 
 
