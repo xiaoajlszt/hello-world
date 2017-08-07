@@ -241,6 +241,8 @@ int pthread_rwlock_timedwrlock(pthread_rwlock_t *restrict rwlock, const struct t
 //如果超时不能获取锁，这两个函数将返回ETIMEDOUT错误。超时时间是绝对时间，而不是相对时间。
 
 6、条件变量(pthread_cond_t)
+http://blog.csdn.net/hiflower/article/details/2195350
+
 <1>条件变量给多个线程提供了一个会和的场所。条件变量和互斥量一起使用时，允许线程以无竞争的方式等待特定的条件发生。
 1)条件本身是由互斥量保护的。线程在改变条件状态之前必须首先锁住互斥量，其他线程在获得互斥量之前不会察觉到这种改变。
 2)使用条件变量之前必须先对它进行初始化:
@@ -254,6 +256,143 @@ int pthread_cond_wait(pthread_cond_t *restrict cond, pthread_mutex_t *restrict m
 int pthread_cond_timedwait(pthread_cond_t *restrict cond, pthread_mutex_t *restrict mutex, const struct timespec *restrict tsptr);
 
 1)互斥量对条件进行保护。调用者把锁住的互斥量传给函数，函数然后自动把调用线程放在等待条件的线程列表上，对互斥量解锁。
+这就关闭了条件检查和线程进入休眠状态等待条件改变这两个操作之间的时间通道，线程不会错过条件的任何变化。
+//等待条件的线程处于休眠状态
+
+2)pthread_cond_wait返回时，互斥量再次被锁住。
+
+3)从pthread_cond_wait或者pthread_cond_timedwait调用成功返回时，线程需要重新计算条件，因为另一个线程可能已经在运行并改变了条件。
+
+<3>通知线程条件已经满足
+#include <pthread.h>
+int pthread_cond_signal(pthread_cond_t *cond);	  //唤醒一个等待该条件的线程
+int pthread_cond_broadcast(pthread_cond_t *cond); //唤醒等待该条件的所有线程
+一定要在改变条件状态之后再给线程发信号！
+
+7、自旋锁(pthread_spinlock_t)
+<1>自旋锁和互斥量类似，但它不是通过休眠使进程阻塞，而是在获取锁之前一直处于忙等(自旋)状态。
+//当线程自旋等待时，CPU不能做其他的事情。
+1)自旋锁使用场景：锁被持有的时间短，而且线程并不希望在重新调度上花费太多的成本。
+			      自旋锁通常作为底层原语用于实现其他类型的锁。
+
+2)自旋锁在非抢占式内核中非常有用；但在用户层并不是很有用(除非运行在不允许抢占的实时调度类中)。				  
+//运行在分时调度类中(通常情况)的用户层线程在两种情况下可以被取消：
+//它们的时间片到期 或者 具有更高优先级的线程就绪变为可执行状态。
+//这些情况下，如果线程持有自旋锁，它就会进入休眠状态，阻塞在锁上的其它线程自旋的时间可能比预期的时间更长。
+
+3)加上现代处理器的进步，使得上下文切换越来越快，也使得自旋锁只在某些特定的情况下有用。
+
+<2>pthread_spin_init函数对自旋锁进行初始化；pthread_spin_destory函数进程自旋锁的反初始化。
+#include <pthread.h>
+int pthread_spin_init(pthread_spinlock_t *lock, int pshared);
+int pthread_spin_destory(pthread_spinlock_t *lock);
+
+1)只有一个属性是自旋锁特有的，这个属性只在支持线程进程共享同步(Thread Process-Shared Synchronization)选项(SUS中强制支持)的平台上可用。
+pshared表示进程共享属性。如果设置为PTHREAD_PROCESS_SHARED，则自旋锁能被可访问锁底层内存的线程锁获取，即使该线程属于不同的进程。
+						 否则设置为PTHREAD_PROCESS_PRIVATE，则自旋锁只能被初始化该锁的进程内部的线程访问。
+						 
+<3>加锁和解锁
+#include <pthread.h>
+int pthread_spin_lock(pthread_spinlock_t *lock);	//获取锁之前一直自旋
+int pthread_spin_trylock(pthread_spinlock_t *lock); //如果不能获取锁，不自旋，立即返回EBUSY错误
+int pthread_spin_unlock(pthread_spinlock_t *lock);
+
+8、屏障(pthread_barrier_t)
+<1>屏障(barrier)是用户协调多个线程并行工作的同步机制。屏障允许每个线程等待，直到所有的合作线程都到达某一点，然后从该点继续执行。
+1)pthread_join函数就是一种屏障，允许一个线程等待，直到另一个线程退出。
+
+<2>初始化和反初始化
+#include <pthread.h>
+int pthread_barrier_init(pthread_barrier_t *restrict barrier, const pthread_barrierattr_t *restrict attr, unsigned int count);
+int pthread_barrier_destory(pthread_barrier_t *barrier);
+
+初始化屏障时，使用count指定在允许所有线程继续运行之前，必须达到屏障的线程数目。
+
+<3>可以使用pthread_barrier_wait函数表明，线程已经完成工作，准备等其他线程赶上来。
+#include <pthread.h>
+int pthread_barrier_wait(pthread_barrier_t *barrier);
+
+1)调用该函数的线程，在屏障计数未满足条件时，会进入休眠状态。如果该线程是最后一个调用该函数的线程，那所有线程都被唤醒。
+
+2)对于任意一个线程，函数返回了PTHREAD_BARRIER_SERIAL_THREAD，其他线程返回值都是0。
+这使得一个线程可以作为主线程，它可以工作在其他所有线程已完成的工作结果上。
+
+<4>一旦达到屏障计数，且线程处于非阻塞状态，屏障就可以被重用。
+
+
+第12章 线程控制
+12.2 线程限制
+<1>PTHREAD_DESTRUCTOR_ITERATIONS	//线程退出时操作系统实现试图销毁线程特定数据的最大次数 4
+<2>PTHREAD_KEYS_MAX					//进程可以创建的键的最大数目						   1024
+<3>PTHREAD_STACK_MIN				//单个线程的栈可用的最小字节数						   16384 
+<4>PTHREAD_THREADS_MAX				//进程可以创建的最大线程数							   无限制
+
+12.3 线程属性
+1、pthread接口允许我们通过设置每个对象关联的不同属性来细调线程和同步对象的行为。
+<1>每个对象与它自己类型的属性对象进行关联。一个属性对象可以代表多个属性。
+<2>有一个初始化函数，把属性设置为默认值。
+<3>有一个销毁属性对象的函数。如果初始化函数分配了与属性对象关联的资源，销毁函数负责释放这些资源。
+<4>每个属性都有一个从属性对象中获取属性值的函数。
+<5>每个属性都有一个设置属性值的函数。
+
+2、属性
+#include <pthread.h>
+int pthread_attr_init(pthread_attr_t *attr);   //初始化之后，结构中所包含的就是操作系统实现支持的所有线程属性的默认值
+int pthread_attr_destory(pthread_attr_t *attr);
+
+<1>detachstate	线程的分离状态属性
+int pthread_attr_getdetachstate(const pthread_attr_t *restrict attr, int *detachstate);
+int pthread_attr_setdetachstate(pthread_attr_t *attr, int detachstate); 
+1)如果对现有的某个进程的终止状态不感兴趣，可以使用pthread_detach函数让操作系统在线程退出时收回它所占用的资源。
+2)可以使用pthread_attr_setdetachstate函数把线程属性detachstate设置成：PTHREAD_CREATE_DETACHED或者PTHREAD_CREATE_JOINABLE。
+
+<2>guardsize	线程栈末尾的警戒缓冲区大小(字节数)
+
+<3>stackaddr	线程栈的最低地址
+<4>stacksize	线程栈的最小长度(字节数)
+#include <pthread.h>
+int pthread_attr_getstack(const pthread_attr_t *restrict attr, void **restrict stackaddr, size_t *restrict stacksize);
+int pthread_attr_setstack(pthread_attr_t *addr, void *stackaddr, size_t stacksize); //stacksize不能小于PTHREAD_STACK_MIN
+
+int pthread_attr_getstacksize(const pthread_attr_t *restrict attr, size_t *restrict stackszie);
+int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize); //stacksize不能小于PTHREAD_STACK_MIN
+
+1)对于进程来说，虚拟地址空间大小是固定的。因为进程只有一个栈，所以它的大小通常不是问题。
+对于线程来说，同样大小的虚拟地址空间必须被所有线程栈共享。如果应用程序使用了许多线程，
+以致这些线程栈的累计大小超过了可用的虚拟地址空间，就需要减少默认的线程栈大小。
+
+2)另一方面，如果线程调用的函数分配了大量的自动变量，或者调用的函数涉及许多很深的栈帧(stack frame)，那么需要的栈大小可能要比默认的大。
+
+3)如果线程栈的虚地址空间都用完了，那么可以使用malloc或者mmap来为可替代的栈分配空间，并用pthread_attr_setstack来改变新建线程的栈位置。
+如果希望改变默认栈的大小，又不想自己处理线程栈的分配问题，可以使用pthread_attr_setstacksize函数。
+
+12.4 同步属性
+1、互斥量属性
+int pthread_mutexattr_init(pthread_mutexattr_t *attr);
+int pthread_mutexattr_destory(pthread_mutexattr_t *attr);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
