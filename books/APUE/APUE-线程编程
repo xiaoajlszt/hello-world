@@ -371,6 +371,43 @@ int pthread_attr_setstacksize(pthread_attr_t *attr, size_t stacksize); //stacksi
 int pthread_mutexattr_init(pthread_mutexattr_t *attr);
 int pthread_mutexattr_destory(pthread_mutexattr_t *attr);
 
+12.6 线程的特定数据
+1、线程特定数据也称为线程私有数据，是存储和查询某个线程相关数据的一种机制。不需要担心与其他线程的同步访问问题。
+进程中的所有线程都可以访问这个进程的整个地址空间。除非使用寄存器，线程无法阻止其他线程访问它的数据。线程特定数据也不例外。
+虽然底层实现部分并不能阻止这种访问能力，但管理线程特定数据的函数可以提高线程间的数据独立性，使得线程不太容易访问到其他线程的线程特定数据。
+
+2、在分配线程特定数据之前，需要创建与该数据关联的键。
+#include <pthread.h>
+int pthread_key_create(pthread_key_t *keyp, void (*destructor)(void *));
+<1>创建的键存储在keyp指向的内存单元中，这个键可以被进程中的所有线程使用，但每个线程把这个键与不同的线程特定数据地址进行关联。
+创建新键时，每个线程的数据地址设为空值。
+
+<2>除了创建键以外，pthread_key_create可以为该键关联一个可选择的析构函数。
+当线程退出时，如果数据地址已经被置为非空，那么析构函数就会被调用，它唯一的参数就是该数据地址。
+如果传入的析构函数为空，表明没有析构函数与该键关联。
+
+<3>线程可以为线程特定数据分配多个键，每个键都可以有一个析构函数与它关联。
+每个键的析构函数可以互不相同，所有键也可以使用同一个析构函数。
+
+3、取消键与线程特定数据值之间的关联关系
+#include <pthread.h>
+int pthread_key_delete(pthread_key_t key);
+调用pthread_key_delete并不会激活与键关联的析构函数。要释放任何与键关联的线程特定数据值的内存，需要在应用程序中采取额外的步骤。
+
+4、解决竞争pthread_once
+
+
+
+12.7 取消选项
+
+
+12.8 线程与信号
+
+
+12.9 线程和fork
+
+
+12.10 线程和I/O
 
 
 
