@@ -208,6 +208,9 @@ Nginx¾ÍÊÇÖ§³ÖÒì²½IOµÄWeb·þÎñÆ÷£¬ËüÔÚµ¥ºËCPUÉÏ²ÉÓÃµ¥½ø³ÌÄ£ÐÍ¾Í¿ÉÒÔ¸ßÐ§µØÖ§³Ö¶àÈÎÎ
 <3>¶ÔÓ¦µ½PythonÓïÑÔ£¬µ¥Ïß³ÌµÄÒì²½±à³ÌÄ£ÐÍ³ÆÎªÐ­³Ì£¬ÓÐÁËÐ­³ÌµÄÖ§³Ö£¬¾Í¿ÉÒÔ»ùÓÚÊÂ¼þÇý¶¯±àÐ´¸ßÐ§µÄ¶àÈÎÎñ³ÌÐò¡£
 
 
+ËÄ¡¢·Ö²¼Ê½½ø³Ì
+1¡¢ÔÚthreadºÍprocessÖ®¼ä£¬Ó¦ÓÅÏÈÑ¡Ôñprocess£¬ÒòÎªËü¸üÎÈ¶¨£¬ÇÒ¿ÉÒÔ·Ö²¼µ½¶àÌ¨»úÆ÷ÉÏ¡£threadÖ»ÄÜ·Ö²¼µ½Í¬Ò»Ì¨»úÆ÷µÄ¶à¸öCPUÉÏ¡£
+<1>multiprocessingÄ£¿é²»µ«Ö§³Ö¶à½ø³Ì£¬ÆäÖÐmanagers×ÓÄ£¿é»¹Ö§³Ö°Ñ¶à¸ö½ø³Ì·Ö²¼µ½¶àÌ¨»úÆ÷ÉÏ¡£
 
 
 
