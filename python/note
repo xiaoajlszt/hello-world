@@ -21,6 +21,10 @@ ln -s /usr/local/python3/bin/pip3.6  /usr/bin/pip3               # 可直接使用 "p
 4)# 最后测试下 
 python3
 pip3
+
+注：
+1、Python Shell 中敲击方向键显示「^[[C^[[D]
+安装yum -y install readline-devel，然后再重新编译安装python。
 ----------------------------------------------------------------
 1、#!/usr/bin/Python 与 #!/usr/bin/env python
 脚本语言的第一行，目的就是指出，文件中的代码用什么可执行程序去执行。
