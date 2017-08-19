@@ -48,7 +48,10 @@ FTP客户端连接到FTP服务器的21端口，发送用户名和密码登录。
 <2>客户端防火墙
 很多客户端都是在防火墙内，开放端口给FTP服务器访问比较困难。
 
-4、ftp\ftps\sftp\vsftpd
+4、FTP两种传输方式(文本传输、二进制传输)
+详见 "C/从(ASCII,bin)传输到(文件,二进制)文件"
+
+5、ftp\ftps\sftp\vsftpd
 ftp是一种文件传输协议。
 ftps是加密版的FTP，一种替代FTPS的协议是安全文件传输协议(SFTP)。
 sftp是基于ssh协议的加密ftp传输协议。
@@ -112,6 +115,23 @@ userlist_deny=NO
 5、关闭SELinux。
 
 6、关闭或配置防火墙。
+<1>关闭防火墙
+
+<2>配置防火墙
+设置默认规则
+# iptables -A INPUT -j DROP（注：添加此条规则会阻止未处理的传入数据包，如在此规则之前未添加允许规则将会阻止远程连接）
+# iptables -A FORWARD -j ACCEPT
+
+开放 FTP 端口
+# iptables -I INPUT -p tcp --dport 21 -j ACCEPT
+# iptables -I OUTPUT -p tcp --sport 21 -j ACCEPT
+# iptables -I INPUT -p tcp --dport 20 -j ACCEPT
+# iptables -I OUTPUT -p tcp --sport 20 -j ACCEPT
+# iptables -I INPUT -p tcp --dport 20001:21000 -j ACCEPT
+# iptables -I OUTPUT -p tcp --sport 20001:21000 -j ACCEPT
+
+保存防火墙设置
+# iptables-save > /etc/sysconfig/iptables
 
 7、启动vsftp服务。
 
