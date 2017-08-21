@@ -155,14 +155,36 @@ http://www.jetbrains.com/pycharm/
 
 
 三、单元测试
+1、测试驱动开发(TDD:Test-Driven Development)。
 单元测试是对一个模块、一个函数或者一个类进行正确性检查的测试工作。
+
+2、使用Python自带的unittest模块编写单元测试。
+<1>编写一个测试类，从unittest.TestCase继承。
+<2>以test开头的方法就是测试方法，不以test开头的方法不被认为是测试方法，测试时也不会执行。
+<3>unittest.TestCase提供了很对内置的条件判断，主需要调用这些方法就可以断言输出是否是期望的。
+最常用的断言是assertEqual()\assertTrue()\assertEqual()\assertRaises()
+
+assertIn(self, member, container, msg=None) //Just like self.assertTrue(a in b), but with a nicer default message.
+
+
+3、运行单元测试
+<1>最简单的方法是在测试文件最后，加上：
+if __name__ == '__main__':
+    unittest.main()
+
+<2>也可以在命令行通过参数-m unittest直接运行单元测试：
+python3 -m unittest mydict_test
+
+4、setUp和tearDown
+可以在单元测试中编写两个特殊的setup()和teardown()方法，这两个方法会自动在每个测试方法的前后分别被执行。
+这样就不必在每个测试方法中写重复代码。
 
 
 四、文档测试
-很多官方文档都有实例代码。可不可以自动执行这些写在注释中的实例代码呢？
+很多官方文档都有示例代码，可以自动执行这些写在注释中的示例代码。
 
 1、Python内置的文档测试模块(doctest)可以直接提取注释中的代码并执行测试。
-
+doctest.testmod()
 
 
 
