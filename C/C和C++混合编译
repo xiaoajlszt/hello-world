@@ -26,3 +26,7 @@ extern "C" {
 #endif
 
 //.cpp编译时会自动生成__cplusplus宏。
+
+4、C/C++混合编译时，C++调用C和C++函数
+被调用的C函数声明需要包含在extern "C"中；被调用的C++函数不能包含在extern "C"中。
+.C会按C方式编译，.CPP、.CC会按C++方式编译。
