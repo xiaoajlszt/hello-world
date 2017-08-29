@@ -27,3 +27,6 @@ https://www.zhihu.com/question/28557115
 <7>正确使用HTTP Status Code表示访问状态
 <8>返回结果用明确易懂的文本，适当加入注释
 <9>关于安全
+
+3、restful无状态理解
+http://blog.csdn.net/Jmilk/article/details/50461577
