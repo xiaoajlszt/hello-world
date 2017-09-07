@@ -73,3 +73,11 @@ WEXITSTATUS(status) µ±WIFEXITED·µ»Ø·ÇÁãÖµÊ±£¬ÎÒÃÇ¿ÉÒÔÓÃÕâ¸öºêÀ´ÌáÈ¡×Ó½ø³ÌµÄ·µ»ØÖ
 					Èç¹û×Ó½ø³Ìµ÷ÓÃexit(5)ÍË³ö£¬WEXITSTATUS(status)¾Í»á·µ»Ø5£»Èç¹û×Ó½ø³Ìµ÷ÓÃexit(7)£¬WEXITSTATUS(status)¾Í»á·µ»Ø7¡£
 
 5¡¢rename()º¯Êı¿çÎÄ¼şÏµÍ³Ê±»á±¨errnoÎª18µÄ´íÎó£º"Invalid cross-device link"¡£
+
+6¡¢strtol·µ»Ø½á¹û×î´óÖµÎª32Î»£¿
+printf("%ld\n", strtol("4294967295", NULL, 10));   ·µ»Ø4294967295
+printf("%ld\n", strtol("4294967296", NULL, 10));   ·µ»Ø0
+printf("%ld\n", strtol("20170831235959", NULL, 10));  ·µ»Ø1664813943
+printf("result = %ld\n", 20170831235959);			ÏÔÊ¾20170831235959
+
+¿ÉÒÔ¿´³östrtol·µ»ØµÄÊÇ32Î»Öµ£¬À§ÈÅÁËºÜ¾Ã£¬×îÖÕ·¢ÏÖÔ­ÒòÊÇÃ»ÓĞÌí¼ÓÍ·ÎÄ¼ş°üº¬#include <stdlib.h>!!!

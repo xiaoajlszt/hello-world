@@ -101,6 +101,9 @@ pasv_max_port=21000
 更多的配置可查看 vsftpd.conf 文档
 # man vsftpd.conf
 
+//vsftpd修改根目录
+local_root=/ubas/ZXUN-EMSPLUS/server/emsplus_1/server/data/rcp/edr
+
 3、修改配置文件/etc/vsftpd/vsftpd.user_list 
 <1>当/etc/vsftpd/vsftpd.conf配置文件中配置如下时，禁止该配置文件中的所有用户访问FTP服务器。
 userlist_enable=YES

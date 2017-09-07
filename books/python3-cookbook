@@ -1,0 +1,114 @@
+http://python3-cookbook.readthedocs.io/zh_CN/latest/c01/p03_keep_last_n_items.html
+第一章：数据结构和算法
+
+集合模块collections 
+
+1.1 解压序列赋值给多个变量
+1、任何的序列（或者是可迭代对象）可以通过一个简单的赋值语句解压并赋值给多个变量。唯一的前提就是变量的数量必须跟序列元素的数量是一样的。
+<1> data = [ 'ACME', 50, 91.1, (2012, 12, 21) ]
+
+>>> name, shares, price, date = data
+>>> name
+'ACME'
+>>> date
+(2012, 12, 21)
+
+>>> name, shares, price, (year, mon, day) = data
+>>> name
+'ACME'
+>>> year
+2012
+>>> mon
+12
+>>> day
+21
+
+<2> s = 'Hello'
+>>> a, b, c, d, e = s
+>>> a
+'H'
+>>> b
+'e'
+>>> e
+'o'
+
+2、有时候，你可能只想解压一部分，丢弃其他的值。对于这种情况 Python 并没有提供特殊的语法。但是你可以使用任意变量名去占位，到时候丢掉这些变量就行了。
+你必须保证你选用的那些占位变量名在其他地方没被使用到。
+<1> data = [ 'ACME', 50, 91.1, (2012, 12, 21) ]
+>>> _, shares, price, _ = data
+>>> shares
+50
+>>> price
+91.1
+
+
+1.2 解压可迭代对象赋值给多个变量
+1、如果一个可迭代对象的元素个数超过变量个数时，会抛出一个 ValueError 。那么怎样才能从这个可迭代对象中解压出 N 个元素出来？
+Python 的星号表达式可以用来解决这个问题。
+
+<1>假设你现在有一些用户的记录列表，每条记录包含一个名字、邮件，接着就是不确定数量的电话号码。 你可以像下面这样分解这些记录：
+>>> record = ('Dave', 'dave@example.com', '773-555-1212', '847-555-1212')
+>>> name, email, *phone_numbers = record
+>>> name
+'Dave'
+>>> email
+'dave@example.com'
+>>> phone_numbers
+['773-555-1212', '847-555-1212']
+>>>
+
+//解压出的 phone_numbers 变量永远都是列表类型，不管解压的电话号码数量是多少（包括 0 个）。 
+所以，任何使用到 phone_numbers 变量的代码就不需要做多余的类型检查去确认它是否是列表类型了。
+
+<2>星号解压语法在字符串操作的时候也会很有用，比如字符串的分割。
+>>> line = 'nobody:*:-2:-2:Unprivileged User:/var/empty:/usr/bin/false'
+>>> uname, *fields, homedir, sh = line.split(':')		//split返回一个列表
+>>> uname
+'nobody'
+>>> homedir
+'/var/empty'
+>>> sh
+'/usr/bin/false'
+
+2、有时候，你想解压一些元素后丢弃它们，你不能简单就使用 * ， 但是你可以使用一个普通的废弃名称，比如 _ 或者 ign （ignore）。
+>>> record = ('ACME', 50, 123.45, (12, 18, 2012))
+>>> name, *_, (*_, year) = record
+>>> name
+'ACME'
+>>> year
+2012
+>>>
+
+
+1.3 保留最后N个元素
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,12 @@
+1、链接库文件时，既可以直接引用库文件名，也可以加上-l
+TARGET_LINK_LIBRARIES(${EXE_NAME} gbaseclient)
+TARGET_LINK_LIBRARIES(${EXE_NAME} -lgbaseclient)
+
+
+存在问题：
+<1>ldd、nm
+<2>静态库、动态库cmake中LINK时的不同写法
+<3>静态库、动态库、还有一种类型
+<4>cmake中INCLUDE_DIRECTORIES和LINK_DIRECTORIES相对路径
+<5>使用动态库时，要注意打包可执行文件时将动态库一并打包，本地链接路径和在其他机器上的链接路径要注意！！！
+<6>使用系统头文件

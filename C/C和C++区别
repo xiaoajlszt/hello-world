@@ -1,0 +1,33 @@
+1.c文件和.cc/.cpp文件编译时检查方式不太一样：
+<1>结论：
+gcc认为.c的为C程序，.cpp的为C++程序；
+g++认为.c的为C++程序，.cpp的为C++程序；
+VC++的编译器cl认为.c的为C程序，.cpp的为C++程序；
+C程序与C++程序中同样的函数在编译后的obj文件中的symbol是不同的，所以以C方式编译的obj文件与以C++方式编译的obj文件无法成功链接。
+
+<2>.cc比.c检查严格的地方：
+(1)return
+1).c文件函数返回值为WORD类型时，return可以不带任何返回值：
+int main()
+{
+	return;
+}
+
+2).cpp文件不可以。
+" error: return-statement with no value, in function returning ‘int’ [-fpermissive]"
+
+(2)strchr/strstr
+strchr有以下两种方式，即入参为const，返回值必须也是const；入参为非const，返回值也为非const。
+const char *strchr(const char *s, int c);
+char *strchr(char *s, int c);
+
+1).cpp文件中必须使用上述两种中的一种，不能使用诸如：char *strchr(const char *s, int c);的混合形式。
+2).c文件中可以使用诸如：char *strchr(const char *s, int c);的混合形式。
+
+补充：
+<1>为什么char *p = "123";可以将const char *赋值给非const。
+char *在初始化变量时将忽略=右边的指针const限制，只是将右边的指针的地址存到自己那里，内存是否可修改完全由内存自身决定，而不会使用指针const进行限定。
+
+<2>不要纠结各种常量，这个世界上唯一不变的就是变化。用API WriteProcessMemory还能修改正运行的其它进程的内存里面的所谓常量呢!
+
+<3>有函数原型，对函数调用进行类型检查，c支持隐式转换???

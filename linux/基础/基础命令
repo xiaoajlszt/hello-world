@@ -62,3 +62,6 @@ http://man.linuxde.net/dmidecode
 <2>”Ô∑®
 http://blog.csdn.net/ithomer/article/details/6187464
 
+8°¢mkdir 
+-p, --parents
+    no error if existing, make parent directories as needed
