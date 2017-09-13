@@ -69,3 +69,5 @@ else:
 查看python内置的类型：help("list")
 查看python类型的成员方法：help("str.find") 
 查看python内置函数：help("open")
+
+5、print('\t', end='')  //表示输出一个制表符后不换行。

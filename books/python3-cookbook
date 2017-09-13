@@ -81,7 +81,130 @@ Python 的星号表达式可以用来解决这个问题。
 
 
 1.3 保留最后N个元素
+1、使用 deque(maxlen=N) 构造函数会新建一个固定大小的队列。当新的元素加入并且这个队列已满的时候，最老的元素会自动被移除掉。
+不设置最大队列大小，那么就会得到一个无限大小队列。
+可以在队列的两端执行添加和弹出元素的操作。
 
+2、在队列两端插入或删除元素时间复杂度都是 O(1) ，而在列表的开头插入或删除元素的时间复杂度为 O(N) 。
+
+
+1.4 查找最大或最小的N个元素
+1、如何从一个集合中获得最大或者最小的N个元素列表？
+heapq模块的nlargest()和nsmallest()可以完美解决。
+
+import heapq
+nums = [1, 8, 2, 23, 7, -4, 18, 23, 42, 37, 2]
+print(heapq.nlargest(3, nums)) # Prints [42, 37, 23]
+print(heapq.nsmallest(3, nums)) # Prints [-4, 1, 2]
+
+2、这些函数在底层实现中，首先会将集合数据进行堆排序后放入一个列表中：
+>>> nums = [1, 8, 2, 23, 7, -4, 18, 23, 42, 37, 2]
+>>> import heapq
+>>> heap = list(nums)
+>>> heapq.heapify(heap)
+>>> nums
+[-4, 2, 1, 23, 7, 2, 18, 23, 42, 37, 8]
+
+堆数据结构最重要的特征是heap[0]永远是最小元素，并且剩余元素可以通过调用heapd.heappop()方法得到。
+该方法会先将第一个元素pop出，然后用下一个最小元素取代pop出的元素。这种操作时间复杂度仅仅为o(logN)。
+
+3、当要查找的元素个数相对比较小的时候，函数 nlargest() 和 nsmallest() 是很合适的。 
+- 如果你仅仅想查找唯一的最小或最大（N=1）的元素的话，那么使用 min() 和 max() 函数会更快些。 
+- 如果 N 的大小和集合大小接近的时候，通常先排序这个集合然后再使用切片操作会更快点。 sorted(items)[:N] 或者是 sorted(items)[-N:]。
+
+需要在正确场合使用函数 nlargest() 和 nsmallest() 才能发挥它们的优势(如果 N 快接近集合大小了，那么使用排序操作会更好些)。
+
+
+1.5 实现一个优先级队列
+
+
+
+
+2.1 使用多个界定符分割字符串
+1、re.split()
+r'[;,\s]\s*'       //ok
+r'(;|,|\s)\s*'	   //捕获分组，会保存分隔符
+r'(?:,|;|\s)\s*'   //非捕获分组，不会保存分隔符 ok
+
+2、http://www.cnblogs.com/frydsh/archive/2012/07/10/2585370.html   //zip()用法
+
+
+2.2 字符串开头或结尾匹配
+1、startswith和endswith
+str.startswith()
+str.endswith()
+
+>>> filename = 'spam.txt'
+>>> filename.endswith('.txt')
+True
+>>> filename.startswith('file:')
+False
+>>> url = 'http://www.python.org'
+>>> url.startswith('http:')
+True
+>>>
+
+2、如果想要匹配多种可能，需要将所有的匹配项放入到一个元组中，再将元组传给startswith和endswith。
+<1>
+>>> import os
+>>> filenames = os.listdir('.')
+>>> filenames
+[ 'Makefile', 'foo.c', 'bar.py', 'spam.c', 'spam.h' ]
+>>> [name for name in filenames if name.endswith(('.c', '.h')) ]
+['foo.c', 'spam.c', 'spam.h'
+>>> any(name.endswith('.py') for name in filenames)
+True
+>>>
+
+<2>
+if any(name.endswith(('.c', '.h')) for name in listdir(dirname)):
+...
+
+//这种方法中必须输入元组作为参数，如果是list或者set类型，要先调用tuple()将其转换为元组类型。
+
+3、类似的操作也可以使用切片来实现
+>>> filename = 'spam.txt'
+>>> filename[-4:] == '.txt'
+True
+>>> url = 'http://www.python.org'
+>>> url[:5] == 'http:' or url[:6] == 'https:' or url[:4] == 'ftp:'
+True
+>>>
+
+
+2.3 用shell通配符匹配字符串
+1、Unix Shell 中常用的通配符(比如 *.py , Dat[0-9]*.csv 等)去匹配文本字符串。 //注意：这里只是通配符，不是linux下的正则表达式!!!
+fnmatch 模块提供了两个函数—— fnmatch() 和 fnmatchcase() ，可以用来实现这样的匹配。
+
+>>> from fnmatch import fnmatch, fnmatchcase
+>>> fnmatch('foo.txt', '*.txt')
+True
+>>> fnmatch('foo.txt', '?oo.txt')
+True
+>>> fnmatch('Dat45.csv', 'Dat[0-9]*')
+True
+>>> names = ['Dat1.csv', 'Dat2.csv', 'config.ini', 'foo.py']
+>>> [name for name in names if fnmatch(name, 'Dat*.csv')]
+['Dat1.csv', 'Dat2.csv']
+>>>
+
+2、fnmatch()函数使用底层操作系统的大小写敏感规则(不同系统是不一样的)来匹配模式。
+>>> # On OS X (Mac)
+>>> fnmatch('foo.txt', '*.TXT')
+False
+>>> # On Windows
+>>> fnmatch('foo.txt', '*.TXT')
+True
+>>>
+
+3、fnmatchcase()区分大小写匹配。
+>>> fnmatchcase('foo.txt', '*.TXT')
+False
+>>>
+
+4、fnmatch() 函数匹配能力介于简单的字符串方法和强大的正则表达式之间。 
+如果在数据处理操作中只需要简单的通配符就能完成的时候，这通常是一个比较合理的方案。
+如果你的代码需要做文件名的匹配，最好使用 glob 模块。
 
 
 
