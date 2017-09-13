@@ -1,26 +1,57 @@
-Ò»¡¢yum¾µÏñÔ´Ìæ»»
-1¡¢CentOSÏµÍ³¸ü»»Èí¼ş°²×°Ô´£¨ÒÔÍøÒ×163yumÔ´ÎªÀı ÍøÒ×¿ªÔ´¾µÏñÕ¾:http://mirrors.163.com/£©  http://www.ruooo.com/VPS/594.html
-<1>±¸·İÄãµÄÔ­¾µÏñÎÄ¼ş£¬³ö´íºó¿ÉÒÔ»Ö¸´
+ä¸€ã€yumé•œåƒæºæ›¿æ¢
+1ã€CentOSç³»ç»Ÿæ›´æ¢è½¯ä»¶å®‰è£…æºï¼ˆä»¥ç½‘æ˜“163yumæºä¸ºä¾‹ ç½‘æ˜“å¼€æºé•œåƒç«™:http://mirrors.163.com/ï¼‰  http://www.ruooo.com/VPS/594.html
+<1>å¤‡ä»½ä½ çš„åŸé•œåƒæ–‡ä»¶ï¼Œå‡ºé”™åå¯ä»¥æ¢å¤
 mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
-<2>ÏÂÔØĞÂµÄCentOS-Base.repo µ½/etc/yum.repos.d/
+<2>ä¸‹è½½æ–°çš„CentOS-Base.repo åˆ°/etc/yum.repos.d/
 wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.163.com/.help/CentOS7-Base-163.repo   //CentOS 7
-<3>ÔËĞĞÒÔÏÂÃüÁîÉú³É»º´æ 
+<3>è¿è¡Œä»¥ä¸‹å‘½ä»¤ç”Ÿæˆç¼“å­˜ 
 yum clean all
 yum makecache
 
-2¡¢¹úÄÚÆäËûyumÔ´
-°¢ÀïÔÆLinux°²×°¾µÏñÔ´µØÖ·£ºhttp://mirrors.aliyun.com/
-ÖĞ¿Æ´óµÄLinux°²×°¾µÏñÔ´£ºhttp://centos.ustc.edu.cn/
-ËÑºüµÄLinux°²×°¾µÏñÔ´£ºhttp://mirrors.sohu.com/
-±±¾©Ê×¶¼ÔÚÏß¿Æ¼¼£ºhttp://mirrors.yun-idc.com/
+2ã€å›½å†…å…¶ä»–yumæº
+é˜¿é‡Œäº‘Linuxå®‰è£…é•œåƒæºåœ°å€ï¼šhttp://mirrors.aliyun.com/
+ä¸­ç§‘å¤§çš„Linuxå®‰è£…é•œåƒæºï¼šhttp://centos.ustc.edu.cn/
+æœç‹çš„Linuxå®‰è£…é•œåƒæºï¼šhttp://mirrors.sohu.com/
+åŒ—äº¬é¦–éƒ½åœ¨çº¿ç§‘æŠ€ï¼šhttp://mirrors.yun-idc.com/
 
-3¡¢ÆäËû²Î¿¼×ÊÁÏ
+3ã€å…¶ä»–å‚è€ƒèµ„æ–™
 http://blog.csdn.net/inthirties/article/details/5465577
 http://www.tuicool.com/articles/qyiI3e
 
-¶ş¡¢°²×°
-1¡¢rpm
-<1>rpm -ivh»òyum installÊ±±¨´í
+------------------------------------------------------------------------------------------------------
+
+redhatæ›´æ¢yumæº
+redhat çš„æ›´æ–°åŒ…åªå¯¹æ³¨å†Œçš„ç”¨æˆ·ç”Ÿæ•ˆï¼Œæ‰€ä»¥æˆ‘ä»¬è‡ªå·±æ‰‹åŠ¨æ›´æ”¹æˆCentOS çš„æ›´æ–°åŒ…ï¼ŒCentOSå‡ ä¹å’Œredhatæ˜¯ä¸€æ ·çš„ï¼Œæ‰€ä»¥æ— éœ€æ‹…å¿ƒè½¯ä»¶åŒ…æ˜¯å¦å¯å®‰è£…ï¼Œå®‰è£…ä¹‹åæ˜¯å¦æœ‰é—®é¢˜ã€‚ 
+1ã€é¦–å…ˆåˆ é™¤redhatåŸæœ‰çš„yum
+rpm -aq|grep yum|xargs rpm -e --nodeps 
+rpm -aq|grep python-iniparse|xargs rpm -e --nodeps 
+rpm -qa|grep python-urlgrabber|xargs rpm -e --nodeps
+
+2ã€ä¸‹è½½rpmåŒ…
+http://mirrors.163.com/centos/7/ä¸­ä¸‹è½½
+yum-metadata-parser-1.1.4-10.el7.x86_64.rpmã€yum-plugin-fastestmirror-1.1.31-40.el7.noarch.rpmã€yum-3.4.3-150.el7.centos.noarch.rpm
+python-urlgrabber-3.10-8.el7.noarch.rpmã€python-iniparse-0.4-9.el7.noarch.rpm
+
+3ã€å®‰è£…è½¯ä»¶åŒ…
+rpm -ivh *  //å› ä¸ºè½¯ä»¶åŒ…ä¹‹é—´æœ‰ä¾èµ–å…³ç³»ï¼Œæœ€å¥½ä¸€èµ·å®‰è£…
+<1>å¦‚æœæŠ¥é”™"éœ€è¦python(abi)=2.7"ï¼Œåˆ™éœ€è¦åœ¨ https://pkgs.org/download/python(abi) ä¸‹è½½python-2.7.5-58.el7.x86_64.rpmã€python-libs-2.7.5-58.el7.x86_64.rpm
+ä¹‹åå†æ‰§è¡Œrpm -ivh * å®‰è£…ã€‚
+
+<2>å¦‚æœæŠ¥é”™python-iniparse-0.4-9.el7.noarch.rpmä¸python2.7ä¸­çš„"..."æœ‰å†²çªï¼Œåˆ™ä¸éœ€è¦å®‰è£…python-iniparse-0.4-9.el7.noarch.rpmã€‚
+
+5ã€æ‰§è¡Œä¸Šé¢"ä¸€ã€yumé•œåƒæºæ›¿æ¢"ä¸­çš„æ­¥éª¤ã€‚
+
+
+èµ„æ–™ï¼š
+1ã€http://mirrors.163.com/centos/     //163centosç³»ç»Ÿç»„ä»¶ã€yumã€é•œåƒ
+2ã€https://pkgs.org/download/python(abi)    //pythonç­‰ç»„ä»¶çš„rpmåŒ…ä¸‹è½½
+3ã€http://blog.csdn.net/wylfengyujiancheng/article/details/50418930
+4ã€https://www.u22e.com/702.html
+
+
+äºŒã€å®‰è£…
+1ã€rpm
+<1>rpm -ivhæˆ–yum installæ—¶æŠ¥é”™
 https://unix.stackexchange.com/questions/256783/installing-html-tidy-conflicts-with-filesystem-package
 # yum install tidy-5.1.25-64bit.rpm
 ......
@@ -31,10 +62,10 @@ file /usr/share/man/man1 from install of tidy-5.1.25-1.x86_64 conflicts
   with file from package filesystem-3.2-20.el7.x86_64
 
 "[root@rcp extra_rpms]# rpm -ivh c3-5.1.2-1.noarch.rpm 
-×¼±¸ÖĞ...                          ################################# [100%]
+å‡†å¤‡ä¸­...                          ################################# [100%]
         file /usr/bin from install of c3-5.1.2-1.noarch conflicts with file from package filesystem-3.2-20.el7.x86_64"
   
-½â´ğ£º
+è§£ç­”ï¼š
 The reason why you're seeing that error is because the person who maintains the package incorrectly included 
 /usr/share/man and /usr/share/man/man1 in the RPM package's definition of what the package "owns". 
 Because the package claims to own that directory (and will try to delete it if you uninstall it), 
@@ -45,56 +76,63 @@ That makes me less likely to trust that package, or any package from that web si
 
 Have you looked at the tidyp package in EPEL? It is API-compatible and is packaged in a reputable repository.
 
-Èı¡¢Ğ¶ÔØ£¨·´°²×°£©
-1¡¢rpm -e »á½«ÅäÖÃÎÄ¼şÒ»ÆğÉ¾³ı
-   rpm -e Ì×¼şÃû
-   rpm --rebuilddb //ÖØ½¨Êı¾İ¿â
-2¡¢yum remove »á±£ÁôÅäÖÃÎÄ¼ş  
-3¡¢tarballĞ¶ÔØÊ±£¬ÅäÖÃÎÄ¼şĞèÒªÊÖ¶¯É¾³ı£¬±È½ÏÂé·³¡£½¨ÒéÅäÖÃÎÄ¼ş×°ÔÚÒ»¸öÎÄ¼ş¼ĞÖĞ¡£
+ä¸‰ã€å¸è½½ï¼ˆåå®‰è£…ï¼‰
+1ã€rpm -e ä¼šå°†é…ç½®æ–‡ä»¶ä¸€èµ·åˆ é™¤
+   rpm -e å¥—ä»¶å
+   rpm --rebuilddb //é‡å»ºæ•°æ®åº“
+2ã€yum remove ä¼šä¿ç•™é…ç½®æ–‡ä»¶  
+3ã€tarballå¸è½½æ—¶ï¼Œé…ç½®æ–‡ä»¶éœ€è¦æ‰‹åŠ¨åˆ é™¤ï¼Œæ¯”è¾ƒéº»çƒ¦ã€‚å»ºè®®é…ç½®æ–‡ä»¶è£…åœ¨ä¸€ä¸ªæ–‡ä»¶å¤¹ä¸­ã€‚
 
-4¡¢Àı×Ó£º
-<1>Èç¹û²é³öÀ´µÄÉè¶¨µµ°¸ÒÑ¾­±»ÎÒ¸Ä¹ı£¬µ«ÊÇÎÒÍü¼ÇÁËÔø¾­ĞŞ¸Ä¹ıÄÄĞ©µØ·½£¬ËùÒÔÏëÒªÖ±½ÓÖØĞÂ°²×°Ò»´Î¸ÃÌ×¼ş£¬¸ÃÈçºÎ×÷£¿
-¼ÙÉè¸ÃÌ×¼şÔÚÍøÂçÉÏµÄÍøÖ·Îª£ºhttp://web.site.name/path/httpd-x.x.xx.i386.rpm
-ÔòÎÒ¿ÉÒÔÕâÑù×ö£ºrpm -ivh http://web.site.name/path/httpd-x.x.xx.i386.rpm --replacepkgs
-<2>Èç¹ûÎÒÎó¿³ÁËÄ³¸öÖØÒªµµ°¸£¬ÀıÈç /etc/crontab£¬Æ«Æ«²»ÏşµÃËûÊôÓÚÄÄÒ»¸öÌ×¼ş£¬¸ÃÔõÃ´°ì£¿
-ËäÈ»ÒÑ¾­Ã»ÓĞÕâ¸öµµ°¸ÁË£¬²»¹ıÃ»ÓĞ¹ØÏµ£¬ÒòÎª RPM ÓĞ¼ÍÂ¼ÔÚ /var/lib/rpm µ±ÖĞµÄÊı¾İ¿â°¡£¡ËùÒÔÖ±½ÓÏÂ´ï£º
-rpm -qf /etc/crontab ¾Í¿ÉÒÔÖªµÀÊÇÄÇ¸öÌ×¼ş†ª£¡ÖØĞÂ°²×°Ò»´Î¸ÃÌ×¼ş¼´¿É£¡
+4ã€ä¾‹å­ï¼š
+<1>å¦‚æœæŸ¥å‡ºæ¥çš„è®¾å®šæ¡£æ¡ˆå·²ç»è¢«æˆ‘æ”¹è¿‡ï¼Œä½†æ˜¯æˆ‘å¿˜è®°äº†æ›¾ç»ä¿®æ”¹è¿‡å“ªäº›åœ°æ–¹ï¼Œæ‰€ä»¥æƒ³è¦ç›´æ¥é‡æ–°å®‰è£…ä¸€æ¬¡è¯¥å¥—ä»¶ï¼Œè¯¥å¦‚ä½•ä½œï¼Ÿ
+å‡è®¾è¯¥å¥—ä»¶åœ¨ç½‘ç»œä¸Šçš„ç½‘å€ä¸ºï¼šhttp://web.site.name/path/httpd-x.x.xx.i386.rpm
+åˆ™æˆ‘å¯ä»¥è¿™æ ·åšï¼šrpm -ivh http://web.site.name/path/httpd-x.x.xx.i386.rpm --replacepkgs
+<2>å¦‚æœæˆ‘è¯¯ç äº†æŸä¸ªé‡è¦æ¡£æ¡ˆï¼Œä¾‹å¦‚ /etc/crontabï¼Œååä¸æ™“å¾—ä»–å±äºå“ªä¸€ä¸ªå¥—ä»¶ï¼Œè¯¥æ€ä¹ˆåŠï¼Ÿ
+è™½ç„¶å·²ç»æ²¡æœ‰è¿™ä¸ªæ¡£æ¡ˆäº†ï¼Œä¸è¿‡æ²¡æœ‰å…³ç³»ï¼Œå› ä¸º RPM æœ‰çºªå½•åœ¨ /var/lib/rpm å½“ä¸­çš„æ•°æ®åº“å•Šï¼æ‰€ä»¥ç›´æ¥ä¸‹è¾¾ï¼š
+rpm -qf /etc/crontab å°±å¯ä»¥çŸ¥é“æ˜¯é‚£ä¸ªå¥—ä»¶å•°ï¼é‡æ–°å®‰è£…ä¸€æ¬¡è¯¥å¥—ä»¶å³å¯ï¼
 
-(ÖØĞÂ°²×°Ì×¼ş¿ÉÒÔ»Ö¸´Ì×¼şµµ°¸£¡)
+(é‡æ–°å®‰è£…å¥—ä»¶å¯ä»¥æ¢å¤å¥—ä»¶æ¡£æ¡ˆï¼)
 
-ËÄ¡¢ÅäÖÃÎÄ¼ş
-<1>/var/lib/rpm(°üº¬rpmÊı¾İ¿â):°²×°Íê±Ïºó£¬rpm»á°ÑÌ×¼şĞÅÏ¢Ğ´Èë/var/lib/rpm£¬ÒÔºó½øĞĞ²éÑ¯»òÕßÊÇÔ¤¼ÆÒªÉı¼¶µÄÊ±ºò£¬Ïà¹ØµÄĞÅÏ¢¾Í»áÓÉ /var/lib/rpmÕâ¸öÄ¿Â¼µÄÄÚÈİÊı¾İÀ´Ìá¹©¡£
-<2>/etc/pki/rpm-gpg/£ºGPGÖ¤ÊéÎÄ¼şÂ·¾¶
-<3>/etc/yum.conf:Éè¶¨µµ£¬¿ÉÒÔÉè¶¨Ò»Ğ©»·¾³²ÎÊıÖ®ÀàµÄ
-<4>/etc/yum.repos.d/CentOS-Base.repo:ÉèÖÃyum serverµÄÎÂ¶È£¬¿ÉÒÔĞŞ¸Ä CentOS-Base.repoÀ´¸Ä±äserver¡£
-<5>/var/cache/yum: yumÏÂÔØµÄÌ×¼şµµ°¸´æÔÚÂ·¾¶ ¿ÉÒÔÊ¹ÓÃyum cleanÇå³ı¡£
+å››ã€é…ç½®æ–‡ä»¶
+<1>/var/lib/rpm(åŒ…å«rpmæ•°æ®åº“):å®‰è£…å®Œæ¯•åï¼Œrpmä¼šæŠŠå¥—ä»¶ä¿¡æ¯å†™å…¥/var/lib/rpmï¼Œä»¥åè¿›è¡ŒæŸ¥è¯¢æˆ–è€…æ˜¯é¢„è®¡è¦å‡çº§çš„æ—¶å€™ï¼Œç›¸å…³çš„ä¿¡æ¯å°±ä¼šç”± /var/lib/rpmè¿™ä¸ªç›®å½•çš„å†…å®¹æ•°æ®æ¥æä¾›ã€‚
+<2>/etc/pki/rpm-gpg/ï¼šGPGè¯ä¹¦æ–‡ä»¶è·¯å¾„
+<3>/etc/yum.conf:è®¾å®šæ¡£ï¼Œå¯ä»¥è®¾å®šä¸€äº›ç¯å¢ƒå‚æ•°ä¹‹ç±»çš„
+<4>/etc/yum.repos.d/CentOS-Base.repo:è®¾ç½®yum serverçš„æ¸©åº¦ï¼Œå¯ä»¥ä¿®æ”¹ CentOS-Base.repoæ¥æ”¹å˜serverã€‚
+<5>/var/cache/yum: yumä¸‹è½½çš„å¥—ä»¶æ¡£æ¡ˆå­˜åœ¨è·¯å¾„ å¯ä»¥ä½¿ç”¨yum cleanæ¸…é™¤ã€‚
 
-Îå¡¢rpmÑéÖ¤ÓëÊı×ÖÑéÖ¤
-1¡¢rpmÑéÖ¤
-<1>Ê¹ÓÃ /var/lib/rpm µ×ÏÂµÄÊı¾İ¿âÄÚÈİÀ´±È¶ÔÄ¿Ç° Linux ÏµÍ³µÄ»·¾³ÏÂµÄËùÓĞÌ×¼şµµ°¸£¨ÈçÉè¶¨µµ/etc,ËµÃ÷µµ/man£©£¬ÁË½âÄÄĞ©µµ°¸Êı¾İ±»ĞŞ¸Ä¹ı¡£
-2¡¢Êı×ÖÑéÖ¤
-<1>°²×°rpmÎÄ¼şµÄ²½Öè£º
--- Ê×ÏÈ±ØĞë°²×°Ô­³§·¢²¼µÄ¹«Ô¿ÎÄ¼ş£¨Public Key£¬CentOSÊ¹ÓÃµÄÊÇGPG£© rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 
--- Êµ¼Ê°²×°Ô­³§RPMÈí¼şÊ±£¬rpmÃüÁî»áÈ¥¶ÁÈ¡RPMÎÄ¼şµÄÖ¤ÊéĞÅÏ¢£¬²¢Óë±¾»úÏµÍ³ÄÚµÄÖ¤ÊéĞÅÏ¢±È½Ï
--- Ö¤ÊéÏàÍ¬ÔòÓèÒÔ°²×°£¬ÈôÕÒ²»µ½Ö¤ÊéĞÅÏ¢£¬ÔòÓèÒÔ¸æ¾¯²¢Í£Ö¹°²×°¡£(eg:GPG key retrieval failed: [Errno 14])
-<2>yum»òrpm°²×°Ê±±¨´í£ºGPG key retrieval failed: [Errno 14]
-½â¾ö·½·¨£º1¡¢°²×°¹«Ô¿ÎÄ¼şrpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 £¬°²×°Ê±»á³öÏÖÖ¤Êé±È½Ï£¬Ñ¡Ôñyes¡£
-          2¡¢Ò²¿ÉÒÔÑ¡ÔñĞ¯´ø²ÎÊı--nogpgcheck£¬²»¼ì²é¹«Ô¿¡£
-		  £¨Ã»ÓĞ³¢ÊÔ£ºĞŞ¸ÄrepoÎÄ¼şÃ¿²Ö¿âÅäÖÃÇøÓò¼Ó»òĞŞ¸Ägpgcheck=0ÄÜ²Ö¿âÎÄ¼şÎ»ÖÃ£º/etc/yum.repos.d/*
-		              »òÕßrpm --nosignature //ºöÂÔÊı×ÖÖ¤Êé¼ì²é£©
+äº”ã€rpméªŒè¯ä¸æ•°å­—éªŒè¯
+1ã€rpméªŒè¯
+<1>ä½¿ç”¨ /var/lib/rpm åº•ä¸‹çš„æ•°æ®åº“å†…å®¹æ¥æ¯”å¯¹ç›®å‰ Linux ç³»ç»Ÿçš„ç¯å¢ƒä¸‹çš„æ‰€æœ‰å¥—ä»¶æ¡£æ¡ˆï¼ˆå¦‚è®¾å®šæ¡£/etc,è¯´æ˜æ¡£/manï¼‰ï¼Œäº†è§£å“ªäº›æ¡£æ¡ˆæ•°æ®è¢«ä¿®æ”¹è¿‡ã€‚
+2ã€æ•°å­—éªŒè¯
+<1>å®‰è£…rpmæ–‡ä»¶çš„æ­¥éª¤ï¼š
+-- é¦–å…ˆå¿…é¡»å®‰è£…åŸå‚å‘å¸ƒçš„å…¬é’¥æ–‡ä»¶ï¼ˆPublic Keyï¼ŒCentOSä½¿ç”¨çš„æ˜¯GPGï¼‰ rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 
+-- å®é™…å®‰è£…åŸå‚RPMè½¯ä»¶æ—¶ï¼Œrpmå‘½ä»¤ä¼šå»è¯»å–RPMæ–‡ä»¶çš„è¯ä¹¦ä¿¡æ¯ï¼Œå¹¶ä¸æœ¬æœºç³»ç»Ÿå†…çš„è¯ä¹¦ä¿¡æ¯æ¯”è¾ƒ
+-- è¯ä¹¦ç›¸åŒåˆ™äºˆä»¥å®‰è£…ï¼Œè‹¥æ‰¾ä¸åˆ°è¯ä¹¦ä¿¡æ¯ï¼Œåˆ™äºˆä»¥å‘Šè­¦å¹¶åœæ­¢å®‰è£…ã€‚(eg:GPG key retrieval failed: [Errno 14])
+<2>yumæˆ–rpmå®‰è£…æ—¶æŠ¥é”™ï¼šGPG key retrieval failed: [Errno 14]
+è§£å†³æ–¹æ³•ï¼š1ã€å®‰è£…å…¬é’¥æ–‡ä»¶rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-CentOS-7 ï¼Œå®‰è£…æ—¶ä¼šå‡ºç°è¯ä¹¦æ¯”è¾ƒï¼Œé€‰æ‹©yesã€‚
+          2ã€ä¹Ÿå¯ä»¥é€‰æ‹©æºå¸¦å‚æ•°--nogpgcheckï¼Œä¸æ£€æŸ¥å…¬é’¥ã€‚
+		  ï¼ˆæ²¡æœ‰å°è¯•ï¼šä¿®æ”¹repoæ–‡ä»¶æ¯ä»“åº“é…ç½®åŒºåŸŸåŠ æˆ–ä¿®æ”¹gpgcheck=0èƒ½ä»“åº“æ–‡ä»¶ä½ç½®ï¼š/etc/yum.repos.d/*
+		              æˆ–è€…rpm --nosignature //å¿½ç•¥æ•°å­—è¯ä¹¦æ£€æŸ¥ï¼‰
 					  
-Áù¡¢yum
-1¡¢°æ±¾Éı¼¶£¨centos4.2->4.3£©
-<1>ĞŞ¸Ä/etc/yum.conf  ×îºóÒ»ĞĞ¼ÓÉÏ plugins=1
-<2>ĞŞ¸Ä/etc/yum.repos.d/CentOS-Base.repo£¬ÈçÒ»ÖĞËùÊ¾£¬ÅäÖÃºÃºÏÊÊµÄyumÔ´
+å…­ã€yum
+1ã€ç‰ˆæœ¬å‡çº§ï¼ˆcentos4.2->4.3ï¼‰
+<1>ä¿®æ”¹/etc/yum.conf  æœ€åä¸€è¡ŒåŠ ä¸Š plugins=1
+<2>ä¿®æ”¹/etc/yum.repos.d/CentOS-Base.repoï¼Œå¦‚ä¸€ä¸­æ‰€ç¤ºï¼Œé…ç½®å¥½åˆé€‚çš„yumæº
 <3>yum upgrade
-2¡¢°æ±¾Éı¼¶£¨²»Í¬°æ±¾¼ä£©
+2ã€ç‰ˆæœ¬å‡çº§ï¼ˆä¸åŒç‰ˆæœ¬é—´ï¼‰
 
-Æß¡¢×îĞ¡°²×°centos
-°²×°centosÊ±Ñ¡Ôñ×îĞ¡°²×°£¬Ö®ºó½øÈëĞé»úÖ´ĞĞ£º
-yum group install -y "Development and Creative Workstation"   //°²×°³ÌĞò×é
-ÆäÖĞ£º"Development and Creative Workstation" ¶ÔÓ¦°²×°½çÃæÈí¼şÑ¡ÔñÖĞµÄ"¿ª·¢¼°Éú³É¹¤×÷Õ¾"¡£
+3ã€yum updateå’Œyum upgrade(åˆ†åˆ«æµ‹è¯•yum -y upgradeå’Œyum -y update)
+<1>              å‡çº§å‰   ç³»ç»Ÿç‰ˆæœ¬: CentOS 5.5 \ å†…æ ¸ç‰ˆæœ¬: 2.6.18-194.el5
+<2>yum -y upgradeå‡çº§å   ç³»ç»Ÿç‰ˆæœ¬: CentOS 5.7 \ å†…æ ¸ç‰ˆæœ¬: 2.6.18-194.el5   ç³»ç»Ÿå’Œè½¯ä»¶é…ç½®ä¸åšä¿®æ”¹
+<3>yum -y update å‡çº§å   ç³»ç»Ÿç‰ˆæœ¬: CentOS 5.7 \ å†…æ ¸ç‰ˆæœ¬: 2.6.18-238.el5   ç³»ç»Ÿå’Œè½¯ä»¶é…ç½®æ–‡ä»¶æ›´æ–°
 
-yum install -y cmake git-review samba python-pip gcc gcc-c++ telnet zlib zlib-devel  //ÔÙ°²×°ĞèÒªµÄÆäËû³ÌĞò
+ç»“è®ºï¼š
+yum -y update   å‡çº§æ‰€æœ‰åŒ…ï¼Œæ”¹å˜è½¯ä»¶è®¾ç½®å’Œç³»ç»Ÿè®¾ç½®ï¼Œç³»ç»Ÿã€å†…æ ¸éƒ½å‡çº§
+yum -y upgrade  å‡çº§æ‰€æœ‰åŒ…ï¼Œä¸æ”¹å˜è½¯ä»¶è®¾ç½®å’Œç³»ç»Ÿè®¾ç½®ï¼Œç³»ç»Ÿç‰ˆæœ¬å‡çº§ï¼Œå†…æ ¸ä¸å‡çº§
 
+ä¸ƒã€æœ€å°å®‰è£…centos
+å®‰è£…centosæ—¶é€‰æ‹©æœ€å°å®‰è£…ï¼Œä¹‹åè¿›å…¥è™šæœºæ‰§è¡Œï¼š
+yum group install -y "Development and Creative Workstation"   //å®‰è£…ç¨‹åºç»„
+å…¶ä¸­ï¼š"Development and Creative Workstation" å¯¹åº”å®‰è£…ç•Œé¢è½¯ä»¶é€‰æ‹©ä¸­çš„"å¼€å‘åŠç”Ÿæˆå·¥ä½œç«™"ã€‚
 
+yum install -y cmake git-review samba python-pip gcc gcc-c++ telnet zlib zlib-devel  //å†å®‰è£…éœ€è¦çš„å…¶ä»–ç¨‹åº
