@@ -71,3 +71,102 @@ else:
 查看python内置函数：help("open")
 
 5、print('\t', end='')  //表示输出一个制表符后不换行。
+
+6、getopt模块
+getopt模块用于抽出命令行选项和参数，也就是sys.argv。命令行选项使得程序的参数更加灵活，支持短选项模式和长选项模式。
+<1>说明
+getopt函数的格式是getopt.getopt([命令行参数列表], "短选项", [长选项列表])
+短选项名后的冒号(:)表示该选项必须有附加的参数。
+长选项名后的等号(=)表示该选项必须有附加的参数。
+返回opts和args。
+
+opts是一个参数选项及其value的元组( ( '-f', 'hello'), ( '-t', '' ), ( '--format', '' ), ( '--directory-prefix', '/home' ) )
+args是一个除去有用参数外其他的命令行输入 ( 'a', 'b' )
+
+<2>eg:	python scriptname.py -f 'hello' --directory-prefix=/home -t --format 'a' 'b'
+ 
+import getopt
+shortargs = 'f:t'
+longargs = ['directory-prefix=', 'format', '--f_long=']
+
+opts, args = getopt.getopt( sys.argv[1:], shortargs, longargs )
+ 
+然后遍历opts便可以获取所有的命令行选项及其对应参数了。
+
+for opt, val in opts:
+	if opt in ( '-f', '--f_long' ):
+		pass
+	if ....
+使用字典接受命令行的输入，然后再传送字典，可以使得命令行参数的接口更加健壮。
+
+
+7、signal模块
+https://www.cnblogs.com/madsnotes/articles/5688681.html
+signal模块有各种信号名的宏定义，与Linux保持一致。
+
+<1>signal包的核心是使用 signal.signal()函数来预设(register)信号处理函数:
+signal.signal(signalnum, handler)		//signalnum为某个信号，handler为该信号的处理函数
+当handler为signal.SIG_IGN时，信号被无视(ignore)。
+当handler为singal.SIG_DFL，进程采取默认操作(default)。
+当handler为一个函数名时，进程采取函数中定义的操作。
+
+信号处理函数的两个参数:一个用来识别信号(signum)，另一个用来获得信号发生时，进程栈的状况(stack frame)。
+这两个参数都是由signal.singnal()函数来传递的。
+
+8、subprocess模块
+subprocess的目的是启动一个新的进程并且与之通信。
+<1>call
+<2>check_all
+<3>check_output
+父进程等待子进程执行命令，返回子进程向标准输出发送输出运行结果，检查退出信息。
+如果returncode不为0，则举出错误subprocess.CalledProcessError，该对象包含有returncode属性和output属性，output属性为标准输出的输出结果，可用try…except…来检查。
+
+<4>如果在执行相关命令时，可将命令和所带的参数一起放在一个列表中传递给相关方法，例如：
+>>> import subprocess
+>>> retcode = subprocess.call(["ls", "-l"])
+>>> print retcode
+0
+
+9、from A import B as C  \  import A as B
+给B库一个C的别称
+
+10、xml.etree.ElementTree解析XML
+from xml.etree import ElementTree as ET
+<1>tree = ET.parse('xmlfilepath')
+
+11、ConfigParser模块
+读写配置文件
+http://blog.csdn.net/gexiaobaohelloworld/article/details/7976944
+
+12、psycopg2模块	//操作PostgreSQL
+
+13、locals()和globals()	//Python的两个内置函数，基于字典的访问局部和全局变量的方式。(locals 是只读的，globals 不是)
+http://blog.csdn.net/scelong/article/details/6977867
+
+<1>当一行代码要使用变量 x 的值时，Python会到所有可用的名字空间去查找变量，按照如下顺序：
+1)局部名字空间 - 特指当前函数或类的方法。如果函数定义了一个局部变量 x，Python将使用这个变量，然后停止搜索。
+2)全局名字空间 - 特指当前的模块。如果模块定义了一个名为 x 的变量，函数或类，Python将使用这个变量然后停止搜索。
+3)内置名字空间 - 对每个模块都是全局的。作为最后的尝试，Python将假设 x 是内置函数或变量。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

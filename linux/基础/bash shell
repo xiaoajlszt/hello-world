@@ -119,6 +119,7 @@ ${#2} 表示脚本第二个参数的长度
 ${#@} 表示脚本所有参数的个数，等效于$#
 
 <2>字符串的前后截取，pattern一般是个命令行glob，匹配的即为被去掉的字符：
+https://www.cnblogs.com/oxspirt/p/7242837.html
 ${var#pattern} 最短头匹配截取
 ${var##Pattern} 最大头匹配截取
 ${var%Pattern} 最短尾匹配截取

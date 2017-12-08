@@ -1,0 +1,126 @@
+一、简介
+1. 信号用于通知进程发生了某种情况，例如除数为0，则将名为SIGFPE(浮点异常)的信号发送给该进程。
+进程有以下三种处理信号的方式：
+<1>忽略信号(不推荐，因为异常产生的后果不确定)
+<2>按系统默认方式处理(对于除数为0，系统默认方式为终止该进程)
+<3>提供一个函数，信号发生时调用该函数，称为捕捉该信号。
+
+2、终端键盘上有两种产生信号的方法：
+<1>中断键 Ctrl+C
+<2>退出键 Ctrl+D
+
+3、另一种产生信号的方法是调用kill函数。在一个进程中调用此函数就可以向另一个进程发送一个信号。
+//我们必须是那个进程的所有者或者是超级用户。
+
+二、详细
+1、说明
+<1>Linux将信号定义在 <bits/signum.h>中。
+<2>不存在编号为0的信号，kill函数对信号编号0有特殊应用。
+<3>信号是异步事件的经典实例。产生信号的事件对进程而言是随机出现的。进程必须告诉内核"在此信号发生时，请执行下列操作"。
+1)忽略此信号。大多数信号都可以使用这种方式处理，SIGKILL和SIGSTOP两种信号决不能被忽略。
+另外，如果忽略某些由硬件异常产生的信号(非法内存、除以0)，则进程的运行行为是未定义的。
+
+2)捕捉信号。通知内核在某种信号发生时，调用一个用户函数。
+注意，不能捕捉SIGKILL和SIGSTOP信号。
+
+3)执行系统默认动作。
+/* Signals.  */
+#define SIGHUP      1   /* Hangup (POSIX).  */						连接断开			终止
+#define SIGINT      2   /* Interrupt (ANSI).  */					终端中断符			终止
+#define SIGQUIT     3   /* Quit (POSIX).  */
+#define SIGILL      4   /* Illegal instruction (ANSI).  */			非法硬件指令		终止+core
+#define SIGTRAP     5   /* Trace trap (POSIX).  */
+#define SIGABRT     6   /* Abort (ANSI).  */						异常终止			终止+core
+#define SIGIOT      6   /* IOT trap (4.2 BSD).  */					硬件故障			终止+core
+#define SIGBUS      7   /* BUS error (4.2 BSD).  */					硬件故障			终止+core
+#define SIGFPE      8   /* Floating-point exception (ANSI).  */		算术异常			终止+core
+#define SIGKILL     9   /* Kill, unblockable (POSIX).  */			终止				终止
+#define SIGUSR1     10  /* User-defined signal 1 (POSIX).  */
+#define SIGSEGV     11  /* Segmentation violation (ANSI).  */		无效内存引用		终止+core
+#define SIGUSR2     12  /* User-defined signal 2 (POSIX).  */
+#define SIGPIPE     13  /* Broken pipe (POSIX).  */
+#define SIGALRM     14  /* Alarm clock (POSIX).  */					定时器超时			终止
+#define SIGTERM     15  /* Termination (ANSI).  */					终止				终止
+#define SIGSTKFLT   16  /* Stack fault.  */
+#define SIGCLD      SIGCHLD /* Same as SIGCHLD (System V).  */
+#define SIGCHLD     17  /* Child status has changed (POSIX).  */	子线程状态改变		忽略
+#define SIGCONT     18  /* Continue (POSIX).  */					使暂停进程继续		继续/忽略
+#define SIGSTOP     19  /* Stop, unblockable (POSIX).  */			停止				停止进程
+#define SIGTSTP     20  /* Keyboard stop (POSIX).  */
+#define SIGTTIN     21  /* Background read from tty (POSIX).  */
+#define SIGTTOU     22  /* Background write to tty (POSIX).  */
+#define SIGURG      23  /* Urgent condition on socket (4.2 BSD).  */
+#define SIGXCPU     24  /* CPU limit exceeded (4.2 BSD).  */
+#define SIGXFSZ     25  /* File size limit exceeded (4.2 BSD).  */
+#define SIGVTALRM   26  /* Virtual alarm clock (4.2 BSD).  */
+#define SIGPROF     27  /* Profiling alarm clock (4.2 BSD).  */
+#define SIGWINCH    28  /* Window size change (4.3 BSD, Sun).  */
+#define SIGPOLL     SIGIO   /* Pollable event occurred (System V).  */可轮询事件(poll)	终止
+#define SIGIO       29  /* I/O now possible (4.2 BSD).  */			异步IO				终止/忽略
+#define SIGPWR      30  /* Power failure restart (System V).  */
+#define SIGSYS      31  /* Bad system call.  */
+#define SIGUNUSED   31
+
+/-----------------------------------------------------------------------------------------------------------------------------------------------------------/
+Linux下的异常是通过信号的方式来发出的。每个信号都有其对应的名称以及含义。利用man 7 signal 可以查看信号的相关信息。
+在linux信号中，最常见的就是下面几种信号，tulip的异常对这几种信号都挂载了信号处理函数来捕捉这几种异常。
+
+#define SIGSEGV         11     段错误异常
+SIGSEGV是C/C++程序员很熟悉的信号。当程序没有权利访问一个受保护的地址时，或者访问无效的虚拟内存地址时，会产生这个信号。
+
+#define SIGFPE          8      浮点异常
+    当进程发生一个浮点错误时，SIGFPE信号被发送给该进程。对于那些处理复杂数学运算的程序，一般会建议你捕获该信号。
+
+#define SIGBUS          7      总线错误
+CPU检测到数据总线上的错误时将产生SIGBUS信号。当程序尝试去访问一个没有正确对齐的内存地址时就会产生该信号。
+
+#define SIGABRT         6      异常终止
+SIGABRT提供了一种在异常终止(abort)一个进程的同时创建一个核心转储的方法。
+
+#define SIGILL          4      非法指令
+如果正在执行的进程中包含非法指令，操作系统将向该进程发送SIGILL信号。如果你的程序使用了线程，或者pointer functions，那么可能的话可以尝试捕获该信号来协助调试。
+/------------------------------------------------------------------------------------------------------------------------------------------------------------/
+
+"终止+core"表示进程当前工作目录的core文件中复制了该进程的内存映像。大多数Unix系统调试程序都使用core文件检查进程终止时的状态。
+Linux中，core文件名通过/proc/sys/kernel/core_pattern进行配置。
+
+
+
+2、函数signal
+#include <signal.h>
+void (*signal(int signo, void (*func)(int)))(int);  //成功，则返回以前的信号处理配置；失败，则返回SIG_ERR
+
+
+3、
+kill(1)	//kill命令		kill -信号ID pid
+kill(2)	//kill函数
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
