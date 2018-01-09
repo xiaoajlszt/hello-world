@@ -8,7 +8,14 @@
 如果有finally语句块，则执行完except后会执行finally。
 
 <2>如果未出错，except语句块不会被执行，但是如果有finally语句块，则会执行finally。
+1)
+try:??
+????a=b??
+????b=c??
+except?Exception,e:			#捕获所有异常??
+????print('Exception:', e)
 
+2)
 try:
     print('try...')
     r = 10 / 0

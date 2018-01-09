@@ -1,0 +1,10 @@
+1. 模块
+import sys
+
+2. 参数
+python test1.py argv1 argv2  or  ./test1.py argv1 argv2
+ 
+<1>len(sys.argv)	//3
+<2>argv[0]	   test1.py  or  ./test1.py 
+<3>argv[1]		argv1
+<4>argv[2]		argv2

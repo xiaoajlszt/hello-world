@@ -206,3 +206,13 @@ True
 >>> s="abce"
 >>> print s.upper()
 ABCE
+
+8¡¢split()
+str.split = split(...)
+    S.split([sep [,maxsplit]]) -> list of strings
+
+    Return a list of the words in the string S, using sep as the
+    delimiter string.  If maxsplit is given, at most maxsplit
+    splits are done. If sep is not specified or is None, any
+    whitespace string is a separator and empty strings are removed
+    from the result.

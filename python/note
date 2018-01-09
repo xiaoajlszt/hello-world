@@ -148,14 +148,59 @@ http://blog.csdn.net/scelong/article/details/6977867
 2)全局名字空间 - 特指当前的模块。如果模块定义了一个名为 x 的变量，函数或类，Python将使用这个变量然后停止搜索。
 3)内置名字空间 - 对每个模块都是全局的。作为最后的尝试，Python将假设 x 是内置函数或变量。
 
+14、glob
+glob模块是最简单的模块之一，内容非常少。用它可以查找符合特定规则的文件路径名。跟使用windows下的文件搜索差不多。
+查找文件只用到三个匹配符：”*”, “?”, “[]”。
+”*”匹配0个或多个字符；
+”?”匹配单个字符；
+”[]”匹配指定范围内的字符，如：[0-9]匹配数字。
+
+<1>glob.glob
+返回所有匹配的文件路径列表。它只有一个参数pathname，定义了文件路径匹配规则，这里可以是绝对路径，也可以是相对路径。
+
+<2>glob.iglob
+获取一个可编历对象，使用它可以逐个获取匹配的文件路径名。
+与glob.glob()的区别是：glob.glob同时获取所有的匹配路径，而glob.iglob一次只获取一个匹配路径。
+
+15. DT模块 DT.datatime
 
 
+15、内置函数filter()
+filter()函数是 Python 内置的另一个有用的高阶函数，filter()函数接收一个函数 f 和一个list，这个函数 f 的作用是对每个元素进行判断，返回 True或 False，filter()根据判断结果自动过滤掉不符合条件的元素，返回由符合条件元素组成的新list。
+
+<1>例如，要从一个list [1, 4, 6, 7, 9, 12, 17]中删除偶数，保留奇数，首先，要编写一个判断奇数的函数：
+def is_odd(x):
+    return x % 2 == 1
+
+然后，利用filter()过滤掉偶数：
+
+>>>filter(is_odd, [1, 4, 6, 7, 9, 12, 17])
+结果：
+
+[1, 7, 9, 17]
+
+<2> help()
+Return those items of sequence for which function(item) is true.  
+If function is None, return the items that are true.  
+If sequence is a tuple or string, return the same type, else return a list.
 
 
+16、注意点
+<1> += 和 =不同
+list1 = [1,2,3]
+list2 = [1,2,3]
 
+def change_list1(l):
+	l += [4]
+	
+def change_list2(l):
+	l = l + [4]
 
+change_list1(list1)
+//[1,2,3,4]
 
-
+change_list2(list1)
+//[1,2,3]
 
 
 

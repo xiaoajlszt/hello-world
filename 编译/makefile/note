@@ -1,0 +1,42 @@
+一、基础
+1. 变量中的变量
+<1> = 
+左侧是变量，右侧是变量的值，右侧变量的值可以定义在文件的任何一处，也就是说，右侧中的变量不一定非要是已定义好的值，其也可以使用后面定义的值。
+
+eg:
+foo = $(bar)
+bar = $(ugh)
+ugh = Huh?
+
+all:
+	echo $(foo)
+我们执行“make all”将会打出变量 $(foo) 的值是“Huh?”
+
+<2> :=
+这种方法，前面的变量不能使用后面的变量，只能使用前面已定义好了的变量。
+
+eg: 
+y := $(x) bar
+x := foo
+那么， y 的值是“bar”，而不是“foo bar”。
+
+
+
+2. 文件名操作函数
+<1> $(addprefix <prefix>,<names...>)
+• 名称：加前缀函数——addprefix。
+• 功能：把前缀 <prefix> 加到 <names> 中的每个单词。
+• 返回：返回加过前缀的文件名序列。
+• 示例： $(addprefix src/,foo bar) 返回值是“src/foo src/bar”。
+
+<2> $(addsuffix <suffix>,<names...>)
+• 名称：加后缀函数——addsuffix。
+• 功能：把后缀 <suffix> 加到 <names> 中的每个单词后面。
+• 返回：返回加过后缀的文件名序列。
+• 示例： $(addsuffix .c,foo bar) 返回值是“foo.c bar.c”。
+
+<3> $(basename <names...>)
+• 名称：取前缀函数——basename。
+• 功能：从文件名序列 <names> 中取出各个文件名的前缀部分。
+• 返回：返回文件名序列 <names> 的前缀序列，如果文件没有前缀，则返回空字串。
+• 示例： $(basename src/foo.c src-1.0/bar.c hacks) 返回值是“src/foo src-1.0/bar hacks”。

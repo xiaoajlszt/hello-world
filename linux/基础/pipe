@@ -28,13 +28,64 @@ HOME="/root"
 
 <2>cut需要有固定的分隔符，比如空格、分号等，如果有多个空格连在一起，可能会不太好处理。
 
-2、grep  //分析以行信息，若当中有我们所需要的信息，就将该行拿出来
-<1>参数
+2、grep  //分析以行信息
+grep [OPTIONS] PATTERN [FILE ...]
+grep [OPTIONS] [-e PATTERN | -f FILE] [FILE ...]
+  
+<1> OPTIONS
+-r, --recursive	//文件参数是目录，该选项将递归搜索该目录下的所有子目录和文件。symbolic links文件与-R有差异。
+    Read all files under each directory, recursively, following symbolic links only if they are on the command line.  This is equivalent to the -d recurse option.
+
+-R, --dereference-recursive
+    Read all files under each directory, recursively. Follow all symbolic links, unlike -r.
+	
+-h, --no-filename
+    Suppress the prefixing of file names on output.  This is the default when there is only one file (or only standard input) to search.
+
+-H, --with-filename
+    Print the file name for each match.  This is the default when there is more than one file to search.
+
+-i, --ignore-case	//忽略大小写
+    Ignore case distinctions in both the PATTERN and the input files.  (-i is specified by POSIX.)
+
+-I  //
+	Process a binary file as if it did not contain matching data; this is equivalent to the --binary-files=without-match option.
+
+-n, --line-number
+    Prefix each line of output with the 1-based line number within its input file.  (-n is specified by POSIX.)
+
+
 -a：将binary档案以text档案方式搜索数据
 -c：计算找到"搜索字符串"的次数
 -i：忽略大小写
 -n：顺便输出行号
 -v：反向选择，即显示出没有"搜索字符串"的那些行
+
+<2> PATTERN
+^ 锚定行的开始 如：'^grep'匹配所有以grep开头的行。 
+$ 锚定行的结束 如：'grep$'匹配所有以grep结尾的行。 
+. 匹配一个非换行符的字符 如：'gr.p'匹配gr后接一个任意字符，然后是p。 
+* 匹配零个或多个先前字符 如：'*grep'匹配所有一个或多个空格后紧跟grep的行。 .*一起用代表任意字符。
+?[] 匹配一个指定范围内的字符，如'[Gg]rep'匹配Grep和grep。 
+[^] 匹配一个不在指定范围内的字符，如：'[^A-FH-Z]rep'匹配不包含A-R和T-Z的一个字母开头，紧跟rep的行。 
+\(..\) 标记匹配字符，如'\(love\)'，love被标记为1。 
+\ 锚定单词的开始，如:'\匹配包含以grep开头的单词的行。 
+\> 锚定单词的结束，如'grep\>'匹配包含以grep结尾的单词的行。 
+x\{m\} 重复字符x，m次，如：'0\{5\}'匹配包含5个o的行。 
+x\{m,\} 重复字符x,至少m次，如：'o\{5,\}'匹配至少有5个o的行。 
+x\{m,n\}重复字符x，至少m次，不多于n次，如：'o\{5,10\}'匹配5--10个o的行。
+?\w 匹配文字和数字字符，也就是[A-Za-z0-9]，如：'G\w*p'匹配以G后跟零个或多个文字或数字字符，然后是p。
+?\b 单词锁定符，如: '\bgrep\b'只匹配grep。
+?常用的 grep 选项有：
+?-c 只输出匹配行的个数。
+?-i 不区分大小写（只适用于单字符）。
+?-h 查询多文件时不显示文件名。
+?-l 查询多文件时只输出包含匹配字符的文件名。
+?-n 显示匹配行及行号。
+?-s 不显示不存在或无匹配文本的错误信息。
+?-v 显示不包含匹配文本的所有行。
+?-V 显示软件版本信息
+?使用grep匹配时最好用双引号引起来，防止被系统误认为参数或者特殊命令，也可以匹配多个单词
 
 二、排序命令：sort、wc、uniq
 1、sort
