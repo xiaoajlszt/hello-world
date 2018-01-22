@@ -72,34 +72,6 @@ else:
 
 5、print('\t', end='')  //表示输出一个制表符后不换行。
 
-6、getopt模块
-getopt模块用于抽出命令行选项和参数，也就是sys.argv。命令行选项使得程序的参数更加灵活，支持短选项模式和长选项模式。
-<1>说明
-getopt函数的格式是getopt.getopt([命令行参数列表], "短选项", [长选项列表])
-短选项名后的冒号(:)表示该选项必须有附加的参数。
-长选项名后的等号(=)表示该选项必须有附加的参数。
-返回opts和args。
-
-opts是一个参数选项及其value的元组( ( '-f', 'hello'), ( '-t', '' ), ( '--format', '' ), ( '--directory-prefix', '/home' ) )
-args是一个除去有用参数外其他的命令行输入 ( 'a', 'b' )
-
-<2>eg:	python scriptname.py -f 'hello' --directory-prefix=/home -t --format 'a' 'b'
- 
-import getopt
-shortargs = 'f:t'
-longargs = ['directory-prefix=', 'format', '--f_long=']
-
-opts, args = getopt.getopt( sys.argv[1:], shortargs, longargs )
- 
-然后遍历opts便可以获取所有的命令行选项及其对应参数了。
-
-for opt, val in opts:
-	if opt in ( '-f', '--f_long' ):
-		pass
-	if ....
-使用字典接受命令行的输入，然后再传送字典，可以使得命令行参数的接口更加健壮。
-
-
 7、signal模块
 https://www.cnblogs.com/madsnotes/articles/5688681.html
 signal模块有各种信号名的宏定义，与Linux保持一致。
@@ -140,10 +112,19 @@ http://blog.csdn.net/gexiaobaohelloworld/article/details/7976944
 
 12、psycopg2模块	//操作PostgreSQL
 
-13、locals()和globals()	//Python的两个内置函数，基于字典的访问局部和全局变量的方式。(locals 是只读的，globals 不是)
+13、locals()和globals()	//(locals 是只读的，globals 不是)
 http://blog.csdn.net/scelong/article/details/6977867
 
-<1>当一行代码要使用变量 x 的值时，Python会到所有可用的名字空间去查找变量，按照如下顺序：
+Python的两个内置函数，基于字典的访问局部和全局变量的方式。
+
+<1>首先需要理解python中的名字空间概念。
+Python使用叫做名字空间的东西来记录变量的轨迹。
+名字空间只是一个字典，它的键字就是变量名，字典的值就是那些变量的值。实际上，名字空间可以象Python的字典一样进行访问。
+1)每个函数都有着自已的名字空间，叫做局部名字空间，它记录了函数的变量，包括函数的参数和局部定义的变量。
+2)每个模块拥有它自已的名字空间，叫做全局名字空间，它记录了模块的变量，包括函数、类、其它导入的模块、模块级的变量和常量。
+3)还有就是内置名字空间，任何模块均可访问它，它存放着内置的函数和异常。
+
+<2>当一行代码要使用变量 x 的值时，Python会到所有可用的名字空间去查找变量，按照如下顺序：
 1)局部名字空间 - 特指当前函数或类的方法。如果函数定义了一个局部变量 x，Python将使用这个变量，然后停止搜索。
 2)全局名字空间 - 特指当前的模块。如果模块定义了一个名为 x 的变量，函数或类，Python将使用这个变量然后停止搜索。
 3)内置名字空间 - 对每个模块都是全局的。作为最后的尝试，Python将假设 x 是内置函数或变量。
@@ -203,7 +184,25 @@ change_list2(list1)
 //[1,2,3]
 
 
+17. reload(sys)后设置编码
+http://blog.csdn.net/daydayup_gzm/article/details/72654188
 
+<1>python在安装时，默认的编码是ascii，当程序中出现非ascii编码时，python的处理常常会报：
+UnicodeDecodeError: 'ascii' codec can't decode byte 0x?? in position 1: ordinal not in range(128)
+python没办法处理非ascii编码的，此时需要自己设置python的默认编码，一般设置为utf8的编码格式。
+
+<2>查询系统默认编码可以在解释器中输入以下命令：
+sys.getdefaultencoding()
+
+<2>设置默认编码时使用： 
+sys.setdefaultencoding('utf8')
+//可能会报AttributeError: 'module' object has no attribute 'setdefaultencoding'的错误，需要执行reload(sys)，再执行以上命令就可以顺利通过。再执行sys.getdefaultencoding()就会发现编码已经被设置为utf8的了。
+//如果需要在运行时（就是整个解释器启动完之后）进行setdefaultencoding，就只能重新加载sys这个模块。
+
+<3>eg:
+import sys  
+reload(sys)  
+sys.setdefaultencoding('utf8')
 
 
 

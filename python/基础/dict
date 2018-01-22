@@ -26,10 +26,13 @@ KeyError: 'Thomas'
 >>> 'Thomas' in d
 False
 
-<2>通过dict的get()方法，如果key不存在，可以返回None，或者自己指定的value：
+<2>通过dict的get()方法，如果key不存在，返回None，或者自己指定的value：
 >>> d.get('Thomas') //返回None的时候Python的交互式命令行不显示结果。
 >>> d.get('Thomas', -1)
 -1
+
+//注意，python中没有NULL，空字符直接是""。None不是空字符。
+
 
 4、和list比较
 <1>dict查找和插入的速度极快，不会随着key的增加而变慢；

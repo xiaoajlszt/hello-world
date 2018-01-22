@@ -1,10 +1,51 @@
-1. 模块
+一、sys模块
 import sys
 
-2. 参数
+1. 参数
 python test1.py argv1 argv2  or  ./test1.py argv1 argv2
  
 <1>len(sys.argv)	//3
 <2>argv[0]	   test1.py  or  ./test1.py 
 <3>argv[1]		argv1
 <4>argv[2]		argv2
+
+2. 如何写main函数：
+http://www.360doc.com/content/16/0424/16/31913486_553405472.shtml
+
+
+二、argparse模块
+但是大多数情况下，脚本很可能需要多个参数，而且每次参数的类型用处各不相同，那么这个时候在参数前添加标签表明参数的类型和用途便十分有用，利用argparse模块可以很方便得实现这一目的。
+
+
+
+
+
+
+三、getopt模块
+getopt模块用于抽出命令行选项和参数，也就是sys.argv。命令行选项使得程序的参数更加灵活，支持短选项模式和长选项模式。
+
+1. 说明
+<1>getopt函数的格式是getopt.getopt([命令行参数列表], "短选项", [长选项列表])
+- 短选项名后的冒号(:)表示该选项必须有附加的参数。
+- 长选项名后的等号(=)表示该选项必须有附加的参数。
+
+<2>返回opts和args
+- opts是一个参数选项及其value的元组( ( '-f', 'hello'), ( '-t', '' ), ( '--format', '' ), ( '--directory-prefix', '/home' ) )
+- args是一个除去有用参数外其他的命令行输入 ( 'a', 'b' )
+
+2. eg:	python scriptname.py -f 'hello' --directory-prefix=/home -t --format 'a' 'b'
+
+import getopt
+shortargs = 'f:t'
+longargs = ['directory-prefix=', 'format', '--f_long=']
+opts, args = getopt.getopt( sys.argv[1:], shortargs, longargs )
+
+然后遍历opts便可以获取所有的命令行选项及其对应参数了。
+
+for opt, val in opts:
+	if opt in ( '-f', '--f_long' ):
+		pass
+	if ....
+使用字典接受命令行的输入，然后再传送字典，可以使得命令行参数的接口更加健壮。
+
+

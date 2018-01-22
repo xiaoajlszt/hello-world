@@ -1,0 +1,50 @@
+一、时间格式
+1. UTC(Universal Time Coordinated) 和 GMT(Greenwich Mean Time)
+UTC是我们现在用的时间标准，GMT是老的时间计量标准。UTC是根据原子钟来计算时间，而GMT是根据地球的自转和公转来计算时间。
+
+2. UTC时间的表示格式
+根据 ISO 8601《数据存储和交换形式·信息交换·日期和时间的表示方法》，UTC时间，也就是国际统一时间/国际协调时，
+表示方法：YYYYMMDD T HHMMSS Z(或者时区标识)。
+
+eg：
+<1>20100607T152000Z，表示2010年6月7号15点20分0秒，Z表示是标准时间
+
+<2>北京时间：
+20100607T152000+08，其中“+08”表示东八区。
+
+3. Example
+<1> 1985-04-12T23:20:50.52Z
+This represents 20 minutes and 50.52 seconds after the 23rd hour of 12 April 1985 in UTC.
+
+<2> 1985-04-12T19:20:50.52-04:00
+	//表示本地时间是19:20:50.52，本地时区是-4，即可得UTC时间为23:20:50.52
+This represents the same time as in example 1, but expressed in US Eastern Standard Time (observing daylight savings time).
+
+二、修改时间
+1. date命令：print or set the system date and time
+date [OPTION]... [+FORMAT]
+date [-u|--utc|--universal] [MMDDhhmm[[CC]YY][.ss]]
+
+date //显示localtime
+-R, --rfc-2822			output date and time in RFC 2822 format.  Example: Mon, 07 Aug 2006 12:34:56 -0600
+-u, --utc, --universal	print or set Coordinated Universal Time (UTC)
+-r, --reference=FILE	display the last modification time of FILE
+-s, --set=STRING		set time described by STRING
+
+eg:
+- date		Tue Jan  9 00:34:20 CST 2018
+- date -R	Tue, 09 Jan 2018 00:34:20 +0800
+- date -u	Mon Jan  8 16:34:20 UTC 2018
+
+--------------------------------------------
+# 设置完系统时间后,还需要同步到硬件时钟上
+# clock --systohc
+
+三、修改时区
+date -R 查看当前时区
+方法1. tzselect
+方法2. 用相应的时区文件来替换系统时区文件(或者创建链接文件)
+cp /usr/share/zoneinfo/主时区/次时区 /etc/localtime
+
+eg：在设置中国时区使用亚洲/上海（+8）
+cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime

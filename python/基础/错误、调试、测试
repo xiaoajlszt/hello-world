@@ -9,11 +9,11 @@
 
 <2>如果未出错，except语句块不会被执行，但是如果有finally语句块，则会执行finally。
 1)
-try:??
-????a=b??
-????b=c??
-except?Exception,e:			#捕获所有异常??
-????print('Exception:', e)
+try:
+	a=b
+	b=c
+except Exception,e:			#捕获所有异常
+	print('Exception:', e)
 
 2)
 try:
@@ -94,6 +94,40 @@ try:
     10 / 0
 except ZeroDivisionError:
     raise ValueError('input error!')
+	
+5、eg
+  1 #! /usr/bin/env python
+  2 # -*- coding:utf-8 -*-
+  3 import sys
+  4
+  5 def main():
+  6     try:
+  7         test(sys.argv[1])
+  8     except ValueError as e:				#捕获异常
+  9         print 'there is a ValueError!'
+ 10         #raise							#如果这里的raise不注释掉，那么就会有异常没有被捕获，就会一直上抛，最后被Python解释器捕获，打印一个错误信息，然后程序退出。
+ 11         test(sys.argv[2])
+ 12
+ 13     return 0
+ 14
+ 15 def test(key1):
+ 16     d1 = {'a':'1', 'b':'2', 'c':'3'}
+ 17     value1 = d1.get(key1)
+ 18
+ 19     if value1 == None:
+ 20         raise ValueError('can not find %s in dict!' % (key1))
+ 21
+ 22     print '%s' % int(value1)
+ 23     return 0
+ 24
+ 25 if __name__ == '__main__':
+ 26     main()
+
+[root@allen python]# python none1.py 'd' 'c'
+there is a ValueError!
+3
+
+
 
 
 二、调试

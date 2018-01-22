@@ -216,3 +216,11 @@ str.split = split(...)
     splits are done. If sep is not specified or is None, any
     whitespace string is a separator and empty strings are removed
     from the result.
+
+9. replace()
+str.replace = replace(...)
+    S.replace(old, new[, count]) -> string
+
+    Return a copy of string S with all occurrences of substring
+    old replaced by new.  If the optional argument count is
+    given, only the first count occurrences are replaced.
