@@ -181,13 +181,24 @@ n大于src长度时：将src的前n个字符复制到dest中(以'\0'填充直至n)，会将src中的字符串
 <1>原型：int sprintf( char *buffer, const char *format, [ argument] … );
 <2>说明：把格式化的字符串写入缓冲区中。返回写入buffer的字符数(不计入'\0')，出错返回-1。
 <3>结束符说明：如果buf空间足够大，就会把src中的字符串结束符拷贝到buf中。
+<4>eg:
 
 4、snprintf
 <1>原型：int snprintf(char *str, size_t size, const char *format, ...)
-<2>说明：成功返回欲写入的字符串长度，失败返回负值。
+<2>返回值：成功返回欲写入的字符串长度，失败返回负值。
 <3>结束符说明：
 如果格式化后的字符串长度 < size，则将此字符串全部复制到str中，并给其后添加一个字符串结束符('\0')；
 如果格式化后的字符串长度 >= size，则只将其中的(size-1)个字符复制到str中，并给其后添加一个字符串结束符('\0')。
+<4>eg:
+char?str[10]={0};
+int?nLen=snprintf(str,sizeof(str),"0123456789012345678");
+printf("str=%s\n",str);
+printf("nLen=%d\n",nLen);
+return 0;
+
+执行结果：
+str=012345678
+nLen=19
 
 5、strtol与atoi
 http://blog.sina.com.cn/s/blog_6c26d57b01012l0x.html

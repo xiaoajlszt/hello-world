@@ -52,7 +52,76 @@ random.randint(12, 20) #生成的随机数n: 12 <= n <= 20
 random.randint(20, 20) #结果永远是20 
 random.randint(20, 10) #该语句是错误的
 
-3、print '',这里的逗号，可以让后面要输出的内容不换行。会用空格隔开。
+3. 换行
+<1>代码换行
+1)  \
+print "this line is toooooooooooo \
+long"
+
+结果：
+this line is toooooooooooo long
+
+//这里的long必须顶格写，否则结果中会出现多余的空格。
+ 
+<2>字符串换行 - 换行后中间不要出现多余的空格
+1) '' \
+''
+print "this line is toooooooooooo "      \   #\前后可以有很多空格
+	"long" #可以不顶格写
+
+结果：
+this line is toooooooooooo long
+
+2) 括号中不需要特殊的换行符 () [] {}
+str = ['eeee'
+            'eeee']
+print '%s' % (str)
+
+结果：
+['eeeeeeee']
+
+test3 =('Hello'
+' '
+'world')
+输出结果：Hello world
+
+4. 三引号('''或""")
+<1>单引号和双引号是单行字符串；三引号是多行字符串，可以直接输入回车，而不需要用\n来表示。
+三引号的字符串在输出时保持原样。
+
+eg：
+str = '''1
+      2222222'''
+print '%s' % (str)
+
+结果：
+1
+     2222222
+
+<2>也可以用来表示多行注释
+
+<3>三引号中加上换行符\也可以将多行合并为一行。
+
+5. 打印基础
+<1>如果字符串内部既包含'又包含"，可以用转义符\来表示。
+\n	换行
+\t	制表符
+\\	打印出\
+
+<2>使用r''表示''内部的字符串默认不转义。
+>>> print(r'\\\t\\')
+\\\t\\
+
+<3>'''三引号表示换行
+>>> print('''123
+	456''')
+123
+456
+
+3、print 
+<0>print '%s' % (str)
+
+<1>print '', //这里的逗号，可以让后面要输出的内容不换行。会用空格隔开。
 print 'Refilling candy...',
 try:
 	candytray.release()
@@ -61,7 +130,182 @@ except ValueError:
 else:
 	print 'OK'
 	
-4、内置函数help()的使用
+<2>print('\t', end='')  //表示输出一个制表符后不换行。
+
+<3> %s% 字符串 (采用str()的显示)，因此输入是整数也可以
+	%r% 字符串 (采用repr()的显示)
+	%c% 单个字符
+	%b% 二进制整数
+	%d% 十进制整数
+	%i% 十进制整数
+	%o% 八进制整数
+	%x% 十六进制整数
+	%e% 指数 (基底写为e)
+	%E% 指数 (基底写为E)
+	%f% 浮点数
+	%F% 浮点数，与上相同
+	%g% 指数(e)或浮点数 (根据显示长度)
+	%G% 指数(E)或浮点数 (根据显示长度)
+	%% 字符"%"
+	
+4. repr()
+http://blog.csdn.net/luckytanggu/article/details/53649156
+
+<1>__repr__和__str__这两个方法都是用于显示的，__str__是面向用户的，而__repr__面向程序员。
+打印操作会首先尝试__str__和str内置函数(print运行的内部等价形式)，它通常应该返回一个友好的显示。
+
+<2>__repr__用于所有其他的环境中：用于交互模式下提示回应以及repr函数，如果没有使用__str__，会使用print和str。它通常应该返回一个编码字符串，可以用来重新创建对象，或者给开发者详细的显示。
+当我们想所有环境下都统一显示的话，可以重构__repr__方法；当我们想在不同环境下支持不同的显示，例如终端用户显示使用__str__，而程序员在开发期间则使用底层的__repr__来显示，实际上__str__只是覆盖了__repr__以得到更友好的用户显示。
+	
+5. 三目运算
+<1>eg：
+x = x+1 if x%2==1 else x
+
+<2>斐波那契数列
+def fn(n):
+    return n if n < 2 else fn(n-1)+fn(n-2)
+
+<3>三目运算符目的是得到一个结果，未必就是将该结果return，或者进行简单的变量赋值，如下：
+l = []
+l.append(1 if x>=1 else 0) # 将会给形式带来巨大的简洁
+	
+6. is 和 ==
+https://www.cnblogs.com/CheeseZH/p/5260560.html
+
+Python中对象包含的三个基本要素，分别是：id(身份标识)、type(数据类型)和value(值)。
+is和==都是对对象进行比较判断作用的，但对对象比较判断的内容并不相同。
+
+<1>==是python标准操作符中的比较操作符，用来比较判断两个对象的value(值)是否相等：
+
+<2>is也被叫做同一性运算符，这个运算符比较判断的是对象间的唯一身份标识，也就是id是否相同
+
+<3>eg:
+>>> x = y = [4,5,6]
+>>> z = [4,5,6]
+>>> x == y
+True
+>>> x == z
+True
+>>> x is y
+True
+>>> x is z
+False
+>>>
+>>> print id(x)	#获取对象id
+3075326572
+>>> print id(y)
+3075326572
+>>> print id(z)
+3075328140
+
+<4>eg:
+>>> a = 1 #a和b为数值类型
+>>> b = 1
+>>> a is b
+True
+>>> id(a)
+14318944
+>>> id(b)
+14318944
+
+>>> a = 'cheesezh' #a和b为字符串类型
+>>> b = 'cheesezh'
+>>> a is b
+True
+>>> id(a)
+42111872
+>>> id(b)
+42111872
+
+>>> a = (1,2,3) #a和b为tuple类型
+>>> b = (1,2,3)
+>>> a is b
+False
+>>> id(a)
+15001280
+>>> id(b)
+14790408
+
+>>> a = [1,2,3] #a和b为list类型
+>>> b = [1,2,3]
+>>> a is b
+False
+>>> id(a)
+42091624
+>>> id(b)
+42082016
+
+>>> a = {'cheese':1,'zh':2} #a和b为dict类型
+>>> b = {'cheese':1,'zh':2}
+>>> a is b
+False
+>>> id(a)
+42101616
+>>> id(b)
+42098736
+
+>>> a = set([1,2,3])#a和b为set类型
+>>> b = set([1,2,3])
+>>> a is b
+False
+>>> id(a)
+14819976
+>>> id(b)
+14822256
+
+结论：只有数值型和字符串型的情况下，a is b才为True；当tuple，list，dict或set类型时，a is b为False！
+
+7. None 
+>>> s = None
+>>> type(s)
+<type 'NoneType'>
+
+<1>
+None是一个特殊的常量。
+None和False不同。
+None不是0。
+None不是空字符串。
+None和任何其他的数据类型比较永远返回False。
+None有自己的数据类型NoneType。
+你可以将None复制给任何变量，但是你不能创建其他NoneType对象。
+
+<2>判断某个对象是否为None
+if X is None：
+if not X is None: # if not (X is None): 
+//更好的是写作 if X is not None这样没有歧义
+
+if not X: #此时会有歧义
+当X为None, False, 空字符串"", 0, 空列表[], 空字典{}, 空元组()这些时，not X为都为真，无法分辨出是其中的哪一个。
+
+<3>None与""(空字符串)	
+1)不同的数据类型
+None表示该值是一个空对象，None是Python里一个特殊的值。
+None不能理解为0，因为0是有意义的，而None是一个特殊的空值。
+注：可以将None赋值给任何变量，也可以将任何变量赋值给一个None值的对象。
+
+2)判断的时候均是False
+
+3)属性不同:使用dir()函数返回参数的属性、方法列表。
+如果参数包含方法dir()，该方法将被调用。如果参数不包含dir()，该方法将最大限度地收集参数信息。
+
+8. not
+http://blog.csdn.net/evan123mg/article/details/50174669
+
+在python中not是逻辑判断词，用于布尔型True和False，not True为False，not False为True。
+<1>not与逻辑判断句if连用，代表not后面的表达式为False的时候，执行冒号后面的语句。
+>>> if 0 is not 1:
+...  print 1
+...
+1
+>>> if not 0 == 1:
+...     print 1
+...
+1
+	
+<2>判断元素是否在列表或者字典中。
+if a not in b: #a是元素，b是列表或字典。这句话的意思是如果a不在列表b中，那么就执行冒号后面的语句。
+	
+5、内置函数help()的使用
 查看python所有的modules：help("modules")
 单看python所有的modules中包含指定字符串的modules： help("modules yourstr")
 查看python中常见的topics： help("topics")
@@ -69,8 +313,6 @@ else:
 查看python内置的类型：help("list")
 查看python类型的成员方法：help("str.find") 
 查看python内置函数：help("open")
-
-5、print('\t', end='')  //表示输出一个制表符后不换行。
 
 7、signal模块
 https://www.cnblogs.com/madsnotes/articles/5688681.html
@@ -100,7 +342,7 @@ subprocess的目的是启动一个新的进程并且与之通信。
 0
 
 9、from A import B as C  \  import A as B
-给B库一个C的别称
+给B一个C的别称
 
 10、xml.etree.ElementTree解析XML
 from xml.etree import ElementTree as ET
