@@ -1,0 +1,30 @@
+1. 从零开始掌握Python机器学习：十四步教程
+https://zhuanlan.zhihu.com/p/25761248
+
+2. python doc
+https://www.python.org/doc/
+
+3. anaconda
+https://www.anaconda.com/download/
+
+4. iPython (Jupyter) Notebook 
+http://jupyter.org/install.html
+https://jupyter.readthedocs.io/en/latest/running.html#running
+
+[I 23:00:37.013 NotebookApp] Writing notebook server cookie secret to /home/xiaopeng/.local/share/jupyter/runtime/notebook_cookie_secret
+[I 23:00:37.401 NotebookApp] JupyterLab beta preview extension loaded from /usr/local/lib/anaconda3/lib/python3.6/site-packages/jupyterlab
+[I 23:00:37.401 NotebookApp] JupyterLab application directory is /usr/local/lib/anaconda3/share/jupyter/lab
+[I 23:00:37.406 NotebookApp] Serving notebooks from local directory: /usr/local/lib/anaconda3/bin
+[I 23:00:37.406 NotebookApp] 0 active kernels
+[I 23:00:37.406 NotebookApp] The Jupyter Notebook is running at:
+[I 23:00:37.407 NotebookApp] http://localhost:8888/?token=ab5fc004deb26a9f8a1a73a29ccb614377167d4b0f30a2d5
+[I 23:00:37.407 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
+[C 23:00:37.409 NotebookApp]
+
+    Copy/paste this URL into your browser when you connect for the first time,
+    to login with a token:
+        http://localhost:8888/?token=ab5fc004deb26a9f8a1a73a29ccb614377167d4b0f30a2d5
+
+
+5. nbviewer 
+http://nbviewer.jupyter.org/
