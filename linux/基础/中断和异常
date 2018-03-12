@@ -2,5 +2,7 @@
 <1>硬中断是外部设备对CPU的中断；
 <2>软中断通常是硬中断服务程序对内核的中断；
 <3>信号(软件中断)是内核(或其他进程)对某个进程的中断。
+<4>软中断和硬中断
+http://blog.csdn.net/zhangskd/article/details/21992933
 
-<4>异常(exception):
+<5>异常(exception):

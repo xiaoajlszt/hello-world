@@ -1,0 +1,146 @@
+一、signal模块
+https://www.cnblogs.com/madsnotes/articles/5688681.html
+
+signal模块负责在Python程序内部处理信号，典型的操作包括预设信号处理函数，暂停并等待信号，以及定时发出SIGALRM等。
+要注意，signal模块主要是针对UNIX平台(比如Linux, MAC OS)，而Windows内核中由于对信号机制的支持不充分，所以在Windows上的Python不能发挥信号系统的功能。
+
+1. 信号(signal)是进程之间通讯的方式，是一种软件中断。一个进程一旦接收到信号就会打断原来的程序执行流程来处理信号。
+
+2. 信号名
+----------------------------------------------------------
+补充linux说明：
+<1>kill -l	//显示信号
+1) SIGHUP       2) SIGINT       3) SIGQUIT      4) SIGILL       5) SIGTRAP
+6) SIGABRT      7) SIGBUS       8) SIGFPE       9) SIGKILL     10) SIGUSR1
+11) SIGSEGV     12) SIGUSR2     13) SIGPIPE     14) SIGALRM     15) SIGTERM
+16) SIGSTKFLT   17) SIGCHLD     18) SIGCONT     19) SIGSTOP     20) SIGTSTP
+21) SIGTTIN     22) SIGTTOU     23) SIGURG      24) SIGXCPU     25) SIGXFSZ
+26) SIGVTALRM   27) SIGPROF     28) SIGWINCH    29) SIGIO       30) SIGPWR
+31) SIGSYS      34) SIGRTMIN    35) SIGRTMIN+1  36) SIGRTMIN+2  37) SIGRTMIN+3
+38) SIGRTMIN+4  39) SIGRTMIN+5  40) SIGRTMIN+6  41) SIGRTMIN+7  42) SIGRTMIN+8
+43) SIGRTMIN+9  44) SIGRTMIN+10 45) SIGRTMIN+11 46) SIGRTMIN+12 47) SIGRTMIN+13
+48) SIGRTMIN+14 49) SIGRTMIN+15 50) SIGRTMAX-14 51) SIGRTMAX-13 52) SIGRTMAX-12
+53) SIGRTMAX-11 54) SIGRTMAX-10 55) SIGRTMAX-9  56) SIGRTMAX-8  57) SIGRTMAX-7
+58) SIGRTMAX-6  59) SIGRTMAX-5  60) SIGRTMAX-4  61) SIGRTMAX-3  62) SIGRTMAX-2
+
+<2>kill命令描述：
+The command kill sends the specified signal to the specified process or process group. If no signal is specified, the TERM signal is sent.  
+The TERM signal will kill processes which donot catch this signal. For other processes, it may be necessary to use the KILL (9) signal, since this signal cannot be caught.
+
+Most modern shells have a builtin kill function, with a usage rather similar to that of the command described here.  
+The '-a' and '-p' options, and the possibility to specify processes by command name are a local extension.
+
+If sig is 0, then no signal is sent, but error checking is still performed.
+----------------------------------------------------------
+
+python中所用的信号名与linux一致，可以通过man 7 signal查询：
+SIGINT		 2			ctrl+c
+SIGQUIT	     3			Ctrl+\
+SIGTERM		15			不带参数的kill
+SIGKILL		 9			kill -9				无法捕捉(尝试捕捉会报错 "RuntimeError: (22, 'Invalid argument')")
+SIGTSTP		20			ctrl+z	
+
+3. 预设信号处理函数
+singnal.signal(signalnum, handler)
+其中，signalnum为某个信号，handler为该信号的处理函数。
+
+<1>进程可以无视信号，可以采取默认操作，还可以自定义操作：
+	当handler为signal.SIG_IGN时，信号被无视(ignore)；
+	当handler为singal.SIG_DFL，进程采取默认操作(default)；
+	当handler为一个函数时，进程采取函数中定义的操作。
+
+<2>
+在主程序中，我们首先使用signal.signal()函数来预设信号处理函数。
+然后执行signal.pause()来让该进程暂停以等待信号，以等待信号。(也可以在进行工作中接受信号，比如将上面的signal.pause()改为一个需要长时间工作的循环)
+当信号SIGUSR1被传递给该进程时，进程从暂停中恢复，并根据预设，执行SIGTSTP的信号处理函数myHandler()。 
+
+def myHandler(signum, frame):
+	...
+myHandler的两个参数一个用来识别信号(signum)，另一个用来获得信号发生时，进程栈的状况(stack frame)。这两个参数都是由signal.singnal()函数来传递的。
+
+4. 定时发出SIGALRM信号
+signal.alarm()可用于在一定时间之后，向进程自身发送SIGALRM信号。
+
+5. 发送信号
+signal包的核心是设置信号处理函数。除了signal.alarm()向自身发送信号之外，并没有其他发送信号的功能。
+但在os包中，有类似于linux的kill命令的函数，分别为：
+os.kill(pid, sid)
+os.killpg(pgid, sid)
+分别向进程和进程组发送信号。sid为信号所对应的整数或者singal.SIG*。
+
+实际上signal, pause，kill和alarm都是Linux应用编程中常见的C库函数，在这里，我们只不过是用Python语言来实现了一下。
+实际上，Python 的解释器是使用C语言来编写的，所以有此相似性也并不意外。
+此外，在Python 3.4中，signal包被增强，信号阻塞等功能被加入到该包中。我们暂时不深入到该包中。
+
+6. eg：
+import signal
+def myHandler(signum, frame):
+    print("Now, it's the time")
+    exit()
+
+signal.signal(signal.SIGALRM, myHandler)
+signal.alarm(5)		#用于在一定时间之后，向进程自身发送SIGALRM信号
+while True:
+    print('not yet')
+	
+7. SIGTERM和SIGKILL
+http://xiaorui.cc/2016/04/04/%E5%85%B3%E4%BA%8Epython%E6%8D%95%E8%8E%B7%E5%86%85%E6%A0%B8%E5%8F%91%E5%87%BA%E7%9A%84sigkill%E4%BF%A1%E5%8F%B7%E9%97%AE%E9%A2%98/
+	
+二、atexit模块
+https://allenwind.github.io/2018/01/17/Python%E7%A8%8B%E5%BA%8F%E9%80%80%E5%87%BA%E6%97%B6%E7%9A%84%E5%9B%9E%E8%B0%83/
+
+atexit模块可以注册一系列函数，让Python解析器在恰当的方式退出前调用这些函数。
+这个功能很实用，例如我们实现“文件锁”功能，通过在文件系统中创建一个文件来表示进程正在运行且确保进行的唯一性。当进程退出时，删除该文件，以告知其他需要创建进程的服务。
+另外还可以用于处理异常、日志、销毁进行运行过程的中间文件、临时文件、数据库连接等。
+
+1. atexit.register() #注册程序退出时的回调函数
+<1>注:
+1) 如果程序是非正常crash，或者通过os._exit()退出，注册的回调函数将不会被调用。
+- 程序调用os._exit()退出
+- 程序被一个信号终止(???)//经测试ctrl+c会调用(但会有异常)；kill和kill -9不会调用。
+- 检测到解析器的一个致命错误
+
+2) 也可以通过sys.exitfunc来注册回调，但通过它只能注册一个回调，而且还不支持参数。所以建议使用atexit来注册回调函数。
+3) atexit先把注册的回调函数放到一个列表中，当程序退出的时候，按先进后出的顺序调用注册的回调。
+如果回调函数在执行过程中抛出了异常，atexit会打印异常的文字信息，并继续执行下一下回调，直到所有的回调都执行完毕，它会重新抛出最后接收到的异常。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

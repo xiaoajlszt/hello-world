@@ -1,0 +1,68 @@
+1. ConfigParser模块  //读写配置文件
+http://blog.csdn.net/tianzhu123/article/details/6893755
+http://blog.csdn.net/gexiaobaohelloworld/article/details/7976944
+
+类似于以下的配置文件格式：
+[sec_a]  
+a_key1 = 20  
+a_key2 = 10  
+  
+[sec_b]  
+b_key1 = 121  
+b_key2 = b_value2  
+b_key3 = $r  
+b_key4 = 127.0.0.1  
+
+2. eg
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+import ConfigParser,time
+
+BOOK_MARK_FILE_PATH = "./bookmark_test1"
+
+def main():
+    CfgParser = ConfigParser.RawConfigParser()
+    CfgParser.read(BOOK_MARK_FILE_PATH)
+    if not CfgParser.has_section('last_log_id'):
+        CfgParser.add_section('last_log_id')
+        CfgParser.write(open(BOOK_MARK_FILE_PATH, 'wb+'))
+
+    set_bookmark('1')
+    set_bookmark('2')
+    set_bookmark('3')
+
+    reset_bookmark('1')
+
+
+def set_bookmark(log_type):
+    CfgParser = ConfigParser.RawConfigParser()
+    CfgParser.read(BOOK_MARK_FILE_PATH)
+
+    if not CfgParser.has_option('last_log_id', log_type):
+        CfgParser.set('last_log_id', log_type, str(100))
+        with open(BOOK_MARK_FILE_PATH, 'wb+') as f:
+            time.sleep(10)	#测试'wb+'是否将文件删除
+            CfgParser.write(f)
+
+def reset_bookmark(log_type):
+    CfgParser = ConfigParser.RawConfigParser()
+    CfgParser.read(BOOK_MARK_FILE_PATH)
+
+    if CfgParser.has_option('last_log_id', log_type):
+        CfgParser.remove_option('last_log_id', log_type)
+        with open(BOOK_MARK_FILE_PATH, 'wb+') as f:
+            CfgParser.write(f)
+
+
+if __name__ == '__main__':
+    main()
+	
+输出：
+[last_log_id]
+2 = 100
+3 = 100
+	
+注：
+<1>使用with open(BOOK_MARK_FILE_PATH, 'wb+') as f:打开文件，确实会先将文件内容覆盖；但是CfgParser.write(f)会将处理之后的文件再次正确的输出。因此不会有问题。
+

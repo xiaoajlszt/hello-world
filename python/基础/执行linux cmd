@@ -1,0 +1,20 @@
+一. os.system
+
+二. os.popen
+
+三. subprocess
+https://www.cnblogs.com/sunailong/p/5162748.html
+http://www.cnblogs.com/oubo/archive/2011/10/10/2394593.html
+
+1. call
+父进程等待子进程执行命令，仅返回子进程执行命令的状态码，如果出现错误，不进行报错。
+
+2. check_output
+
+3. check_call
+
+
+1. Popen class
+
+shell=True	//支持字符串作为命令参数
+shell=False //只支持列表、元组作为参数(默认为False)

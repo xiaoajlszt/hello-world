@@ -1,0 +1,37 @@
+import ssl
+
+https://docs.python.org/2.7/library/ssl.html
+
+1. ssl.wrap_socket(
+sock, 
+keyfile=None, 
+certfile=None, 			 # keyfile和certfile指定可选文件，其中包含用于标识连接中本端的证书。
+server_side=False, 
+cert_reqs=CERT_NONE, 	 # 指定是否需要从连接的另一端获得证书，以及是否验证(如果提供)。取值必须是以下三个中的一个：
+							CERT_NONE (certificates ignored)
+							CERT_OPTIONAL (not required, but validated if provided)
+							CERT_REQUIRED (required and validated)
+						 # 如果不为CERT_NONE，ca_certs参数必须指定一个CA证书文件。
+ssl_version={see docs},  # 客户端需要适应服务器端的SSL版本，默认版本为PROTOCOL_SSLv23，它提供了与其他版本的最大兼容性。
+ca_certs=None, 			 # ca_certs文件包含一组连接的“证书颁发机构”证书，用于验证从连接对端发送过来的证书。
+do_handshake_on_connect=True, #指定是否自动在socket.connect()之后做SSL握手，或者应用程序通过调用 SSLSocket.do_handshake() 方法显式进行握手。
+							调用 SSLSocket.do_handshake() 方法显式地让应用程序控制握手过程中涉及的Socket I/O阻塞行为。
+suppress_ragged_eofs=True, # 指定SSLSocket.read()方法如何标识连接对端发来的意外的EOF。
+							默认为True，返回一个正常的EOF(一个空字节对象)来响应底层Socket发起的意外的EOF错误。
+							False，将会把异常提交给调用者。
+ciphers=None			 # 为SSL对象设置可用的密码。它是OpenSSL密码列表格式中的一个字符串。
+)
+
+注：
+1. ssl_version
+<1>通常，服务端选择一个流行的版本，客户端必须适应服务端。
+<2>大部分版本不能彼此兼容。如果不指定版本号，默认选择PROTOCOL_SSLv23，它提供与其他版本的最大兼容性。
+<3>客户端哪些版本能连接服务器哪些版本：
+		server	  SSLv2	    SSLv3	  SSLv23	 TLSv1	  TLSv1.1		TLSv1.2
+client
+SSLv2				yes		no
+SSLv3				no
+SSLv23				no
+TLSv1				no
+TLSv1.1				no
+TLSv1.2				no

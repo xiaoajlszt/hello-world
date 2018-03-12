@@ -18,6 +18,13 @@ read()一次性读取文件的全部内容，为了保险起见，可以反复调用read(size)方法，每次最
 3)readlines()
 一次读取所有内容并按行返回list。适用于读取配置文件。
 
+<5>note
+w,r,wt,rt都是python里面文件操作的模式。
+t是windows平台特有的所谓text mode(文本模式),区别在于会自动识别windows平台的换行符。
+(类Unix平台的换行符是\n，而windows平台用的是\r\n两个ASCII字符来表示换行，python内部采用的是\n来表示换行符。)
+rt模式下，python在读取文本时会自动把\r\n转换成\n。
+wt模式下，Python写文件时会用\r\n来表示换行。
+
 2、file-like Object
 像open()方法返回的有read()方法的对象，称为file-like Object。
 除了file外，还可以是内存的字节流、网络流、自定义流等等。

@@ -185,6 +185,48 @@ def log(func):
         print('call %s():' % func.__name__)
         return func(*args, **kw)
     return wrapper
+	
+5. @staticmethod和@classmethod
+https://www.cnblogs.com/taceywong/p/5813166.html
+
+<1>python其实有3类方法：
+静态方法(static method)\类方法(class method)\实例方法(instance method)
+
+<2>eg
+def foo(x):
+    print "executing foo(%s)" %(x)
+
+class A(object):
+    def foo(self,x):
+        print "executing foo(%s,%s)" %(self,x)
+    @classmethod
+    def class_foo(cls,x):
+        print "executing class_foo(%s,%s)" %(cls,x)
+    @staticmethod
+    def static_foo(x):
+        print "executing static_foo(%s)" %x
+
+在示例代码中，先理解下函数里面的self和cls。这个self和cls是对类或者实例的绑定，对于一般的函数来说我们可以这么调用foo(x)，这个函数就是最常用的，它的工作和任何东西（类、实例）无关。
+- 对于实例方法，我们知道在类里每次定义方法的时候都需要绑定这个实例，就是foo(self,x)，为什么要这么做呢？因为实例方法的调用离不开实例，我们需要把实例自己传给函数，调用的时候是这样的a.foo(x)（其实是foo(a,x)）。
+- 类方法一样，只不过它传递的是类而不是实例，A.class_foo(x)。注意这里的self和cls可以替换别的参数，但是python的约定是这两个，尽量不要更改。
+- 对于静态方法其实和普通的方法一样，不需要对谁进行绑定，唯一的区别是调用时候需要使用a.static_foo(x)或A.static_foo()来调用。
+
+<3>a = A()
+		实例方法	 	类方法			静态方法
+a		a.foo(x)	a.class_foo(x)		a.static_foo(x)
+A		不可用		A.class_foo(x)		A.static_foo(x)
+
+http://blog.csdn.net/handsomekang/article/details/9615239
+<1>一般来说，要使用某个类的方法，需要先实例化一个对象再调用方法。而使用@staticmethod或@classmethod，就可以不需要实例化，直接类名.方法名()来调用。
+这有利于组织代码，把某些应该属于某个类的函数给放到那个类里去，同时有利于命名空间的整洁。
+
+<2>既然@staticmethod和@classmethod都可以直接类名.方法名()来调用，那他们有什么区别呢?
+1)从它们的使用上来看:
+@staticmethod不需要表示自身对象的self和自身类的cls参数，就跟使用函数一样。
+@classmethod也不需要self参数，但第一个参数需要是表示自身类的cls参数。
+
+2)如果在@staticmethod中要调用到这个类的一些属性方法，只能直接类名.属性名或类名.方法名。而@classmethod因为持有cls参数，可以来调用类的属性，类的方法，实例化对象等，避免硬编码。
+
 
 六、偏函数(Partial function)
 1、functools.partial的作用是，把一个函数的某些参数固定住(也就是设置默认值)，返回一个新的函数。

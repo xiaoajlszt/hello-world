@@ -112,12 +112,6 @@ print '%s' % (str)
 >>> print(r'\\\t\\')
 \\\t\\
 
-<3>'''ÈýÒýºÅ±íÊ¾»»ÐÐ
->>> print('''123
-	456''')
-123
-456
-
 3¡¢print 
 <0>print '%s' % (str)
 
@@ -327,20 +321,6 @@ signal.signal(signalnum, handler)		//signalnumÎªÄ³¸öÐÅºÅ£¬handlerÎª¸ÃÐÅºÅµÄ´¦Àíº
 ÐÅºÅ´¦Àíº¯ÊýµÄÁ½¸ö²ÎÊý:Ò»¸öÓÃÀ´Ê¶±ðÐÅºÅ(signum)£¬ÁíÒ»¸öÓÃÀ´»ñµÃÐÅºÅ·¢ÉúÊ±£¬½ø³ÌÕ»µÄ×´¿ö(stack frame)¡£
 ÕâÁ½¸ö²ÎÊý¶¼ÊÇÓÉsignal.singnal()º¯ÊýÀ´´«µÝµÄ¡£
 
-8¡¢subprocessÄ£¿é
-subprocessµÄÄ¿µÄÊÇÆô¶¯Ò»¸öÐÂµÄ½ø³Ì²¢ÇÒÓëÖ®Í¨ÐÅ¡£
-<1>call
-<2>check_all
-<3>check_output
-¸¸½ø³ÌµÈ´ý×Ó½ø³ÌÖ´ÐÐÃüÁî£¬·µ»Ø×Ó½ø³ÌÏò±ê×¼Êä³ö·¢ËÍÊä³öÔËÐÐ½á¹û£¬¼ì²éÍË³öÐÅÏ¢¡£
-Èç¹ûreturncode²»Îª0£¬Ôò¾Ù³ö´íÎósubprocess.CalledProcessError£¬¸Ã¶ÔÏó°üº¬ÓÐreturncodeÊôÐÔºÍoutputÊôÐÔ£¬outputÊôÐÔÎª±ê×¼Êä³öµÄÊä³ö½á¹û£¬¿ÉÓÃtry¡­except¡­À´¼ì²é¡£
-
-<4>Èç¹ûÔÚÖ´ÐÐÏà¹ØÃüÁîÊ±£¬¿É½«ÃüÁîºÍËù´øµÄ²ÎÊýÒ»Æð·ÅÔÚÒ»¸öÁÐ±íÖÐ´«µÝ¸øÏà¹Ø·½·¨£¬ÀýÈç£º
->>> import subprocess
->>> retcode = subprocess.call(["ls", "-l"])
->>> print retcode
-0
-
 9¡¢from A import B as C  \  import A as B
 ¸øBÒ»¸öCµÄ±ð³Æ
 
@@ -348,28 +328,7 @@ subprocessµÄÄ¿µÄÊÇÆô¶¯Ò»¸öÐÂµÄ½ø³Ì²¢ÇÒÓëÖ®Í¨ÐÅ¡£
 from xml.etree import ElementTree as ET
 <1>tree = ET.parse('xmlfilepath')
 
-11¡¢ConfigParserÄ£¿é
-¶ÁÐ´ÅäÖÃÎÄ¼þ
-http://blog.csdn.net/gexiaobaohelloworld/article/details/7976944
-
 12¡¢psycopg2Ä£¿é	//²Ù×÷PostgreSQL
-
-13¡¢locals()ºÍglobals()	//(locals ÊÇÖ»¶ÁµÄ£¬globals ²»ÊÇ)
-http://blog.csdn.net/scelong/article/details/6977867
-
-PythonµÄÁ½¸öÄÚÖÃº¯Êý£¬»ùÓÚ×ÖµäµÄ·ÃÎÊ¾Ö²¿ºÍÈ«¾Ö±äÁ¿µÄ·½Ê½¡£
-
-<1>Ê×ÏÈÐèÒªÀí½âpythonÖÐµÄÃû×Ö¿Õ¼ä¸ÅÄî¡£
-PythonÊ¹ÓÃ½Ð×öÃû×Ö¿Õ¼äµÄ¶«Î÷À´¼ÇÂ¼±äÁ¿µÄ¹ì¼£¡£
-Ãû×Ö¿Õ¼äÖ»ÊÇÒ»¸ö×Öµä£¬ËüµÄ¼ü×Ö¾ÍÊÇ±äÁ¿Ãû£¬×ÖµäµÄÖµ¾ÍÊÇÄÇÐ©±äÁ¿µÄÖµ¡£Êµ¼ÊÉÏ£¬Ãû×Ö¿Õ¼ä¿ÉÒÔÏóPythonµÄ×ÖµäÒ»Ñù½øÐÐ·ÃÎÊ¡£
-1)Ã¿¸öº¯Êý¶¼ÓÐ×Å×ÔÒÑµÄÃû×Ö¿Õ¼ä£¬½Ð×ö¾Ö²¿Ãû×Ö¿Õ¼ä£¬Ëü¼ÇÂ¼ÁËº¯ÊýµÄ±äÁ¿£¬°üÀ¨º¯ÊýµÄ²ÎÊýºÍ¾Ö²¿¶¨ÒåµÄ±äÁ¿¡£
-2)Ã¿¸öÄ£¿éÓµÓÐËü×ÔÒÑµÄÃû×Ö¿Õ¼ä£¬½Ð×öÈ«¾ÖÃû×Ö¿Õ¼ä£¬Ëü¼ÇÂ¼ÁËÄ£¿éµÄ±äÁ¿£¬°üÀ¨º¯Êý¡¢Àà¡¢ÆäËüµ¼ÈëµÄÄ£¿é¡¢Ä£¿é¼¶µÄ±äÁ¿ºÍ³£Á¿¡£
-3)»¹ÓÐ¾ÍÊÇÄÚÖÃÃû×Ö¿Õ¼ä£¬ÈÎºÎÄ£¿é¾ù¿É·ÃÎÊËü£¬Ëü´æ·Å×ÅÄÚÖÃµÄº¯ÊýºÍÒì³£¡£
-
-<2>µ±Ò»ÐÐ´úÂëÒªÊ¹ÓÃ±äÁ¿ x µÄÖµÊ±£¬Python»áµ½ËùÓÐ¿ÉÓÃµÄÃû×Ö¿Õ¼äÈ¥²éÕÒ±äÁ¿£¬°´ÕÕÈçÏÂË³Ðò£º
-1)¾Ö²¿Ãû×Ö¿Õ¼ä - ÌØÖ¸µ±Ç°º¯Êý»òÀàµÄ·½·¨¡£Èç¹ûº¯Êý¶¨ÒåÁËÒ»¸ö¾Ö²¿±äÁ¿ x£¬Python½«Ê¹ÓÃÕâ¸ö±äÁ¿£¬È»ºóÍ£Ö¹ËÑË÷¡£
-2)È«¾ÖÃû×Ö¿Õ¼ä - ÌØÖ¸µ±Ç°µÄÄ£¿é¡£Èç¹ûÄ£¿é¶¨ÒåÁËÒ»¸öÃûÎª x µÄ±äÁ¿£¬º¯Êý»òÀà£¬Python½«Ê¹ÓÃÕâ¸ö±äÁ¿È»ºóÍ£Ö¹ËÑË÷¡£
-3)ÄÚÖÃÃû×Ö¿Õ¼ä - ¶ÔÃ¿¸öÄ£¿é¶¼ÊÇÈ«¾ÖµÄ¡£×÷Îª×îºóµÄ³¢ÊÔ£¬Python½«¼ÙÉè x ÊÇÄÚÖÃº¯Êý»ò±äÁ¿¡£
 
 14¡¢glob
 globÄ£¿éÊÇ×î¼òµ¥µÄÄ£¿éÖ®Ò»£¬ÄÚÈÝ·Ç³£ÉÙ¡£ÓÃËü¿ÉÒÔ²éÕÒ·ûºÏÌØ¶¨¹æÔòµÄÎÄ¼þÂ·¾¶Ãû¡£¸úÊ¹ÓÃwindowsÏÂµÄÎÄ¼þËÑË÷²î²»¶à¡£
@@ -384,8 +343,6 @@ globÄ£¿éÊÇ×î¼òµ¥µÄÄ£¿éÖ®Ò»£¬ÄÚÈÝ·Ç³£ÉÙ¡£ÓÃËü¿ÉÒÔ²éÕÒ·ûºÏÌØ¶¨¹æÔòµÄÎÄ¼þÂ·¾¶Ãû¡£¸ú
 <2>glob.iglob
 »ñÈ¡Ò»¸ö¿É±àÀú¶ÔÏó£¬Ê¹ÓÃËü¿ÉÒÔÖð¸ö»ñÈ¡Æ¥ÅäµÄÎÄ¼þÂ·¾¶Ãû¡£
 Óëglob.glob()µÄÇø±ðÊÇ£ºglob.globÍ¬Ê±»ñÈ¡ËùÓÐµÄÆ¥ÅäÂ·¾¶£¬¶øglob.iglobÒ»´ÎÖ»»ñÈ¡Ò»¸öÆ¥ÅäÂ·¾¶¡£
-
-15. DTÄ£¿é DT.datatime
 
 
 15¡¢ÄÚÖÃº¯Êýfilter()

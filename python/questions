@@ -1,0 +1,37 @@
+1. 同一函数不同分支里有不同个数的返回值：
+<1> eg
+#!/usr/bin/env python
+# -*- coding:utf-8 -*-
+
+import sys
+
+def main():
+    try:
+        a,b = ret_test(int(sys.argv[1]))
+        print 'a=%s' % a
+        print 'b=%s' % b
+    except Exception,e:
+        print '%s' % e
+        print '%s' % repr(e)
+
+def ret_test(para):
+    a = 1
+    b = '1'
+
+    if para == 1:
+        return a,b
+    elif para == 2:
+        return a
+
+if __name__ == '__main__':
+    main()
+
+
+结果：
+[root@allen python]# python ret_test1.py 1
+a=1
+b=1
+
+[root@allen python]# python ret_test1.py 2
+'int' object is not iterable
+TypeError("'int' object is not iterable",)
