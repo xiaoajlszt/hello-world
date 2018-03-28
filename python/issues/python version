@@ -1,0 +1,23 @@
+1. urllib2.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:579)>
+<1>现象：3.0能够连上第三方(sms等)，3.1连不上
+<2>原因：python由python-2.7.5-48.el7.x86_64升级到了python-2.7.5-58.el7.x86_64
+<3>解决：http://blog.csdn.net/moonhillcity/article/details/52767999
+
+https://www.python.org/dev/peps/pep-0476/
+Python 升级之后引入了一个新特性，当使用urllib.urlopen打开一个https链接时，会验证一次 SSL 证书。
+而当目标网站使用的是自签名的证书时就会抛出上述异常。
+
+
+方法1) 使用ssl创建未经验证的上下文
+import ssl
+import urllib2
+
+context = ssl._create_unverified_context()
+print urllib2.urlopen("https://www.12306.cn/mormhweb/", context=context).read()
+
+方法2) 全局取消证书验证
+import ssl
+import urllib2
+ 
+ssl._create_default_https_context = ssl._create_unverified_context
+print urllib2.urlopen("https://www.12306.cn/mormhweb/").read()

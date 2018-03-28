@@ -1,0 +1,50 @@
+详见：linux运维之道
+https://www.linuxidc.com/Linux/2017-07/145879.htm
+http://blog.csdn.net/pzlsun/article/details/52497839
+
+1. BIND是目前应用最广泛的DNS服务系统。
+bind			//bind主程序
+bind-chroot		//使bind运行在chroot模式下(运行在相对路径的根路径，而不是系统真正的根路径)，提升系统安全性
+				安装该软件包之后，bind的根路径为/var/named/chroot，所有关于bind的配置都在根路径下。
+bind-utils		//提供了一些DNS查询工具。dig\host\nslookup等
+
+2. 主配置文件  /etc/named.conf
+<1>定义语句
+1) acl(Access Control List)，预定义一组主机，从而控制是否允许他人访问域名服务器。
+
+bind预定义了一些主机访问控制列表：
+- any匹配任意IP地址
+- localhost匹配本地系统上所有的IP地址
+- localnets匹配本地系统所连接的任意网络
+- none不匹配任何IP
+
+2) options用于定义全局配置选项。
+在全局配置中至少定义一个工作路径，默认为/var/named/
+
+3) zone用于定义域及相关选项
+
+
+
+
+
+
+其他：
+1. 刷新客户端机器本地的DNS缓存(采用nscd实现DNS缓存时)
+nscd -i hosts 
+
+2. 刷新DNS服务器的DNS缓存
+
+
+3. /var/named/allen.com.zone   (/etc/named.conf)
+  1 $TTL 1D		//这里的1D表示客户端机器每天向DNS服务器获取一次DNS信息。(客户端机器的DNS cache时间是由这里决定的，并非在本身/etc/nscd.conf中)
+  2 $ORIGIN allen.com.
+  3 @   IN      SOA     ns1.allen.com.  root (
+  4     20170526; serial
+  5     1D  ; refresh
+  6     1H  ; retry
+  7     1W  ; expire
+  8     3H )    ; minimum
+  9
+ 10 @           IN      NS     ns1.allen.com.
+ 11 ns1         IN      A      10.64.54.83
+ 12 test1       IN      A      10.64.54.70

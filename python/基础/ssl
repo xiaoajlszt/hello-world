@@ -35,3 +35,36 @@ SSLv23				no
 TLSv1				no
 TLSv1.1				no
 TLSv1.2				no
+
+2. socket.getaddrinfo(host, port[, family[, socktype[, proto[, flags]]]])
+//将主机/端口参数转换成5元组，其中包含创建socket连接所需要的所有必要的参数。
+host：可以是FQDN、ip、None
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

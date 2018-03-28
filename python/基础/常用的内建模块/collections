@@ -1,0 +1,30 @@
+collections是python内建的一个集合模块，提供了许多有用的集合类。
+
+1. namedtuple
+namedtuple是一个函数，用于创建一个自定义的tuple对象，并规定了tuple元素的个数，并可以用属性而不是索引来引用tuple中的某个元素。
+
+<1>tuple可以表示不变集合，使用namedtuple可以很方便地定义一种数据类型，它将具备tuple的不变性，又可以根据属性来引用。
+>>> from collections import namedtuple
+>>> Point = namedtuple('Point', ['x', 'y'])
+>>> p = Point(1, 2)
+>>> p
+Point(x='1', y='2')
+>>> p.x
+1
+>>> p.y
+2
+
+<2>可以验证创建的Point数据类型是tuple的一个子类：
+>>> isinstance(p, Point)
+True
+>>> isinstance(p, tuple)
+True
+
+2. deque
+
+
+
+
+
+1. collection.OrderedDict()类
+很多人认为python中的字典是无序的，因为它是按照hash来存储的，但collections中的类OrderedDict，实现了对字典对象中元素的排序。

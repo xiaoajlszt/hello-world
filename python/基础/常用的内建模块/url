@@ -1,0 +1,198 @@
+一、一些说明
+1. urllib和urllib2
+urllib2可以接受一个Request对象，并以此可以来设置一个URL的headers。但是urllib只接收一个URL，这意味着，不能伪装用户代理字符串等。 
+urllib模块可以提供进行urlencode的方法，该方法用于GET查询字符串的生成，urllib2的不具有这样的功能。这就是urllib与urllib2经常在一起使用的原因。 
+
+2. 字符串与URL编码转换
+http://blog.csdn.net/tangzongyu123/article/details/75224468
+
+<1> 字符串转URL编码
+import urllib
+poet_name = "李白"
+url_code_name = urllib.quote(poet_name)
+print url_code_name
+
+输出：
+%E6%9D%8E%E7%99%BD
+
+<2> URL编码转字符串
+import urllib
+url_code_name = "%E6%9D%8E%E7%99%BD"
+name = urllib.unquote(url_code_name)
+print name
+
+输出：
+李白
+
+3. URL编码
+http://www.w3school.com.cn/tags/html_ref_urlencode.html
+
+与十六进制的区别是：\x <--> %
+
+二、urllib
+urllib提供了一系列操作URL的功能。
+
+0. 一些函数
+<1> urllib.urlencode = urlencode(query, doseq=0)
+>>> s = urllib.urlencode({'smsuser': '123', 'smspass': 'abc'})
+>>> s
+'smsuser=123&smspass=abc'
+
+<2> 
+
+1. GET
+urllib的request模块可以方便地抓取URL的内容，也就是发送一个GET请求到指定页面，然后返回HTTP响应。
+
+<1> eg,对豆瓣的一个URL进行抓取并返回响应：
+from urllib import request
+
+with request.urlopen('https://api.douban.com/v2/book/2129650') as f:
+    data = f.read()
+    print('Status:', f.status, f.reason)
+    for k, v in f.getheaders():
+        print('%s: %s' % (k, v))
+    print('Data:', data.decode('utf-8'))
+	
+//返回结果：
+Status: 200 OK
+Server: nginx
+Date: Tue, 26 May 2015 10:02:27 GMT
+Content-Type: application/json; charset=utf-8
+Content-Length: 2049
+Connection: close
+Expires: Sun, 1 Jan 2006 01:00:00 GMT
+Pragma: no-cache
+Cache-Control: must-revalidate, no-cache, private
+X-DAE-Node: pidl1
+Data: {"rating":{"max":10,"numRaters":16,"average":"7.4","min":0},"subtitle":"","author":["廖雪峰编著"],"pubdate":"2007-6",...}
+
+<2> eg,模拟浏览器发送GET请求，模拟iphone6请求豆瓣首页：
+需要使用Request对象，通过往Request对象添加HTTP头，就可以把请求伪装成浏览器。
+from urllib import request
+
+req = request.Request('http://www.douban.com/')
+req.add_header('User-Agent', 'Mozilla/6.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/8.0 Mobile/10A5376e Safari/8536.25')
+with request.urlopen(req) as f:
+    print('Status:', f.status, f.reason)
+    for k, v in f.getheaders():
+        print('%s: %s' % (k, v))
+    print('Data:', f.read().decode('utf-8'))
+
+//返回适合iphone的移动版网页
+...
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="apple-touch-icon" sizes="57x57" href="http://img4.douban.com/pics/cardkit/launcher/57.png" />
+...
+
+2. POST
+如果要以POST发送一个请求，只需要把参数data以bytes形式传入。
+
+<1> eg,模拟微博登录，先读取登录的邮箱和口令，然后按照weibo.cn的登录页格式以username=xxx&password=xxx的编码传入：
+from urllib import request, parse
+
+print('Login to weibo.cn...')
+email = input('Email: ')
+passwd = input('Password: ')
+login_data = parse.urlencode([
+    ('username', email),
+    ('password', passwd),
+    ('entry', 'mweibo'),
+    ('client_id', ''),
+    ('savestate', '1'),
+    ('ec', ''),
+    ('pagerefer', 'https://passport.weibo.cn/signin/welcome?entry=mweibo&r=http%3A%2F%2Fm.weibo.cn%2F')
+])
+
+req = request.Request('https://passport.weibo.cn/sso/login')
+req.add_header('Origin', 'https://passport.weibo.cn')
+req.add_header('User-Agent', 'Mozilla/6.0 (iPhone; CPU iPhone OS 8_0 like Mac OS X) AppleWebKit/536.26 (KHTML, like Gecko) Version/8.0 Mobile/10A5376e Safari/8536.25')
+req.add_header('Referer', 'https://passport.weibo.cn/signin/login?entry=mweibo&res=wel&wm=3349&r=http%3A%2F%2Fm.weibo.cn%2F')
+
+with request.urlopen(req, data=login_data.encode('utf-8')) as f:
+    print('Status:', f.status, f.reason)
+    for k, v in f.getheaders():
+        print('%s: %s' % (k, v))
+    print('Data:', f.read().decode('utf-8'))
+
+//成功返回
+Status: 200 OK
+Server: nginx/1.2.0
+...
+Set-Cookie: SSOLoginState=1432620126; path=/; domain=weibo.cn
+...
+Data: {"retcode":20000000,"msg":"","data":{...,"uid":"1658384301"}}
+
+//失败返回
+...
+Data: {"retcode":50011015,"msg":"\u7528\u6237\u540d\u6216\u5bc6\u7801\u9519\u8bef","data":{"username":"example@python.org","errline":536}}
+
+3. Handler
+如果还需要更复杂的控制，比如通过proxy访问网站，需要利用ProxyHandler来处理。
+
+eg:
+proxy_handler = urllib.request.ProxyHandler({'http': 'http://www.example.com:3128/'})
+proxy_auth_handler = urllib.request.ProxyBasicAuthHandler()
+proxy_auth_handler.add_password('realm', 'host', 'username', 'password')
+opener = urllib.request.build_opener(proxy_handler, proxy_auth_handler)
+with opener.open('http://www.example.com/login.html') as f:
+    pass
+
+4. 总结
+urllib提供的功能就是利用程序去执行各种HTTP请求。
+如果要模拟浏览器完成特定功能，需要把请求伪装成浏览器。伪装的方法是先监控浏览器发出的请求，再根据浏览器的请求头来伪装，User-Agent头就是用来标识浏览器的。
+
+三、urllib2
+1. 函数
+<1>urllib2.urlopen = urlopen(url, data=None, timeout=<object object>, cafile=None, capath=None, cadefault=False, context=None)
+//url参数可以是一个字符串url，也可以是一个Request对象。
+
+<2>urllib2.build_opener([handler, ...])
+//返回一个OpenerDirector实例。
+handler可以是BaseHandler实例，或者是BaseHandler子类的实例。
+
+<3>urllib2.install_opener(opener)
+//安装一个OpenerDirector实例作为默认的global opener。
+如果希望urlopen()使用某个opener，才需要安装该opener。否则，可以直接使用OpenerDirector.open()替代urlopen()。
+注：代码并不会检查入参是否是一个OpenerDirector实例，具有适当接口的类都可以工作。
+
+
+2. HTTPPasswordMgrWithDefaultRealm
+<1>add_password
+
+3. HTTPBasicAuthHandler
+
+
+4. Request(url[, data][, headers][, origin_req_host][, unverifiable])
+该类是URL请求的抽象。
+url		是包含正确URL的字符串。
+data	是指定要发送到server的附加数据的字符串。None表示没有需要的data。
+headers
+https://blog.csdn.net/qq_32252917/article/details/79074252
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

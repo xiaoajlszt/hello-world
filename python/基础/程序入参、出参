@@ -14,9 +14,49 @@ http://www.360doc.com/content/16/0424/16/31913486_553405472.shtml
 
 
 二、argparse模块
-但是大多数情况下，脚本很可能需要多个参数，而且每次参数的类型用处各不相同，那么这个时候在参数前添加标签表明参数的类型和用途便十分有用，利用argparse模块可以很方便得实现这一目的。
+https://docs.python.org/2.7/library/argparse.html
+http://kuanghy.github.io/2016/06/30/python-argparse
 
+argparse 是 Python 标准库中用来解析命令行参数和选项的模块，其是为替代已经过时的 optparse 模块而生的，该模块在 Python2.7 中被引入。
+argparse模块的作用是用于解析命令行参数。
 
+1. 首先需要创建一个解析器
+argparse.ArgumentParser(
+prog=None, 								#程序的名字(默认为sys.argv[0])，用于在help信息中描述程序名称
+usage=None, 							#描述程序的用途(默认从参数中生成)
+description=None, 						#程序描述信息，help 信息前的文字
+epilog=None, 							#help 信息之后的信息
+parents=[], 							#由ArgumentParser对象组成的列表，它们的arguments选项会被包含到新ArgumentParser对象中
+formatter_class=argparse.HelpFormatter, #重置 help 信息输出的格式
+prefix_chars='-', 						#参数前缀
+fromfile_prefix_chars=None, 
+argument_default=None, 
+conflict_handler='error', 
+add_help=True
+)
+
+2. 添加参数选项
+ArgumentParser.add_argument(
+name or flags...		#参数名。参数有两种形式，即可选参数和位置参数。位置参数没有前缀，而可选参数需要加前缀。
+[, action]
+[, nargs]				#参数的数量。可以为整数N(N个)  或  *(任意多个)  或  +(一个或更多)  或   ？(此时，首先从命令行获得参数，若没有则从const获得，然后从default获得)
+[, const]				#保存一个常量
+[, default]				#默认值
+[, type]				#参数类型
+[, choices]
+[, required]			#是否必选，只针对可选参数，对位置参数无效。
+[, help]
+[, metavar]
+[, dest]
+)
+
+3. 解析参数
+ArgumentParser.parse_args(
+args=None, 
+namespace=None
+)
+
+该方法运行会用'-'来认证可选参数，剩下的即为位置参数。该方法返回一个 Namespace 对象，参数值通过属性的方式访问，也可以用内建的 vars() 函数转换为字典。
 
 
 
