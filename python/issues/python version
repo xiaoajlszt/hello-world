@@ -1,23 +1,89 @@
 1. urllib2.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed (_ssl.c:579)>
 <1>现象：3.0能够连上第三方(sms等)，3.1连不上
 <2>原因：python由python-2.7.5-48.el7.x86_64升级到了python-2.7.5-58.el7.x86_64
-<3>解决：http://blog.csdn.net/moonhillcity/article/details/52767999
+<3>解决：https://www.python.org/dev/peps/pep-0476/
+	    (http://blog.csdn.net/moonhillcity/article/details/52767999)
+		
+注：
+1. TSL握手的时候，server端将它的证书发往client端。
+2. DDEI证书认证的实现，用户在server端下载证书，然后在DDEI的UI中导入，DDEI再通过该证书在TLS握手时进行认证。
 
-https://www.python.org/dev/peps/pep-0476/
-Python 升级之后引入了一个新特性，当使用urllib.urlopen打开一个https链接时，会验证一次 SSL 证书。
-而当目标网站使用的是自签名的证书时就会抛出上述异常。
+PEP 476 -- Enabling certificate verification by default for stdlib http clients		//PEP(Python Enhancement Proposals)
 
+<1>简介
+当前Python的版本，当一个标准库(urllib, urllib2, http, and httplib)http客户端，遇到 https://URL 时，客户端将HTTP traffic包裹在TLS stream中，例如与server进行通信时。		 
+然而，在TLS握手过程中，客户端将不会真正地检查server是否含有CA(in any trust root)签名的X509证书，也不会认证server提供的证书中的Common Name(or Subject Alternate Name)是否与server host匹配。
+不做这些检查，意味着，任何具有特权网络位置的人都能够trivially execute a man in the middle attack against a Python application using either of these HTTP clients, and change traffic at will.
 
-方法1) 使用ssl创建未经验证的上下文
+本PEP目的是默认启用python客户端对X509证书签名的认证，以及对hostname的认证。但根据每次呼叫选择退出(subject to opt-out on a per-call basis)。
+
+<2>实现细节
+Python将会使用操作系统提供的证书库，未能找到证书库将会发生错误。用户需要通过以下方法来明确指定证书库的位置。
+- ssl._create_default_https_context(与ssl.create_default_context相同)
+- http客户端就会使用ssl._create_default_https_context替换它的ssl._create_stdlib_context。
+- 此外，ssl._create_stdlib_context被重命名为ssl._create_unverified_context。(由于需要向下兼容，别名将被保留)
+
+<3>信任的证书库
+本PEP建议使用系统提供的证书库，之前的讨论建议绑定Mozilla的证书库作为默认证书库。
+
+使用该方法有以下几个原因：
+- python开发者。使用我们自身信任的证书库将需要在证书吊销时做一次发布。
+- Linux供应商和其他下游企业，将会拆解Mozilla证书为更加分散的一组行为。
+- 使用平台存储，能更加简单地处理一些情况，比如企业内部CA等。
+
+OpenSSL也有一对环境变量， SSL_CERT_DIR 和 SSL_CERT_FILE 用于指定Python使用不同的证书库。 
+
+<3>向后兼容
+这次改变将会引起一些HTTPS连接断开，因为它们将会在握手时引发异常。事实上这些连接目前正在默默地失败，HTTPS URL表明希望进行身份认证。
+尽管如此，需要访问具有自签名或错误证书的server时，需要提供一个用户信任roots的上下文，或者关闭认证(可能的情况下，本文档强烈建议推荐前者)。
+用户也能够增加必须的证书到系统信任库中，以便全局信任这些证书。
+
+<4>选择退出(关闭验证)
+1)对于希望在一次连接中选择退出证书认证的用户，可以通过提供上下文参数给urllib.urlopen来实现。
 import ssl
-import urllib2
 
+# This restores the same behavior as before.
 context = ssl._create_unverified_context()
-print urllib2.urlopen("https://www.12306.cn/mormhweb/", context=context).read()
+urllib.urlopen("https://no-valid-cert", context=context)
 
-方法2) 全局取消证书验证
+2)也可以给ssl模块增加monkeypatch来全局关闭验证：
 import ssl
-import urllib2
- 
-ssl._create_default_https_context = ssl._create_unverified_context
-print urllib2.urlopen("https://www.12306.cn/mormhweb/").read()
+
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    # Legacy Python that doesn't verify HTTPS certificates by default
+    pass
+else:
+    # Handle target environment that doesn't support HTTPS verification
+    ssl._create_default_https_context = _create_unverified_https_context
+
+管理员可以在他们标准的操作系统Python环境中，增加上述的monkeypatch到sitecustomize.py。
+
+注：对安全特别敏感的程序应当总是提供一个明确应用定义的SSL context，而不是依靠Python实现的默认行为。
+
+<5>其他协议
+本PEP只针对HTTPS客户端的认证，并不针对其他协议(如：SMTP等)。
+这是因为很高比例的HTTPS server具有正确的证书，因此浏览器执行验证。
+对于其他的协议，自签名或者其他不正确的证书更为常见。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
