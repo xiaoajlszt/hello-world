@@ -153,92 +153,6 @@ def fn(n):
 <3>三目运算符目的是得到一个结果，未必就是将该结果return，或者进行简单的变量赋值，如下：
 l = []
 l.append(1 if x>=1 else 0) # 将会给形式带来巨大的简洁
-	
-6. is 和 ==
-https://www.cnblogs.com/CheeseZH/p/5260560.html
-
-Python中对象包含的三个基本要素，分别是：id(身份标识)、type(数据类型)和value(值)。
-is和==都是对对象进行比较判断作用的，但对对象比较判断的内容并不相同。
-
-<1>==是python标准操作符中的比较操作符，用来比较判断两个对象的value(值)是否相等：
-
-<2>is也被叫做同一性运算符，这个运算符比较判断的是对象间的唯一身份标识，也就是id是否相同
-
-<3>eg:
->>> x = y = [4,5,6]
->>> z = [4,5,6]
->>> x == y
-True
->>> x == z
-True
->>> x is y
-True
->>> x is z
-False
->>>
->>> print id(x)	#获取对象id
-3075326572
->>> print id(y)
-3075326572
->>> print id(z)
-3075328140
-
-<4>eg:
->>> a = 1 #a和b为数值类型
->>> b = 1
->>> a is b
-True
->>> id(a)
-14318944
->>> id(b)
-14318944
-
->>> a = 'cheesezh' #a和b为字符串类型
->>> b = 'cheesezh'
->>> a is b
-True
->>> id(a)
-42111872
->>> id(b)
-42111872
-
->>> a = (1,2,3) #a和b为tuple类型
->>> b = (1,2,3)
->>> a is b
-False
->>> id(a)
-15001280
->>> id(b)
-14790408
-
->>> a = [1,2,3] #a和b为list类型
->>> b = [1,2,3]
->>> a is b
-False
->>> id(a)
-42091624
->>> id(b)
-42082016
-
->>> a = {'cheese':1,'zh':2} #a和b为dict类型
->>> b = {'cheese':1,'zh':2}
->>> a is b
-False
->>> id(a)
-42101616
->>> id(b)
-42098736
-
->>> a = set([1,2,3])#a和b为set类型
->>> b = set([1,2,3])
->>> a is b
-False
->>> id(a)
-14819976
->>> id(b)
-14822256
-
-结论：只有数值型和字符串型的情况下，a is b才为True；当tuple，list，dict或set类型时，a is b为False！
 
 7. None 
 >>> s = None
@@ -354,25 +268,6 @@ def is_odd(x):
 Return those items of sequence for which function(item) is true.  
 If function is None, return the items that are true.  
 If sequence is a tuple or string, return the same type, else return a list.
-
-
-16、注意点
-<1> += 和 =不同
-list1 = [1,2,3]
-list2 = [1,2,3]
-
-def change_list1(l):
-	l += [4]
-	
-def change_list2(l):
-	l = l + [4]
-
-change_list1(list1)
-//[1,2,3,4]
-
-change_list2(list1)
-//[1,2,3]
-
 
 17. reload(sys)后设置编码
 http://blog.csdn.net/daydayup_gzm/article/details/72654188

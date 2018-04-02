@@ -1,12 +1,7 @@
-一、一些说明
-1. urllib和urllib2
-urllib2可以接受一个Request对象，并以此可以来设置一个URL的headers。但是urllib只接收一个URL，这意味着，不能伪装用户代理字符串等。 
-urllib模块可以提供进行urlencode的方法，该方法用于GET查询字符串的生成，urllib2的不具有这样的功能。这就是urllib与urllib2经常在一起使用的原因。 
-
-2. 字符串与URL编码转换
+一、字符串与URL编码转换
 http://blog.csdn.net/tangzongyu123/article/details/75224468
 
-<1> 字符串转URL编码
+1. 字符串转URL编码
 import urllib
 poet_name = "李白"
 url_code_name = urllib.quote(poet_name)
@@ -15,7 +10,7 @@ print url_code_name
 输出：
 %E6%9D%8E%E7%99%BD
 
-<2> URL编码转字符串
+2. URL编码转字符串
 import urllib
 url_code_name = "%E6%9D%8E%E7%99%BD"
 name = urllib.unquote(url_code_name)
@@ -29,16 +24,23 @@ http://www.w3school.com.cn/tags/html_ref_urlencode.html
 
 与十六进制的区别是：\x <--> %
 
-二、urllib
-urllib提供了一系列操作URL的功能。
+--------------------------------------------------------------------------------------------------------------
 
-0. 一些函数
-<1> urllib.urlencode = urlencode(query, doseq=0)
->>> s = urllib.urlencode({'smsuser': '123', 'smspass': 'abc'})
->>> s
-'smsuser=123&smspass=abc'
+urlib\urlib2\http\httplib
 
-<2> 
+一、Python 2.X与Python 3.X的区别
+1. python3.x中没有urllib2
+The urllib2 module has been split across several modules in Python 3.0 named urllib.request and urllib.error. 
+The 2to3 tool will automatically adapt imports when converting your sources to 3.0. 
+
+eg:
+from urllib.request import urlopen
+
+2. Python2.x的urllib2中有Request类(注意是大写!)。
+
+
+二、python 3.x
+urllib
 
 1. GET
 urllib的request模块可以方便地抓取URL的内容，也就是发送一个GET请求到指定页面，然后返回HTTP响应。
@@ -142,10 +144,46 @@ with opener.open('http://www.example.com/login.html') as f:
 urllib提供的功能就是利用程序去执行各种HTTP请求。
 如果要模拟浏览器完成特定功能，需要把请求伪装成浏览器。伪装的方法是先监控浏览器发出的请求，再根据浏览器的请求头来伪装，User-Agent头就是用来标识浏览器的。
 
-三、urllib2
-1. 函数
+
+三、Python 2.x
+1. urllib和urllib2
+urllib2可以接受一个Request对象，并以此可以来设置一个URL的headers。但是urllib只接收一个URL，这意味着，不能伪装用户代理字符串等。 
+urllib模块可以提供进行urlencode的方法，该方法用于GET查询字符串的生成，urllib2的不具有这样的功能。这就是urllib与urllib2经常在一起使用的原因。 
+
+2. urllib
+urllib提供了一系列操作URL的功能。
+
+(1)函数：
+<1> urllib.urlencode(query, doseq=0)
+>>> s = urllib.urlencode({'smsuser': '123', 'smspass': 'abc'})
+>>> s
+'smsuser=123&smspass=abc'
+
+3. urllib2
+资料：
+https://www.cnblogs.com/wly923/archive/2013/05/07/3057122.html
+https://docs.python.org/2/library/urllib2.html
+
+(1)函数
 <1>urllib2.urlopen = urlopen(url, data=None, timeout=<object object>, cafile=None, capath=None, cadefault=False, context=None)
-//url参数可以是一个字符串url，也可以是一个Request对象。
+1)说明：用于打开url网址。
+
+2)参数：
+- url：可以是一个字符串url，也可以是一个Request对象。
+- data：字符串用于指定发送给server的附加data；None表示不需要发送附加data。
+		目前，HTTP request是唯一使用data的。当提供data时，HTTP request是POST请求而不是GET请求。
+		data应该是标准application/x-www-form-urlencoded格式的buffer。urllib.urlencode()函数输入一个2元元组的映射或序列，并返回这样格式的一个string。
+- timeout：为阻塞操作(如：尝试连接)指定timeout。如果不指定，将会使用global默认timeout。(只用于HTTP\HTTPS\FTP连接)
+- context：它必须是ssl.SSLContext实例，用于描述多个SSL选项。详见HTTPSConnection。
+- cafile & capath：为HTTPS请求指定一系列信任的CA证书。
+					cafile需要指向单个包含一束CA证书的文件。capath应该指向hashed证书文件的目录。
+					详见ssl.SSLContext.load_verify_locations()。
+- cadefault 
+					
+
+
+3)返回值：
+
 
 <2>urllib2.build_opener([handler, ...])
 //返回一个OpenerDirector实例。
@@ -156,15 +194,13 @@ handler可以是BaseHandler实例，或者是BaseHandler子类的实例。
 如果希望urlopen()使用某个opener，才需要安装该opener。否则，可以直接使用OpenerDirector.open()替代urlopen()。
 注：代码并不会检查入参是否是一个OpenerDirector实例，具有适当接口的类都可以工作。
 
+(2)类
+<1>HTTPPasswordMgrWithDefaultRealm
+- add_password
 
-2. HTTPPasswordMgrWithDefaultRealm
-<1>add_password
+<2>HTTPBasicAuthHandler
 
-3. HTTPBasicAuthHandler
-
-
-4. Request(url[, data][, headers][, origin_req_host][, unverifiable])
-该类是URL请求的抽象。
+<3>Request(url[, data][, headers][, origin_req_host][, unverifiable])   //该类是URL请求的抽象。
 url		是包含正确URL的字符串。
 data	是指定要发送到server的附加数据的字符串。None表示没有需要的data。
 headers

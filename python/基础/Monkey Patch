@@ -1,1 +1,15 @@
-用于在运行时动态替换已有的代码。
+1. Monkey Patch  //用于在运行时动态替换已有的代码，达到hot patch的目的。
+
+2. sitecustomize.py
+<1> sitecustomize.py是python中的一个特殊脚本，可以放在目录下的任意位置，不过一般放在Python安装目录的/Lib/site-packages/下。当python开始运行时会先运行该脚本中的代码，因此可以用来设置一些default的东西。
+
+<2> 一个用途就是用来设置python的默认编码，在import sys后，可以使用sys.getdefaultencoding()函数查看默认编码，如果你想使用utf-8成为默认编码，又不愿意每次都来设置一下，可以在sitecustomize.py中放入以下代码
+# set system default encoding: utf-8  
+import sys  
+reload(sys) #可能不需要  
+sys.setdefaultencoding('utf-8')  
+
+这样python默认编码就变成了utf-8，并且以后无需在设置。
+
+<3> eg
+./ATuin/Build_RPM/anaconda/anaconda-19.31.123/pyanaconda/sitecustomize.py
