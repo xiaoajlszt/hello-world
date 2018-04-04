@@ -153,7 +153,7 @@ urllib模块可以提供进行urlencode的方法，该方法用于GET查询字�
 2. urllib
 urllib提供了一系列操作URL的功能。
 
-(1)函数：
+(1)方法：
 <1> urllib.urlencode(query, doseq=0)
 >>> s = urllib.urlencode({'smsuser': '123', 'smspass': 'abc'})
 >>> s
@@ -162,9 +162,10 @@ urllib提供了一系列操作URL的功能。
 3. urllib2
 资料：
 https://www.cnblogs.com/wly923/archive/2013/05/07/3057122.html
+https://blog.csdn.net/qq_32252917/article/details/79074252
 https://docs.python.org/2/library/urllib2.html
 
-(1)函数
+(1)方法：
 <1>urllib2.urlopen = urlopen(url, data=None, timeout=<object object>, cafile=None, capath=None, cadefault=False, context=None)
 1)说明：用于打开url网址。
 
@@ -178,38 +179,73 @@ https://docs.python.org/2/library/urllib2.html
 - cafile & capath：为HTTPS请求指定一系列信任的CA证书。
 					cafile需要指向单个包含一束CA证书的文件。capath应该指向hashed证书文件的目录。
 					详见ssl.SSLContext.load_verify_locations()。
-- cadefault 
+- cadefault:	忽略该参数。
 					
-
-
 3)返回值：
+函数返回一个file-like对象(response对象)，该对象具有三个附加方法：
+- geturl() 	返回检索资源的URL，通常用于判断是否需要后续的重定向。
+- info()	以mimetools.message实例的格式返回页面的meta-information，比如：headers。
+- getcode() 返回response的HTTP状态码。
 
+注：如果没有handler处理请求(尽管默认安装的全局OpenerDirector使用UnknowHandler来确保该情况永远不会发生)，将会返回None。
+此外，如果检查到proxy设置(如：设置了例如http_proxy的*_proxy环境变量)，ProxyHandler是默认安装的，并且确保通过proxy执行请求。
+
+4)会抛出错误引发的URLError。
 
 <2>urllib2.build_opener([handler, ...])
-//返回一个OpenerDirector实例。
-handler可以是BaseHandler实例，或者是BaseHandler子类的实例。
+1)说明：返回一个OpenerDirector实例。该实例按给定的顺序链接handler。
+
+2)参数：
+handler：可以是BaseHandler实例，或者是BaseHandler子类的实例(此时，必须可以不带任何参数调用构造函数)。
 
 <3>urllib2.install_opener(opener)
-//安装一个OpenerDirector实例作为默认的global opener。
+1)说明：安装一个OpenerDirector实例作为默认的global opener。
+
 如果希望urlopen()使用某个opener，才需要安装该opener。否则，可以直接使用OpenerDirector.open()替代urlopen()。
 注：代码并不会检查入参是否是一个OpenerDirector实例，具有适当接口的类都可以工作。
 
-(2)类
-<1>HTTPPasswordMgrWithDefaultRealm
-- add_password
-
-<2>HTTPBasicAuthHandler
-
-<3>Request(url[, data][, headers][, origin_req_host][, unverifiable])   //该类是URL请求的抽象。
-url		是包含正确URL的字符串。
-data	是指定要发送到server的附加数据的字符串。None表示没有需要的data。
-headers
-https://blog.csdn.net/qq_32252917/article/details/79074252
 
 
+(2)类：
+<1> class urllib2.Request(url[, data][, headers][, origin_req_host][, unverifiable])
+1)说明：该类是URL请求的抽象。
 
+2)参数：
+url：是包含正确URL的字符串。
+data：是指定要发送到server的附加数据的字符串。None表示没有需要的data。
+		目前，HTTP request是唯一使用data的。当提供data时，HTTP request是POST请求而不是GET请求。
+		data应该是标准application/x-www-form-urlencoded格式的buffer。urllib.urlencode()函数输入一个2元元组的映射或序列，并返回这样格式的一个string。
+headers：是一个字典。并且被视为通过每个(key,value)作为参数调用add_header()。
+			通常用于欺骗User-Agent header(浏览器使用它来认证自身，一些HTTP servers仅允许来自普通浏览器而不是脚本的请求)的值。
+			例如，Mozilla Firefox使用"Mozilla/5.0 (X11; U; Linux i686) Gecko/20071127 Firefox/2.0.0.11"来认证自己。Python2.6的urllib2的默认用户代理是"Python-urllib/2.6"。
 
+最后两个参数只对正确处理第三方HTTP cookies感兴趣：
+origin_req_host：
+unverifiable：
 
+<2>class urllib2.HTTPPasswordMgrWithDefaultRealm
+1)说明：保持(realm, uri)到(user, password)的映射。realm为None表示一个catch-all realm，如果其他realm适合，将会搜索该realm。
+构建一个密码管理对象，用来保存需要处理的用户名和密码。
+
+<3>class urllib2.HTTPBasicAuthHandler([password_mgr])
+1)说明：处理远程主机的身份认证。
+访问某些Web服务器需要进行用户身份认证，否则会报访问身份未经授权"urllib2.HTTPError: HTTP Error 401: Unauthorized"。
+
+构建一个HTTP基础用户名/密码验证的HTTPBasicAuthHandler处理器对象。
+
+2)参数：
+password_mgr：如果给出该参数，应当是与HTTPPasswordMgr一致。
+
+<3>HTTPPasswordMgr Objects的方法：
+这些方法适用于HTTPPasswordMgr和HTTPPasswordMgrWithDefaultRealm对象。
+
+1) HTTPPasswordMgr.add_password(realm, uri, user, passwd)
+uri可以是单个URI或一系列的URI。realm\user\passwd必须是字符串。当对realm和给定的URI进行认证时，(user, passwd)被用作认证tokens。
+
+添加账户信息。
+
+2) HTTPPasswordMgr.find_user_password(realm, authuri)
+为给定的realm和URI获取user/password(如果有的话)。如果没有匹配的use/password，将反回(None,None)。
 
 
 

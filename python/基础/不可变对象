@@ -116,6 +116,8 @@ def add_end(L=None):
 	return L
 
 Èý¡¢+ ºÍ +=
+https://www.zhihu.com/question/20114936
+
 1. eg1:
 def main():
 	l1 = [1,2,3]
