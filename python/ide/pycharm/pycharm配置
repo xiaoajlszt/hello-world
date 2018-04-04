@@ -1,0 +1,33 @@
+1.下载安装python
+https://www.python.org/downloads/release/python-2714/
+
+2.配置vritualenv
+https://blog.csdn.net/iamyvette/article/details/77104289
+<1>安装virtualenv
+$ pip install virtualenv  //这样的python的安装目录的Scripts下就会多出一个virtualenv.exe。
+
+<2>利用virtualenv创建一个独立运行环境
+$ virtualenv.exe ENV		//建议创建ENV在python的安装目录的Scripts下。
+如果创建环境的时候想指定python版本，可以使用-p PYTHON_EXE。
+eg：$ virtualenv -p /usr/bin/python2.7 ENV2.7
+
+ENV就是新建的虚拟环境目录。
+ENV下拥有Scripts、Include、Lib三个文件夹。本虚拟环境所有安装的Python库将存放在ENV/Lib/site-packages/下。 
+当脚本带有#! /path/to/ENV/Scripts/python则该脚本将在此虚拟python解释器下运行。 
+
+<3>激活virtualenv
+$ ENV/bin/activate.bat
+此时，命令提示符改变，有个(ENV)前缀，表示现在在一个名为ENV的Python环境。
+
+<4>接下来就可以利用pip安装各种第三方包
+$ pip install Flask
+
+查看当前库
+$ pip list
+
+在ENV环境下，用pip安装的第三方库都会被安装到ENV这个环境下，系统的Python环境不受任何影响。
+
+关闭当前环境
+$ deactivate.bat
+
+3.在pycharm中使用配置好的virtualenv环境
