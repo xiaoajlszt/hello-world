@@ -1,0 +1,81 @@
+http://python3-cookbook.readthedocs.io/zh_CN/latest/c06/p02_read-write_json_data.html
+
+JSON(JavaScript Object Notation, JS对象标记)
+
+一、json模块提供了一种很简单的方式来编码和解码JSON数据。
+其中两个主要的函数是 json.dumps() 和 json.loads()，要比其他序列化函数库如pickle的接口少得多。
+
+1. 将Python数据结构转换为JSON。
+data = {
+    'name' : 'ACME',
+    'shares' : 100,
+    'price' : 542.23
+}
+
+json_str = json.dumps(data)
+
+2. 将JSON编码的字符串转换回一个Python数据结构。
+data = json.loads(json_str)
+
+3. 如果需要处理的是文件而不是字符串，可以使用json.dump()和json.load()来编码和解码JSON数据。
+# Writing JSON data
+with open('data.json', 'w') as f:
+    json.dump(data, f)
+
+# Reading data back
+with open('data.json', 'r') as f:
+    data = json.load(f)
+	
+二、讨论
+1. JSON编码支持的基本数据类型为 None, bool, int, float和str，以及包含这些类型数据的lists, tuples和dictionaries。 
+对于dictionaries，keys需要是字符串类型(字典中任何非字符串类型的key在编码时会先转换为字符串)。 
+为了遵循JSON规范，你应该只编码Python的lists和dictionaries。 而且，在web应用程序中，顶层对象被编码为一个字典是一个标准做法。
+
+2. JSON编码的格式对于Python语法而已几乎是完全一样的，除了一些小的差异之外。 比如，True会被映射为true，False被映射为false，而None会被映射为null，单引号被映射为双引号。
+
+3. 如果你试着去检查JSON解码后的数据，你通常很难通过简单的打印来确定它的结构，特别是当数据的嵌套结构层次很深或者包含大量的字段时。 
+为了解决这个问题，可以考虑使用pprint模块的 pprint() 函数来代替普通的 print() 函数。 它会按照key的字母顺序并以一种更加美观的方式输出。
+>>> from urllib.request import urlopen
+>>> import json
+>>> u = urlopen('http://search.twitter.com/search.json?q=python&rpp=5')
+>>> resp = json.loads(u.read().decode('utf-8'))
+>>> from pprint import pprint
+>>> pprint(resp)
+
+4. 一般来讲，JSON解码会根据提供的数据创建dicts或lists。 
+如果你想要创建其他类型的对象，可以给 json.loads() 传递object_pairs_hook或object_hook参数。
+
+eg: 解码JSON数据并在一个OrderedDict中保留其顺序的例子：
+
+>>> from collections import OrderedDict
+>>> data = json.loads(s, object_pairs_hook=OrderedDict)
+>>> data
+OrderedDict([('name', 'ACME'), ('shares', 50), ('price', 490.1)])
+>>>
+
+eg: 将一个JSON字典转换为一个Python对象例子:
+>>> class JSONObject:
+...     def __init__(self, d):
+...         self.__dict__ = d
+...
+>>>
+>>> data = json.loads(s, object_hook=JSONObject)
+>>> data.name
+'ACME'
+>>> data.shares
+50
+>>> data.price
+490.1
+
+5. 在编码JSON的时候，还有一些选项很有用。 
+如果你想获得漂亮的格式化字符串后输出，可以使用 json.dumps() 的indent(缩进)参数。它会使得输出和pprint()函数效果类似。
+
+>>> print(json.dumps(data))
+{"price": 542.23, "name": "ACME", "shares": 100}
+>>> print(json.dumps(data, indent=4))
+{
+    "price": 542.23,
+    "name": "ACME",
+    "shares": 100
+}
+>>>

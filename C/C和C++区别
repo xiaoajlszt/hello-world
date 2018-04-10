@@ -14,7 +14,7 @@ int main()
 }
 
 2).cpp文件不可以。
-" error: return-statement with no value, in function returning ‘int’ [-fpermissive]"
+"error: return-statement with no value, in function returning ‘int’ [-fpermissive]"
 
 (2)strchr/strstr
 strchr有以下两种方式，即入参为const，返回值必须也是const；入参为非const，返回值也为非const。

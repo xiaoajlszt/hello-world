@@ -1,0 +1,9 @@
+资料
+https://zhuanlan.zhihu.com/p/20152309
+http://python.jobbole.com/87242/
+
+
+1. ctypes模块是Python内建的用于调用动态链接库函数的功能模块，一定程度上可以用于Python与其他语言的混合编程。
+由于编写动态链接库，使用C/C++是最常见的方式，故ctypes最常用于Python与C/C++混合编程之中。
+
+2. ctypes.CDLL = class CDLL(builtins.object)
