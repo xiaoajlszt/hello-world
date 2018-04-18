@@ -1,3 +1,57 @@
+1. vim编译安装
+https://github.com/yangyangwithgnu/use_vim_as_ide
+http://www.cnblogs.com/biglucky/p/6203533.html
+
+发行套件的软件源中预编译的 vim 要么不是最新版本，要么功能有阉割，有必要升级成全功能的最新版，当然，源码安装必须的。
+
+<1>预先安装相关依赖库的头文件:
+python-devel、python3-devel、ruby-devel、lua-devel、libX11-devel、gtk-devel、gtk2-devel、gtk3-devel、ncurses-devel
+如果缺失，源码构建过程虽不会报错，但最终生成的 vim 很可能缺失某些功能。
+
+<2>编译安装
+git clone https://github.com/vim/vim.git
+
+cd vim/
+
+./configure --with-features=huge --with-x --enable-pythoninterp --enable-python3interp --enable-rubyinterp --enable-luainterp --enable-perlinterp --with-python-config-dir=/usr/lib64/python2.7/config/ --with-python3-config-dir=/usr/local/python3/lib/python3.6/config-3.6m-x86_64-linux-gnu/ --enable-gui=gtk2 --enable-cscope --prefix=/usr
+
+make && sudo make install
+
+其中，--enable-pythoninterp、--enable-rubyinterp、--enable-perlinterp、--enable-luainterp 等分别表示支持 ruby、python、perl、lua 编写的插件，
+--enable-gui=gtk2 表示生成采用 GNOME2 风格的 gvim，
+--enable-cscope 支持 cscope，
+--with-python-config-dir=/usr/lib/python2.7/config/ 指定 python 路径，
+这几个特性非常重要，影响后面各类插件的使用。
+
+注: 2.7的python和python-devel通过yum安装
+    3.6的python是编译安装(编译安装包括了python-devel等)
+    --prefix=/usr,安装后的vim命令位于/usr/bin/vim
+
+2. YCM安装
+cmake -G "Unix Makefiles" -DUSE_SYSTEM_BOOST=ON -DPATH_TO_LLVM_ROOT=~/downloads/clang+llvm/ .\
+~/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp		//makefile路径
+
+3. gcc编译安装：
+<1>下载gcc源码   
+http://ftp.gnu.org/gnu/gcc/
+
+<2>安装依赖项
+tar -xvf gcc-6.4.0.tar
+cd gcc-6.4.0/
+./contrib/download_prerequisites		//该过程会下载gmp，mpfr，mpc等多个依赖
+
+<3>编译安装gcc
+mkdir build
+cd build
+../configure --enable-checking=release --enable-languages=c,c++ --disable-multilib
+make
+make install
+
+<4>检查gcc版本
+gcc --version
+
+4. nnoremap的第一个 n 代表 normal mode，后面的 noremap 代表不要重复映射，这是避免一个按键同时映射多个动作用的。
+
 一、vim基本命令  
 https://my.oschina.net/kutengshe/blog/464602
 https://segmentfault.com/a/1190000003962806
@@ -8,6 +62,12 @@ https://segmentfault.com/a/1190000003962806
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set termencoding=utf-8
 set encoding=utf-8
+
+<2>高亮操作
+gd    跳转到局部声明处
+*     
+#     与*相反
+match
 
 
 1、基本操作：
