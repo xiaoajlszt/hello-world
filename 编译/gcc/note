@@ -1,0 +1,163 @@
+一、 编译系统的4个阶段(这部分gcc和g++都一样)
+https://blog.csdn.net/bit_clearoff/article/details/53965514
+
+1. 预处理器(cpp)  预处理阶段   .c -> .i		gcc -E hello.c -o hello.i
+预处理器根据以字符#开头的命令，修改原始的C程序。得到.i文件。
+eg:#include<stdio.h>指令告诉预处理器读取系统头文件stdio.h的内容，并把它字节插入插入到程序文本中去。
+
+- 去掉#开头的程序，保留#pragma
+- 宏替换
+- 去注释
+- 头文件包含
+- 添加行号
+
+2. 编译器(ccl)    编译阶段     .i -> .s		gcc -S hello.i -o hello.s
+将文本文件.i翻译成文本文件.s，它包含一个汇编语言程序。
+汇编语言程序中的每条语句都以一种标准的文本格式确切地描述了一条低级机器语言指令。
+汇编语言非常有用，因为它为不同高级语言的不同编译器提供了通用的输出语言。
+
+- 语法分析
+- 词法分析
+- 生成相应的汇编语言
+
+3. 汇编器(as)     汇编阶段     .s -> .o(目标文件)		gcc -c hello.s -o hello.o
+汇编器将.s翻译成机器语言指令，把这些指令打包成一种叫做可重定位目标程序的格式，并将结果保存在目标文件.o中。
+.o是一个二进制文件，它的字节编码是机器语言指令而不是字符。
+
+- 将汇编代码转换成相应的机器语言
+
+4. 链接器(ld)     链接阶段     .o -> 可执行目标文件		gcc hello.o -o hello
+eg: hello程序中调用了printf函数，它是标准C库中的函数，每个C编译器都提供。
+printf函数存在于一个名为print.o的单独的预编译目标文件中，而这个文件必须以某种方式并入到hello.o程序中。
+链接器就负责处理这种并入，结果就得到可执行目标文件，简称可执行文件。
+
+- 通过调用链接器来链接程序运行需要的目标文件，以及所依赖的其他库文件，生成可执行文件。
+
+二、 gcc和g++
+https://www.zhihu.com/question/20940822
+
+1. 误区1：gcc只能编译c代码,g++只能编译c++代码
+
+<1>实则，两者都可以：
+后缀为.c的，gcc把它当作是C程序，而g++当作是c++程序；
+后缀为.cpp的，两者都会认为是c++程序。
+
+<2>虽然c++是c的超集，但是两者对语法的要求是有区别的，例如：
+#include<stdio.h>
+int main(int argc, char* argv[]) {
+   if(argv == 0) return;
+   printString(argv);
+   return 0;
+}
+int printString(char* string) {
+  sprintf(string, "This is a test.\n");
+}
+
+如果按照C的语法规则，OK，没问题。但是，一旦把后缀改为cpp，立刻报三个错：
+“printString未定义”；
+“cannot convert `char**' to `char*”；
+”return-statement with no value“；
+可见C++的语法规则更加严谨一些。
+
+<3>编译阶段，g++会调用gcc，对于c++代码，两者是等价的。但是因为gcc命令不能自动和C++程序使用的库联接，所以通常用g++来完成链接，为了统一起见，干脆编译/链接统统用g++了，这就给人一种错觉，好像cpp程序只能用g++似的。
+
+2. 误区2: gcc不会定义__cplusplus宏，而g++会。
+<1>实则，这个宏只是标志着编译器将会把代码按C还是C++语法来解释，如上所述，如果后缀为.c，并且采用gcc编译器，则该宏就是未定义的，否则，就是已定义。
+
+3. 误区3：编译只能用gcc，链接只能用g++
+<1>实则：严格来说，这句话不算错误，但是它混淆了概念，应该这样说：编译可以用gcc/g++，而链接可以用g++或者gcc -lstdc++。
+因为gcc命令不能自动和C++程序使用的库联接，所以通常使用g++来完成联接。但在编译阶段，g++会自动调用gcc，二者等价。
+
+4. 误区4：extern "C"与gcc/g++有关系
+<1>实则，并无关系，无论是gcc还是g++，用extern "c"时，都是以C的命名方式来为symbol命名，否则，都以c++方式命名。
+
+5. gcc/g++包含头文件
+<1>-include用来包含头文件，但一般情况下包含头文件都在源码里用#include xxxxxx实现，-include参数很少用。
+
+<2>-I参数是用来指定头文件目录，/usr/include目录一般是不用指定的，gcc知道去那里找。
+但是如果头文件不在/usr/include里我们就要用-I参数指定了，比如头文件放在/myinclude目录里，那编译命令行就要加上-I /myinclude参数了，如果不加你会得到一个"xxxx.h: No such file or directory"的错误。
+-I参数可以用相对路径，比如头文件在当前目录，可以用-I.来指定。
+
+<3>详见6<5>。
+
+<4>linux中c include搜索路径
+1)#include <stdio.h>和#include "stidio.h"的区别：
+#include <stdio.h>	直接到系统指定目录去查找头文件;
+#include "stidio.h"	会先到当前目录查找头文件，如果没找到再到系统指定目录查找。
+
+2)gcc编译时查找头文件，按照以下路径顺序查找：
+- gcc编译时，可以设置-I选项以指定头文件的搜索路径，如果指定多个路径，则按照顺序依次查找。
+
+- gcc会查找环境变量C_INCLUDE_PATH，CPLUS_INCLUDE_PATH中指定的路径。
+
+- 系统默认的路径，分别是/usr/include，/usr/local/include，/usr/lib/gcc-lib/i386-linux/2.95.2/include(gcc库文件的路径，各个系统不一致)。
+
+3)include也可以采用相对路径，比如，a.c需要包含/usr/local/include/node/v8.h，由于/usr/local/include是系统的默认搜索路径，所以在a.c中可以用相对路径包含，#include<node/v8.h>。
+
+6. gcc/g++包含库文件
+<1>-l参数就是用来指定程序要链接的库，-l参数紧接着就是库名。那么库名跟真正的库文件名有什么关系呢？就拿数学库来说，他的库名是m，他的库文件名是libm
+那么库名跟真正的库文件名有什么关系呢？就拿数学库来说，他的库名是m，他的库文件名是libm.so，很容易看出，把库文件名的头lib和尾.so去掉就是库名了。
+
+<2>放在/lib和/usr/lib和/usr/local/lib里的库直接用-l参数就能链接了，但如果库文件没放在这三个目录里，而是放在其他目录里，这时我们只用-l参数的话，链接还是会出错。
+出错信息大概是："/usr/bin/ld: cannot find -lxxx"，也就是链接程序ld在那3个目录里找不到libxxx.so，
+这时另外一个参数-L就派上用场了，比如常用的X11的库，它在/usr/X11R6/lib目录下，我们编译时就要用-L/usr/X11R6/lib -lX11参数。-L参数跟着的是库文件所在的目录名。
+
+<3>另外，大部分libxxxx.so只是一个链接，以RH9为例，比如libm.so它链接到/lib/libm.so.x，/lib/libm.so.6又链接到/lib/libm-2.3.2.so，
+如果没有这样的链接，还是会出错，因为ld只会找libxxxx.so，所以如果你要用到xxxx库，而只有libxxxx.so.x或者libxxxx-x.x.x.so，做一个链接就可以了ln -s libxxxx-x.x.x.so libxxxx.so
+
+<4>手工来写链接参数总是很麻烦的，还好很多库开发包提供了生成链接参数的程序，名字一般叫xxxx-config，一般放在/usr/bin目录下，比如:
+gtk1.2的链接参数生成程序是gtk-config，执行gtk-config --libs就能得到以下输出"-L/usr/lib -L/usr/X11R6/lib -lgtk -lgdk -rdynamic -lgmodule -lglib -ldl -lXi -lXext -lX11 -lm"，这就是编译一个gtk1.2程序所需的gtk链接参数。
+
+<5>xxx-config除了--libs参数外还有一个参数是--cflags用来生成头文件包含目录的，也就是-I参数。可以试试执行gtk-config --libs --cflags，看看输出结果。
+现在的问题就是怎样用这些输出结果了，最笨的方法就是复制粘贴或者照抄，聪明的办法是在编译命令行里加入这个`xxxx-config --libs --cflags`。
+比如编译一个gtk程序：gcc gtktest.c `gtk-config --libs --cflags`这样就差不多了。注意`不是单引号，而是1键左边那个键。
+
+<6>详见三1。
+
+7. 例子
+g++ icu_test.cpp -m32 -o icu_test -I./include -L/test/lib/linux/ -licuuc
+
+三、其他
+1. 在Linux下执行某些外部程序的时候可能会提示找不到共享库的错误："error while loading shared libraries: xxx.so.x cannot open shared object file: No such file or directory"
+https://blog.csdn.net/sahusoft/article/details/7388617
+
+原因一般有两个:
+一是操作系统里确实没有包含该共享库(lib*.so.*文件)或者共享库版本不对, 遇到这种情况那就去网上下载并安装上即可。
+一是已经安装了该共享库，但执行需要调用该共享库的程序的时候，程序按照默认共享库路径找不到该共享库文件。
+
+<1>如果共享库文件安装到了/lib或/usr/lib目录下, 那么需执行一下ldconfig命令。
+ldconfig命令的用途主要是在默认搜寻目录(/lib和/usr/lib)以及动态库配置文件/etc/ld.so.conf内所列的目录下，搜索出可共享的动态链接库(格式如lib*.so*)，进而创建出动态装入程序(ld.so)所需的连接和缓存文件。
+缓存文件默认为/etc/ld.so.cache，此文件保存已排好序的动态链接库名字列表。
+
+<2>如果共享库文件安装到了/usr/local/lib(很多开源的共享库都会安装到该目录下)或其它"非/lib或/usr/lib"目录下，
+那么在执行ldconfig命令前, 还要把新共享库目录加入到共享库配置文件/etc/ld.so.conf中, 如下:
+$ cat /etc/ld.so.conf
+include ld.so.conf.d/*.conf
+$ echo "/usr/local/lib" >> /etc/ld.so.conf
+$ ldconfig
+
+<3>如果共享库文件安装到了其它"非/lib或/usr/lib"目录下，但是又不想在/etc/ld.so.conf中加路径(或者是没有权限加路径)。
+那么可以export一个全局变量LD_LIBRARY_PATH，然后运行程序的时候就会去这个目录中找共享库。一般来讲这只是一种临时的解决方案, 在没有权限或临时需要的时候使用。
+
+LD_LIBRARY_PATH的意思是告诉loader在哪些目录中可以找到共享库。可以设置多个搜索目录，这些目录之间用冒号分隔开。
+比如安装了一个mysql到/usr/local/mysql目录下，其中有一大堆库文件在/usr/local/mysql/lib下面，则可以在.bashrc或.bash_profile或shell里加入以下语句即可:
+export LD_LIBRARY_PATH=/usr/local/mysql/lib:$LD_LIBRARY_PATH    
+
+<4>当然也可以在链接时使用静态库(.a文件)。在g++命令上写入改.a文件的完整路径。
+
+2. Linux下共享库路径配置问题
+https://blog.csdn.net/ldong2007/article/details/3227214
+
+LD_LIBRARY_PATH
+LD_PRELOAD
+LD_DEBUG
+
+
+
+
+
+
+
+
+
+
