@@ -2,6 +2,8 @@
 1、wget  http://www.cnblogs.com/peida/archive/2013/03/18/2965369.html
 eg:wget -O docker-registry.html https://docs.docker.com/docker-trusted-registry/  //下载某个网页
 
+2. curl
+
 二、通过网络传输文件
 常见协议：FTP、SFTP、RSYNC、SCP
 通过FTP传输文件可以使用lftp命令；通过SSH连接传输文件可以使用sftp命令
