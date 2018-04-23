@@ -14,7 +14,7 @@ git clone https://github.com/vim/vim.git
 
 cd vim/
 
-./configure --with-features=huge --with-x --enable-pythoninterp --enable-python3interp --enable-rubyinterp --enable-luainterp --enable-perlinterp --with-python-config-dir=/usr/lib64/python2.7/config/ --with-python3-config-dir=/usr/local/python3/lib/python3.6/config-3.6m-x86_64-linux-gnu/ --enable-gui=gtk2 --enable-cscope --prefix=/usr
+./configure --with-features=huge --with-x --enable-pythoninterp --enable-python3interp --enable-rubyinterp --enable-luainterp --enable-perlinterp --with-python-config-dir=/usr/lib64/python2.7/config/ --with-python3-config-dir=/usr/local/python3/lib/python3.6/config-3.6m-x86_64-linux-gnu/ --enable-gui=gtk2 --enable-cscope --prefix=/usr  //可以换个路径
 
 make && sudo make install
 
@@ -71,7 +71,7 @@ cd gcc-6.4.0/
 <3>编译安装gcc
 mkdir build
 cd build
-../configure --enable-checking=release --enable-languages=c,c++ --disable-multilib
+../configure --enable-checking=release --enable-languages=c,c++ --disable-multilib --prefix=/usr/local/gcc6.4
 make
 make install
 
