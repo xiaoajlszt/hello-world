@@ -197,7 +197,8 @@ VimÌá¹©ÁË·½±ã·ÃÎÊ½üÆÚ»º³åÇøµÄ·½Ê½£¬Ö»ĞèÒªÊäÈë:b <buffer name or number>£¬¾Í¿ÉÒÔÇ
 <0>ÏÈÔÚ~/vimrcÖĞÔö¼Ó,ÓÃÓÚÉè¶¨ÊÇ·ñÊ¹ÓÃ quickfix ´°¿ÚÀ´ÏÔÊ¾ cscope ½á¹û
 :set cscopequickfix=s-,c-,d-,i-,t-,e-
 <1>ÔÚ´úÂë¸ùÄ¿Â¼ÏÂÖ´ĞĞ£º cscope -Rbq  Éú³ÉÈı¸öÎÄ¼ş£ºcscope.in.out  cscope.out  cscope.po.out 
-<2>ÔÚ~/vimrcÖĞÔö¼Ó:cs add /usr/local/share/uspp/uspp/cscope.out /usr/local/share/uspp/uspp  £¨¿ÉÄÜÄ¬ÈÏÔÚµ±Ç°¹¤³ÌÑ°ÕÒ£¬ËùÒÔÒ²¿ÉÒÔ²»¼Ó£©
+<2>Èç¹ûÔÚÊ¹ÓÃ¸Ã²å¼şÊ±³öÏÖ±¨´í:"E567: no cscope connections"
+ĞèÒªÔÚ~/vimrcÖĞÔö¼Ó:cs add {PROJECT_PATH}/cscope.out¡£
 <3>ÔÚVIMÖĞÖ´ĞĞ:cs find g º¯ÊıÃû/±äÁ¿Ãû   ÓÃÓÚ²éÕÒº¯Êı\±äÁ¿µÈ
               :cs find c º¯ÊıÃû/±äÁ¿Ãû   ÓÃÓÚ²éÕÒº¯Êı\±äÁ¿µÈ±»ÄÄĞ©µØ·½µ÷ÓÃ£¬²¢Ìø×ªµ½µÚÒ»¸ö    ÔÙÖ´ĞĞ:cw ´ò¿ªQuickFix´°¿Ú£¬ÏÔÊ¾ËùÓĞµ÷ÓÃ
 			  

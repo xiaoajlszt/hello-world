@@ -1,5 +1,6 @@
 一、 编译系统的4个阶段(这部分gcc和g++都一样)
 https://blog.csdn.net/bit_clearoff/article/details/53965514
+gcc [-c|-S|-E]
 
 1. 预处理器(cpp)  预处理阶段   .c -> .i		gcc -E hello.c -o hello.i
 预处理器根据以字符#开头的命令，修改原始的C程序。得到.i文件。
