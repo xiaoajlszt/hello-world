@@ -12,6 +12,8 @@ class CA{
 
 class CB:public CA{
     public:
+        int a;
+
         virtual void eat(int a = 4)
         {
             printf("CB eat,");

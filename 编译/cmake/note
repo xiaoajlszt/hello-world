@@ -2,7 +2,8 @@
 https://cmake.org/cmake/help/v3.0/command/add_library.html
 
 2. make distclean
-Makefile 在符合GNU Makefiel惯例的Makefile中，包含了一些基本的预先定义的操作。
+Makefile 在符合GNU Makefiel惯例的Makefile中，包含了一些基本的预先定义的操作，以下都是Makefile中预定义的操作：
+
 make 根据Makefile编译源代码，连接，生成目标文件，可执行文件。
 
 make clean 清除上次的make命令所产生的object文件（后缀为“.o”的文件）及可执行文件。 
@@ -16,7 +17,8 @@ make dist 产生发布软件包文件(即distribution package)。
 make distcheck 生成发布软件包并对其进行测试检查，以确定发布包的正确性。
 这个操作将自动把压缩包文件解开，然后执行configure命令，并且执行make，来确认编译不出现错误，最后提示你软件包已经准备好，可以发布了。
 
-3. 在做configure的时候，报错"checking host system type... Invalid configuration `x86_64-unknown-linux-gnu': machine `x86_64-unknown' not recognized"
+二、cmake\make\configure过程中遇到的问题
+1. 在做configure的时候，报错"checking host system type... Invalid configuration `x86_64-unknown-linux-gnu': machine `x86_64-unknown' not recognized"
 解决方案： 
 把 /usr/share/libtool/config/config.guess 覆盖到相关软件自带的config.guess 
 把 /usr/share/libtool/config/config.sub 覆盖到相关软件自带的config.sub 

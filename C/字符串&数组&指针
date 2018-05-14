@@ -155,7 +155,7 @@ word a = 1，将&a作为入参传入函数时（函数参数类型为dword *）
 const T * ptr;
 T const *ptr;
 
-<2>const指针		//指针本身是常量
+<2>const指针(常量指针)		//指针本身是常量
 T * const ptr;
 
 <3>两者兼而有之

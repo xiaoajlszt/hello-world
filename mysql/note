@@ -524,24 +524,5 @@ http://blog.csdn.net/czw698/article/details/42294171   //亿级别MySQL使用
 七、官网API
 https://dev.mysql.com/doc/refman/5.6/en/mysql-init.html
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+八、优化
+1. 判断某张表中是否存在内容时，采用select 1 ... limit 1

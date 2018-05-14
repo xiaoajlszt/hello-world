@@ -1,0 +1,19 @@
+//资料
+https://blog.csdn.net/huguangshanse00/article/details/35780081
+https://www.cnblogs.com/lialong1st/p/8509623.html
+https://blog.csdn.net/dl0914791011/article/details/17299103
+
+
+//joey
+<1>文件patch
+diff -Naru include/spf_dns.h zcl/spf_dns.h >a.patch
+patch -d./include -Np1 <./a.patch
+
+diff -Naru libspf2-master/src/include/spf_dns.h ./spf_dns.h >a.patch
+patch -d./libspf2-master/src/include -Np1 <./a.patch
+按照这个方法写makefile便于升级patch
+
+<2>文件夹patch
+diff -Naru libspf2-master/ libspf2-unbound-timeouts/ > 20180228.patch
+cd libspf2-master
+patch -p1 <../20180228.patch 
