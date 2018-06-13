@@ -27,6 +27,7 @@ list是一个可变的有序表，可以往指定位置插入元素。
 4、删除元素
 <1>l.pop() //删除末尾元素
 <2>l.pop(index)  //删除指定索引的元素
+<3>l.remove(value)	//remove会先寻找第一个值并删除
 
 5、元素替换
 l[index] = ***
@@ -38,13 +39,90 @@ l[index] = ***
 
 //要拿到php需要使用s[2][1]
 
-二、list方法
-1、len(l) //获取list元素的个数
+7. value (not) in list//检查列表是否包含某个值
 
+8. 串联列表
+<1> + 
+In [57]: [4, None, 'foo'] + [7, 8, (2, 3)]
+Out[57]: [4, None, 'foo', 7, 8, (2, 3)]
 
+<4>l.extend() //末尾插入多个元素
+In [58]: x = [4, None, 'foo']
+In [59]: x.extend([7, 8, (2, 3)])
+In [60]: x
+Out[60]: [4, None, 'foo', 7, 8, (2, 3)]
 
+通过加法将列表串联的计算量较大，因为要新建一个列表，并且要复制对象。用extend追加元素，尤其是到一个大列表中，更为可取。
 
+9. 排序
+<1>用sort函数将一个列表原地排序（不创建新的对象）：
+In [61]: a = [7, 2, 5, 1, 3]
+In [62]: a.sort()
+In [63]: a
+Out[63]: [1, 2, 3, 5, 7]
 
+sort有一些选项，有时会很好用。其中之一是二级排序key，可以用这个key进行排序。
+In [64]: b = ['saw', 'small', 'He', 'foxes', 'six'] 
+In [65]: b.sort(key=len) 
+In [66]: b 
+Out[66]: ['He', 'saw', 'six', 'small', 'foxes']
+
+10. 二分搜索和维护已排序的列表
+bisect模块支持二分查找，和向已排序的列表插入值。
+bisect模块不会检查列表是否已排好序，进行检查的话会耗费大量计算。因此，对未排序的列表使用bisect不会产生错误，但结果不一定正确。
+
+<1>bisect.bisect可以找到插入值后仍保证排序的位置
+<2>bisect.insort是向某个位置插入值
+In [67]: import bisect 
+In [68]: c = [1, 2, 2, 2, 3, 4, 7] 
+In [69]: bisect.bisect(c, 2) O
+ut[69]: 4 
+In [70]: bisect.bisect(c, 5)
+Out[70]: 6 
+In [71]: bisect.insort(c, 6) 
+In [72]: c 
+Out[72]: [1, 2, 2, 2, 3, 4, 6, 7]
+
+二、序列函数
+1. enumerate
+迭代一个序列时，你可能想跟踪当前项的序号。Python内建了一个enumerate函数，可以返回(i, value)元组序列。
+i = 0
+for value in collection:
+   # do something with value
+   i += 1
+   
+等同于
+
+for i, value in enumerate(collection):
+   # do something with value
+   
+2. sorted
+sorted函数可以从任意序列的元素返回一个新的排好序的列表。
+In [87]: sorted([7, 1, 2, 6, 0, 3, 2]) 
+Out[87]: [0, 1, 2, 2, 3, 6, 7] 
+In [88]: sorted('horse race') 
+Out[88]: [' ', 'a', 'c', 'e', 'e', 'h', 'o', 'r', 'r', 's']
+
+3. zip
+<1>zip可以将多个列表、元组或其它序列成对组合成一个元组列表。
+In [89]: seq1 = ['foo', 'bar', 'baz'] 
+In [90]: seq2 = ['one', 'two', 'three'] 
+In [91]: zipped = zip(seq1, seq2) 
+In [92]: list(zipped) 
+Out[92]: [('foo', 'one'), ('bar', 'two'), ('baz', 'three')]
+
+zip可以处理任意多的序列，元素的个数取决于最短的序列。
+
+<2>给出一个“被压缩的”序列，zip可以被用来解压序列。
+In [96]: pitchers = [('Nolan', 'Ryan'), ('Roger', 'Clemens'), ....: ('Schilling', 'Curt')] 
+In [97]: first_names, last_names = zip(*pitchers) 
+In [98]: first_names Out[98]: ('Nolan', 'Roger', 'Schilling') 
+In [99]: last_names Out[99]: ('Ryan', 'Clemens', 'Curt')
+
+4. reversed函数
+<1>reversed可以从后向前迭代一个序列
+In [100]: list(reversed(range(10)))
+Out[100]: [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
 
 
 
