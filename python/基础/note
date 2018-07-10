@@ -26,6 +26,28 @@ pip3
 注：
 1、Python Shell 中敲击方向键显示「^[[C^[[D]
 安装yum -y install readline-devel，然后再重新编译安装python。
+
+----------------------------------------------------------------
+python包安装
+
+0. python包安装路径
+/usr/lib/python3.6/site-packages/
+
+1. easy_install
+
+2. pip 	//easy_install的改进版
+pip install package_name
+pip install --upgrade package_name
+pip uninstall package_name
+
+3. 安装github上的库
+<1> 方法一
+git clone https://github.com/jkbr/httpie.git		//下载源码
+sudo python setup.py install						//源码中找到setup.py，执行安装
+
+<2> 方法二
+pip install git+git://github.com/jkbr/httpie.git
+   
 ----------------------------------------------------------------
 1、#!/usr/bin/Python 与 #!/usr/bin/env python
 脚本语言的第一行，目的就是指出，文件中的代码用什么可执行程序去执行。

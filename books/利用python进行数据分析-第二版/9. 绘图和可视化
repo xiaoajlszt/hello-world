@@ -1,0 +1,33 @@
+1. 在Jupyter中运行%matplotlib notebook(或在IPython中运行%matplotlib)，就可以创建一个简单的图形。
+%matplotlib魔术函数配置了IPython shell和Jupyter notebook中的matplotlib。
+运行%matplotlib可以进行设置，可以创建多个绘图窗口，而不会干扰控制台session。
+
+-------------------------------------------------------------------------------
+补充
+1. 魔术命令
+<1>IPython中特殊的命令(Python中没有)被称作"魔术"命令。这些命令可以使普通任务更便捷，更容易控制IPython系统。
+- 魔术命令是在指令前添加百分号%前缀。
+- 魔术命令可以被看做IPython中运行的命令行。许多魔术命令有“命令行”选项，可以通过？查看。(eg: %debug?)
+- 魔术函数默认可以不用百分号，只要没有变量和函数名相同。这个特点被称为"自动魔术"，可以用%automagic打开或关闭。
+
+<2> 部分魔术命令
+%quickref		# 显示IPython的快速参考
+%magic			# 显示所有魔术命令的详细文档
+%debug			# 在出现异常的语句进入调试模式
+%hist			# 打印命令的输入(可以选择输出)历史
+%pdb			# 出现异常时自动进入调试
+%paste			# 执行剪贴板中的代码
+%cpaste			# 开启特别提示，手动粘贴待执行代码
+%reset			# 删除所有命名空间中的变量和名字
+%page OBJECT	# 美化打印对象，分页显示
+%run *.py		# 运行代码
+%prun statement	# 用CProfile运行代码，并报告分析器输出
+%time statement	# 报告单条语句的执行时间
+%timeit statement  # 多次运行一条语句，计算平均执行时间
+%who,%who_ls,%whos # 显示命名空间中的变量，三者显示的信息级别不同 	
+%xdel variable	   # 删除一个变量，并清空任何对它的引用
+-------------------------------------------------------------------------------
+
+2. matplotlib的图像都位于Figure对象中。你可以用plt.figure创建一个新的Figure。
+import matplotlib.pyplot as plt
+fig = plt.figure()

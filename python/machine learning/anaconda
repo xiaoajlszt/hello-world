@@ -1,0 +1,54 @@
+1. download
+https://www.anaconda.com/download/
+
+简单说明:
+https://www.zhihu.com/question/58033789
+
+2. 基本命令
+conda list 			//列出已安装的包
+
+conda install package_name	//安装包
+conda remove package_name	//卸载包
+conda update package_name	//更新包
+conda update --all			//更新所有包
+
+3. 管理环境
+- 安装nb_conda用于notebook自动关联nb_conda的环境
+conda install nb_conda
+
+- 创建虚拟环境
+conda create -n env_name python=X.X		//创建python版本为X.X、名为env_name的虚拟环境。env_name可以在Anaconda安装目录envs文件下找到。
+
+- 进入环境
+activate env_name			//for wins
+source activate env_name	//for linux
+
+- 安装包
+conda list					//环境中的安装包
+conda install package_name	//环境中安装新包
+
+- 离开环境
+deactivate					//for wins
+source deactivate			//for linux
+
+- 共享环境
+共享环境非常有用，它能让其他人安装你的代码中使用的所有包，并确保这些包的版本正确。
+conda env export > environment.yaml 	//保存环境信息到文件(包括Pyhton版本和所有包的名称)
+
+//进入其他环境
+conda env update -f=/path/to/environment.yml	//使用environment.yml文件更新环境
+
+- 列出所有环境
+conda env list / conda info -e	//当前所在环境的旁边会有一个星号。root为默认环境。
+
+- 删除环境
+conda env remove -n env_name
+
+4. conda虚拟环境关联jupyter notebook
+- 安装nb_conda   //注意是在anaconda中安装，不是在某个虚拟环境中安装
+conda install nb_conda
+
+- 浏览器 New 下若没有该虚拟环境，处理方法详见：
+https://www.zhihu.com/question/46309360/answer/254638807
+
+- 之后，刷新浏览器即可。

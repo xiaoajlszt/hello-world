@@ -125,6 +125,27 @@
  <4>数组做sizeof的参数不退化，传递给strlen就退化为指针。
  <5>sizeof后如果是类型必须加括号，如果是变量名可以不加括号。这是因为sizeof是个操作符而不是函数。
  
+ eg:
+int main()
+{
+    char a[100] = "0123456789";
+    char b[] = "0123456789";
+
+    printf("strlen(a):%d\n", strlen(a));
+    printf("sizeof(a):%d\n", sizeof(a));
+
+    printf("strlen(b):%d\n", strlen(b));
+    printf("sizeof(b):%d\n", sizeof(b));
+
+    return 0;
+}
+
+strlen(a):10
+sizeof(a):100
+strlen(b):10
+sizeof(b):11
+
+ 
 9、指针类型不能随意强制转化：
 如：
 word a = 1，将&a作为入参传入函数时（函数参数类型为dword *）

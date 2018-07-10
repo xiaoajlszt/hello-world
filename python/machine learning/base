@@ -1,33 +1,125 @@
-1. 从零开始掌握Python机器学习：十四步教程
-https://zhuanlan.zhihu.com/p/25761248
-
-2. python doc
-https://www.python.org/doc/
-
-3. anaconda
-https://www.anaconda.com/download/
-
-使用：
-https://www.zhihu.com/question/58033789
-
-4. iPython (Jupyter) Notebook 
-http://jupyter.org/install.html
-https://jupyter.readthedocs.io/en/latest/running.html#running
-
-[I 23:00:37.013 NotebookApp] Writing notebook server cookie secret to /home/xiaopeng/.local/share/jupyter/runtime/notebook_cookie_secret
-[I 23:00:37.401 NotebookApp] JupyterLab beta preview extension loaded from /usr/local/lib/anaconda3/lib/python3.6/site-packages/jupyterlab
-[I 23:00:37.401 NotebookApp] JupyterLab application directory is /usr/local/lib/anaconda3/share/jupyter/lab
-[I 23:00:37.406 NotebookApp] Serving notebooks from local directory: /usr/local/lib/anaconda3/bin
-[I 23:00:37.406 NotebookApp] 0 active kernels
-[I 23:00:37.406 NotebookApp] The Jupyter Notebook is running at:
-[I 23:00:37.407 NotebookApp] http://localhost:8888/?token=ab5fc004deb26a9f8a1a73a29ccb614377167d4b0f30a2d5
-[I 23:00:37.407 NotebookApp] Use Control-C to stop this server and shut down all kernels (twice to skip confirmation).
-[C 23:00:37.409 NotebookApp]
-
-    Copy/paste this URL into your browser when you connect for the first time,
-    to login with a token:
-        http://localhost:8888/?token=ab5fc004deb26a9f8a1a73a29ccb614377167d4b0f30a2d5
+alpha	-- α
+GAMMA   -- γ
+Epsilon -- ϵ / ε
 
 
-5. nbviewer 
-http://nbviewer.jupyter.org/
+---------------------------------------------------------------------------------------
+https://blog.csdn.net/jiandanjinxin/article/details/54133521
+
+0. AI
+
+1. 机器学习
+ - 
+
+2. 深度学习
+ - 神经网络
+
+3. 强化学习
+
+4. 迁移学习
+----------------------------------------------------------------------------------------
+1. 梯度下降法
+- SGD (Stochastic Gradient Descent, 随机梯度下降法)：
+批量指的是用于在单次迭代中计算梯度的样本总数。
+SGD每次迭代只使用一个样本(批量大小为1)。如果进行足够的迭代，SGD 也可以发挥作用，但过程会非常杂乱。
+"随机"这一术语表示构成各个批量的一个样本都是随机选择的。
+
+- 小批量梯度下降法：
+小批量SGD是介于全批量迭代与SGD之间的折衷方案。小批量通常包含 10-1000 个随机选择的样本。
+小批量SGD可以减少SGD中的杂乱样本数量，但仍然比全批量更高效。
+
+----------------------------------------------------------------------------------------
+一、简介
+1. 任务(Task)
+<1>监督学习：对事物未知表现的预测。
+- 分类问题
+- 回归问题
+
+<2>无监督学习：对事物本身特性的分析。
+- 数据降维
+- 聚类问题
+
+2. 经验(Experience)
+反应数据内在规律的信息叫做特征(Feature)。
+
+<1>对于监督学习，拥有的经验包括 特征 和 标记/目标(Label/Target)。
+通常采用一个特征向量来描述一个数据样本；标记/目标的表现形式取决于监督学习的种类。
+
+- 把既有特征，同时也带有目标/标记的数据集称作训练集。
+
+<2>无监督学习，没有标记/目标。
+
+3. 性能(Performance)
+评价所完成任务质量的指标。
+
+<1>测试集
+出现在测试集中的数据样本不能被用于模型训练。训练集与测试集之间是彼此互斥的。
+
+<2>预测的精度
+- 分类问题：预测正确类别的百分比来评价其性能，准确性。
+
+- 回归问题：衡量预测值与实际值之间的偏差大小。
+
+二、基础
+2.1 监督学习经典模型
+1. 基本流程
+<1>准备训练数据。
+<2>抽取训练数据的特征，形成特征向量。
+<3>把特征向量和对应的标记/目标一起送入学习算法中，训练出一个预测模型。
+<4>抽取测试数据的特征，形成测试的特征向量。
+<5>使用预测模型对待测试的特征向量进行预测并得到结果(Expected Label)。
+
+--------------------------------------------------------------------------------------
+
+一、强化学习(Reinforcement learning)
+1. 强化学习并没有数据和标签，需要一次次在环境中的尝试来获取数据和标签。尽可能选择带来高分的行为(分数导向性)。
+ 
+2. RL算法
+<1> 通过价值选行为
+Q learning / Sarsa / Deep Q Network
+
+<2> 直接选行为
+Policy Gradients
+
+<3> 想象环境并从中学习
+Model based RL
+
+3. 分类
+<1> 不理解环境(Model-Free RL) 和 理解环境(Model-Based RL)
+- Model-free 的方法有很多, 像 Q learning, Sarsa, Policy Gradients 都是从环境中得到反馈然后从中学习。
+而 model-based RL 只是多了一道程序, 为真实世界建模, 也可以说他们都是 model-free 的强化学习, 
+只是 model-based 多出了一个虚拟环境, 我们不仅可以像 model-free 那样在现实中玩耍,还能在游戏中玩耍, 
+而玩耍的方式也都是 model-free 中那些玩耍方式, 最终 model-based 还有一个杀手锏是 model-free 超级羡慕的, 那就是想象力。
+
+- Model-free 中, 机器人只能按部就班, 一步一步等待真实世界的反馈, 再根据反馈采取下一步行动。
+而 model-based, 他能通过想象来预判断接下来将要发生的所有情，然后选择这些想象情况中最好的那种，
+并依据这种情况来采取下一步的策略, 这也就是围棋场上 AlphaGo 能够超越人类的原因。
+
+<2> 基于概率(Policy-Based RL)和基于价值(Value-Based RL)
+
+<3> 回合更新(Monte-Carlo update) 和 单步更新(Temporal-Different update)
+
+<4> 在线学习(On-Policy) 和 离线学习(Off-Policy)
+
+4. Q learning
+Q表
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

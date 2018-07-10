@@ -1,0 +1,13 @@
+1. download pyinstaller
+http://www.pyinstaller.org/downloads.html
+
+2. 执行pyinstaller *.py报错：Python library not found: libpython3.6.so.1.0, libpython3.6m.so.1.0, libpython3.6mu.so.1.0
+需要执行export LD_LIBRARY_PATH=/home/allen/anaconda3/lib
+
+
+-------------------------------------------------------------
+1. python -m py_compile *.py
+//生成*.pyc文件
+
+2. python打包
+https://www.cnblogs.com/mywolrd/p/4756005.html
