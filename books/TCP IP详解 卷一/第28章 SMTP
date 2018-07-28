@@ -1,0 +1,82 @@
+邮件命令
+1. mail (MUA)
+
+2. mailx(MUA)
+mailx是mail的加强版。
+
+3. mailq
+显示待发送的邮件队列，显示的每一个条目包括邮件队列id、邮件大小、加入队列时间、邮件发送者和接受者。如果最后一次尝试后还没有将邮件投递出去，则显示发送失败的原因。
+
+-v 显示详细信息。
+
+4. telnet mta_ip 25
+
+--------------------------------------------------------------
+
+一些首部：
+1. Content-type
+以"主类型/子类型"的形式出现，主类型有text、image、audio、video、application、message等，分别表示文本、图片、音频、视频、应用程序、组合结构、消息等。每个主类型下面都有多个子类型，例如text主类型包含plain、html、xml、css等子类型。 
+
+multipart/mixed、multipart/related、multipart/alternative
+
+2. Content-Disposition
+Content-Disposition头字段用于指定邮件阅读程序处理数据内容的方式，有inline和attachment两种标准方式，inline表示直接处理，而attachment表示当作附件处理。
+如果将Content-Disposition设置为attachment，在其后还可以指定filename属性，如下所示：
+Content-Disposition: attachment; filename="1.bmp"
+
+上面的MIME头字段表示MIME消息体的内容为邮件附件，附件名"1.bmp"。
+
+
+
+--------------------------------------------------------------
+第28章 SMTP
+
+28.2 SMTP协议
+1. SMTP命令
+
+2. 信封、首部和正文
+邮件由三个部分组成:
+
+<1>信封(envelop)是MTA用来交付的。MTA加上一些首部字段，加上信封，并把结果发送到另一个MTA。
+MAIL FROM
+RCPT To		//SMTP会话过程中指定的地址，正在指明邮件目的地
+
+<2>首部由用户代理使用。
+- 每个首部字段都包含 字段名:字段值 
+- 以 X- 开始的首部字段使用户定义的字段，其他由RFC 822定义
+- 长首部字段会被拆在几行中，多余行以空格开头，eg:
+Received: from allen-centos7-001 (unknown [10.64.54.83])
+	by ddei-1154.localdomain (Postfix) with SMTP
+	for <test2@allen.com>; Mon, 16 Jul 2018 13:42:43 +0000 (UTC)
+
+<3>正文(body)是发送者发给接收者报文的内容。
+- 首部与正文之间有一空行。
+- DATA命令发送的各行必须小于1000字节。
+- 内容(content)通常用于描述首部和正文的结合。
+
+3. 中继代理
+
+4. NVT ASCII
+SMTP用NVTASCII表示一切：信封、首部和正文。
+它是一个7bit字符码，以8bit字节发送，高位比特被置为0。
+
+5. 重试间隔
+
+28.3 SMTP的例子
+1. MX记录：主机非直接连到Internet
+<1>邮件交换记录(MX记录)是DNS中的一种资源记录类型。RFC 974描述了MTA对MX记录的处理。
+
+28.4 SMTP的未来
+MIME(Multipurpose Internet Mail Extensions)多用途互联网邮件扩展类型。
+1. 信封的变化：扩充的SMTP(ESMTP)
+- 如果客户端想使用新的特征，首先通过发布一个EHLO(而不是HELO)命令启动一个与服务器的会话。
+- 服务器的应答通常有好几行，每行都包含一个关键字和一个可选的参数。这些关键字指定了该服务器支持的SMTP扩充。
+
+2. 首部的变化：非ASCII字符
+- RFC 1522指明了在报文首部中如何发送非ASCII字符的方法，目的是允许在发件人、收件人、主题中使用其他字符。
+- 首部字段中可以包含编码字：=?charset?encoding?encoded-text?
+	charset是字符集规范。支持两个值：us-ascii 或 iso-8859-x(x是单个数字)。
+	encoding是用单个字符指定编码方式。支持两个值：Q 或 B
+
+3. 正文变化：通用Internet邮件扩充
+- RFC 822指定正文是NVT ASCII文本行，没有结构。RFC 1521 把扩充定义为允许把结构置入正文。这被称为MIME，即通用Internet邮件扩充。
