@@ -4,6 +4,11 @@ https://www.anaconda.com/download/
 简单说明:
 https://www.zhihu.com/question/58033789
 
+win 10 bin path
+C:\Users\allen_xiao\AppData\Local\Continuum\anaconda3\
+C:\Users\allen_xiao\AppData\Local\Continuum\anaconda3\Scripts\
+
+
 2. 基本命令
 conda list 			//列出已安装的包
 
@@ -11,6 +16,9 @@ conda install package_name	//安装包
 conda remove package_name	//卸载包
 conda update package_name	//更新包
 conda update --all			//更新所有包
+
+conda install package_name=version		//指定版本号下载
+//可以从高版本升级到低版本	
 
 3. 管理环境
 - 安装nb_conda用于notebook自动关联nb_conda的环境
@@ -37,6 +45,7 @@ conda env export > environment.yaml 	//保存环境信息到文件(包括Pyhton�
 
 //进入其他环境
 conda env update -f=/path/to/environment.yml	//使用environment.yml文件更新环境
+conda env create -f=/path/to/environment.yml	//使用environment.yml文件创建环境
 
 - 列出所有环境
 conda env list / conda info -e	//当前所在环境的旁边会有一个星号。root为默认环境。

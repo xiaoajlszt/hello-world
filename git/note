@@ -1,2 +1,23 @@
-1、git status中文显示为数字
+1. Info
+<1>git download
+https://git-scm.com/
+
+<2>git large file storage (LFS)
+https://git-lfs.github.com/
+
+- Download and install the Git command line extension. You only have to set up Git LFS once. 
+git lfs install
+
+- Select the file types you'd like Git LFS to manage (or directly edit your .gitattributes). You can configure additional file extensions at anytime.
+git lfs track "*.psd"
+
+Make sure .gitattributes is tracked
+git add .gitattributes
+
+- There is no step three. Just commit and push to GitHub as you normally would.
+git add file.psd
+git commit -m "Add design file"
+git push origin master
+
+2. git status中文显示为数字
 解决：git config --global core.quotepath false
