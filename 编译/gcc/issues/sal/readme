@@ -1,0 +1,5 @@
+动态库链接问题导致XXSAEng_initialize twice.(问题原因仍不明确)
+
+dlopen 不需要-L path -ltmsa
+g++ -g -m32 testsal.cpp -o testsal_lib -L /home/allen/workspace/code/DDEI-3.2/DDEI/product/common/XXSA/lib/linux -ltmsa -ldl
+g++ -g -m32 testsal.cpp -o testsal_lib -ldl

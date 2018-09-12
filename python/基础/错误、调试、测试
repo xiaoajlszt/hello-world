@@ -32,6 +32,32 @@ except: division by zero
 finally...
 END
 
+
+def test():
+    try:
+        os.getdir()
+        print('try')
+        return 1
+    except Exception,e:
+        print('except %s' % e)
+        return 1
+    finally:
+        print('finally')
+        return 0
+
+    print('111')
+    return 2
+
+if __name__ == '__main__':
+    ret = test()
+    print(ret)
+
+结果：
+except global name 'os' is not defined
+finally
+0
+
+
 <3>针对不同类型的错误，应该设置不同的except语句块处理。
 
 <4>可以在except语句块后面增加else语句块，当没有错误发生时，会执行else。

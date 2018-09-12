@@ -1,0 +1,41 @@
+API:
+https://www.w3cschool.cn/tensorflow_python/tensorflow_python-slp52jz8.html
+
+-----------------------------------------------------------------------------------------------
+1. tf.Variable(<initial-value>, name=<optional-name>)
+
+
+2. tf.zeros(shape, dtype=tf.float32, name=None)
+Returns:
+	A `Tensor` with all elements set to zero.
+	
+3. tf.random_uniform(shape, minval=0, maxval=None, dtype=tf.float32, seed=None, name=None)
+<1>说明：
+从均匀分布中输出平均值，生成的值在 [minval, maxval) 范围内遵循均匀分布。对于浮点数，默认范围是 [0, 1)。
+对于整数，至少 maxval 必须明确地指定。
+
+<2>参数：
+shape：一维整数张量或 Python 数组。输出张量的形状。
+minval：dtype 类型的 0-D 张量或 Python 值；生成的随机值范围的下限；默认为0。
+maxval：dtype 类型的 0-D 张量或 Python 值。要生成的随机值范围的上限。如果 dtype 是浮点，则默认为1 。
+dtype：输出的类型：float16、float32、float64、int32、orint64。
+seed：一个 Python 整数。用于为分布创建一个随机种子。查看 tf.set_random_seed 行为。
+name：操作的名称（可选）。
+
+<3>返回值：
+用于填充随机均匀值的指定形状的张量。
+
+<4>异常
+ValueError：如果 dtype 是整数并且 maxval 没有被指定。
+
+4. tf.matmul(a, b, transpose_a=False, transpose_b=False, adjoint_a=False, adjoint_b=False, a_is_sparse=False, b_is_sparse=False, name=None)
+a * b
+
+5. tf.reduce_mean(input_tensor, axis=None, keepdims=None, name=None, reduction_indices=None, keep_dims=None)
+<1>说明：计算张量的各个维度上的元素的平均值。
+
+axis是tf.reduce_mean函数中的参数，按照函数中axis给定的维度减少input_tensor。
+除非keep_dims是true，否则张量的秩将在axis的每个条目中减少1。如果keep_dims为true，则缩小的维度将保留为1。 
+如果axis没有条目，则减少所有维度，并返回具有单个元素的张量。
+
+6. 

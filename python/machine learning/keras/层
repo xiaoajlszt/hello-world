@@ -1,0 +1,11 @@
+0. Layer
+<1>所有的Keras层对象都有如下方法：
+layer.get_weights()			//返回层的权重(numpy array)
+layer.set_weights(weights)	//设置层的权重。要求weights的shape与layer.get_weights的shape相同。
+layer.get_config()			//返回当前层配置信息的字典。层也可以借由配置信息重构。
+
+1. Dense层
+Dense层是常用的全连接层，所实现的运算是 output = activation(dot(input, kernel)+bias)。
+activation 是逐元素的激活函数
+kernel 是本层的权值矩阵
+bias 是偏置向量，只有当 use_bias=True 时才会添加

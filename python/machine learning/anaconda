@@ -26,6 +26,7 @@ conda install nb_conda
 
 - 创建虚拟环境
 conda create -n env_name python=X.X		//创建python版本为X.X、名为env_name的虚拟环境。env_name可以在Anaconda安装目录envs文件下找到。
+conda env create -f environments.yml
 
 - 进入环境
 activate env_name			//for wins

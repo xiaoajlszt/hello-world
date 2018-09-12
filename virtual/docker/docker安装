@@ -83,14 +83,14 @@ NATÄ£Ê½£º1¡¢VMnet8 IPV4×Ô¶¯»ñÈ¡
 
 15. docker run¿¿¿Error response from daemon: error creating overlay mount to /var/lib/docker/overlay2/XXXXXXXXXXXXXXX/merged: invalid argument
 https://blog.csdn.net/Ysssssssssssssss/article/details/79596367
-<1>¿¿¿
-¿¿¿¿overlay2¿¿¿¿¿¿¿¿¿¿¿¿¿¿overlay¿¿¿¿¿
+<1>¿¿?
+¿¿¿¿overlay2¿¿¿¿¿¿¿¿¿¿¿¿¿¿overlay¿¿¿¿?
 
 <2>¿¿¿¿:
  - service docker stop
  - rm -rf /var/lib/docker  //¿¿docker root¿¿
  - vim /etc/sysconfig/docker-storage   //¿¿¿¿¿overlay2¿¿overlay¿¿,eg: DOCKER_STORAGE_OPTIONS="--storage-driver overlay"
- - vim /etc/sysconfig/docker           //¿¿option¿¿¿--selinux-enabled
+ - vim /etc/sysconfig/docker           //¿¿option¿¿?-selinux-enabled
  - service docker start
 
 ---------------------------------------------------------------------------------------------------------------------------
@@ -156,3 +156,7 @@ $ rm -rf /var/lib/docker
            ftp
 		   http
 		   https
+-----------------------------------
+
+install docker-ce:
+https://docs.docker.com/install/linux/docker-ce/centos/#install-docker-ce-1

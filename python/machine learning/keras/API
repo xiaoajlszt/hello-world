@@ -1,0 +1,16 @@
+API:
+1. Sequential.fit_generator()的变化
+<1>新版
+Sequential.fit_generator(self, 
+generator, steps_per_epoch=None, epochs=1, verbose=1, callbacks=None, validation_data=None, validation_steps=None, 
+class_weight=None, max_queue_size=10, workers=1, use_multiprocessing=False, shuffle=True, initial_epoch=0)
+
+<2>旧版
+Sequential.fit_generator(self, 
+generator, samples_per_epoch, nb_epoch, verbose=1, callbacks=[], validation_data=None, nb_val_samples=None, 
+class_weight=None, max_q_size=10, nb_worker=1, pickle_safe=False, **kwargs)
+
+<3>对比
+参数2：
+	steps_per_epoch 新版表示每轮的batch数
+	samples_per_epoch 旧版表示每轮的样本数(通常是 样本总数)

@@ -1,0 +1,16 @@
+一、sql池
+1. 相关类
+psycopg2
+psycopg2.pool
+psycopg2.pool.SimpleConnectionPool
+
+2. conn 和 cursor
+
+
+
+二、线程池
+threatpool
+
+
+
+三、socket池
