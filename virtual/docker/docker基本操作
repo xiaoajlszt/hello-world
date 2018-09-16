@@ -170,7 +170,6 @@ ENTRYPOINT ["executable", "param1", "param2"] (exec¸ñÊ½£¬ÍÆ¼ö)
 
 2¡¢docker run [OPTIONS] IMAGE[:TAG] [COMMAND] [ARG...]
 
-
 Æß¡¢/var/lib/docker/devicemapper/devicemapper/
 1¡¢
 [root@opencos devicemapper]# ll -h

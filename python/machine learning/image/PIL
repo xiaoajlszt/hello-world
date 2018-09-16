@@ -1,0 +1,22 @@
+PIL(Python Imaging Library), 通过pip安装。
+
+官网：
+http://effbot.org/imagingbook/
+
+1. 操作图像
+from PIL import Image
+from PIL import ImageFilter
+
+# 打开一个jpg图像文件:
+im = Image.open(path)
+# 获得图像尺寸:
+w, h = im.size
+# 缩放到50%:
+im.thumbnail((w//2, h//2))
+# 把缩放后的图像用jpeg格式保存:
+im.save('/Users/michael/thumbnail.jpg', 'jpeg')
+
+# 过滤
+im = Image.open(path)
+im2 = im.filter(ImageFilter.BLUR)
+im2.save('/Users/michael/blur.jpg', 'jpeg')

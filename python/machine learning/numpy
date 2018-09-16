@@ -17,6 +17,8 @@ Y = X[:,np.newaxis,:,:]
 
 4. np.mgrid()
 
+5. np.array() 和 np.asarray()
+array和asarray都可以将结构数据转化为ndarray，但是主要区别就是当数据源是ndarray时，array仍然会copy出一个副本，占用新的内存，但asarray不会。
 
 二. np.random
 1. np.random.seed(0) # set a seed so that the results are consistent
@@ -87,7 +89,7 @@ Out[7]: array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
 
 <6> 总结：由于NumPy关注的是数组计算，因此，如果没有特别指定，数据类型基本都是float64。
 array()
-asarry()
+asarray()
 arange()
 ones()/ones_like()
 zeros()/zeros_like()

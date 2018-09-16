@@ -1,0 +1,12 @@
+旋转 100  10
+旋转后的黑色区域
+resize -> 66 200?
+去重？
+
+
+几个很好的OpenCV网上教程：
+https://blog.csdn.net/w_k_l/article/details/74887145
+
+
+RGB\YUV\HSV
+https://www.cnblogs.com/justkong/p/6570914.html
