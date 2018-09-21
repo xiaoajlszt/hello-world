@@ -19,3 +19,6 @@ eg£º
 man: /usr/bin/man /usr/share/man /usr/share/man/man1/man.1.gz /usr/share/man/man1p/man.1p.gz /usr/share/man/man7/man.7.gz
 [root@xiaopeng linux-4.8.1]# which man
 /usr/bin/man
+
+3. ÏÂÔØÃüÁîÔ´´úÂë
+https://www.jb51.net/os/RedHat/532649.html
