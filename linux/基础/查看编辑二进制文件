@@ -1,1 +1,8 @@
-xxd命令
+一、查看
+1. xxd命令
+2. hexdump
+
+二、编辑
+1. biew
+2. hexedit
+3. vim

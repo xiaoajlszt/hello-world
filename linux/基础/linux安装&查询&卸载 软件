@@ -76,6 +76,17 @@ That makes me less likely to trust that package, or any package from that web si
 
 Have you looked at the tidyp package in EPEL? It is API-compatible and is packaged in a reputable repository.
 
+2. 在yum中下载rpm包
+yum install --downloadonly --downloaddir=/tmp <package-name>
+
+注：
+<1>运行时出现Command line error:no such option:--downloadonly
+需要执行yum install yum-plugin-downloadonly
+
+<2>linux批量安装某个目录下的rpm包
+rpm -ivh *.rpm --force --nodeps 
+
+
 三、卸载（反安装）
 1、rpm -e 会将配置文件一起删除
    rpm -e 套件名

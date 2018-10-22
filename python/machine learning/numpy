@@ -20,6 +20,23 @@ Y = X[:,np.newaxis,:,:]
 5. np.array() 和 np.asarray()
 array和asarray都可以将结构数据转化为ndarray，但是主要区别就是当数据源是ndarray时，array仍然会copy出一个副本，占用新的内存，但asarray不会。
 
+6. np.flatnonzero(a)
+返回flattened版本a中非0字段的索引。
+eg：
+>>> x = np.arange(-2, 3)
+>>> x
+array([-2, -1,  0,  1,  2])
+>>> np.flatnonzero(x)
+array([0, 1, 3, 4])
+
+7. 获取array中的某一部分
+X_train.shape #(50000, 32, 32, 3)
+X_train[list(range(5000))]
+X_train.shape #(5000, 32, 32, 3)
+
+8. np.reshape(a, shape)
+新数组元素数量与原数组元素数量要相等。shape中的某部分为-1时，那么reshape函数会计算出shape。
+
 二. np.random
 1. np.random.seed(0) # set a seed so that the results are consistent
 seed( ) 用于指定随机数生成时所用算法开始的整数值。 

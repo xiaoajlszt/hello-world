@@ -1,3 +1,5 @@
+http://matplotlib.org/
+
 1. 在Jupyter中运行%matplotlib notebook(或在IPython中运行%matplotlib)，就可以创建一个简单的图形。
 %matplotlib魔术函数配置了IPython shell和Jupyter notebook中的matplotlib。
 运行%matplotlib可以进行设置，可以创建多个绘图窗口，而不会干扰控制台session。
@@ -28,6 +30,34 @@
 %xdel variable	   # 删除一个变量，并清空任何对它的引用
 -------------------------------------------------------------------------------
 
-2. matplotlib的图像都位于Figure对象中。你可以用plt.figure创建一个新的Figure。
 import matplotlib.pyplot as plt
+
+2. matplotlib的图像都位于Figure对象中。你可以用plt.figure创建一个新的Figure。
 fig = plt.figure()
+
+3. 绘制3D图像
+- 用pyplot的figure()函数可以创建一个figure对象
+- 以figure对象为参数创建Axes3D对象，使之具有3D坐标轴
+- 使用pyplot的show()方法显示figure对象
+
+eg: 绘制f(x,y) = x+y
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+
+def fun(x,y):
+    return x + y
+
+fig = plt.figure()
+ax = Axes3D(fig)
+X = np.arange(-5,5,0.5)
+Y = np.arange(-5,5,0.5)
+X, Y = np.meshgrid(X,Y)
+Z = fun(X,Y)
+plt.title("The title")
+ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=plt.cm.coolwarm)
+ax.set_xlabel('x label', color='r')
+ax.set_ylabel('y label', color='g')
+ax.set_zlabel('z label', color='b')
+plt.show()
+
