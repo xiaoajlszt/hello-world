@@ -62,3 +62,11 @@ conda install nb_conda
 https://www.zhihu.com/question/46309360/answer/254638807
 
 - 之后，刷新浏览器即可。
+
+5. jupyter notebook
+- 允许root用户 
+jupyter notebook --allow-root
+
+- 服务器上的jupyter notebook端口映射到本地
+[allen_xiao.nj-allen-xiao] ➤ ssh -N -f -L8888:localhost:8888 root@10.64.54.83
+这样在本机中使用 http://localhost:8888/tree?token=*** 就可以打开远端的jupyte notebook界面了。
