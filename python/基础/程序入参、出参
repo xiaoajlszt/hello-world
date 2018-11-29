@@ -19,40 +19,51 @@ https://www.jianshu.com/p/fef2d215b91d
 
 argparse 是 Python 标准库中用来解析命令行参数和选项的模块，其是为替代已经过时的 optparse 模块而生的，该模块在 Python2.7 中被引入。
 
-1. 首先需要创建一个解析器
+1. The first step is create a new ArgumentParser object, the ArgumentParser object will hold all the information necessary to parse the command line into Python data types.
+
 argparse.ArgumentParser(
-prog=None, 								#程序的名字(默认为sys.argv[0])，用于在help信息中描述程序名称
-usage=None, 							#描述程序的用途(默认从参数中生成)
-description=None, 						#程序描述信息，help 信息前的文字
-epilog=None, 							#help 信息之后的信息
-parents=[], 							#由ArgumentParser对象组成的列表，它们的arguments选项会被包含到新ArgumentParser对象中
-formatter_class=argparse.HelpFormatter, #重置 help 信息输出的格式
-prefix_chars='-', 						#参数前缀
-fromfile_prefix_chars=None, 
-argument_default=None, 
-conflict_handler='error', 
-add_help=True
+prog=None, 								# The name of the program (default: sys.argv[0])
+usage=None, 							# The string describing the program usage (default: generated from arguments added to parser)
+description=None, 						# Text to display before the argument help (default: none)
+epilog=None, 							# Text to display after the argument help (default: none)
+parents=[], 							# A list of ArgumentParser objects whose arguments should also be included
+formatter_class=argparse.HelpFormatter, # A class for customizing the help output
+prefix_chars='-', 						# The set of characters that prefix optional arguments (default: ‘-‘)
+fromfile_prefix_chars=None, 			# The set of characters that prefix files from which additional arguments should be read (default: None)
+argument_default=None, 					# The global default value for arguments (default: None)
+conflict_handler='error', 				# The strategy for resolving conflicting optionals (usually unnecessary)
+add_help=True							# Add a -h/--help option to the parser (default: True)
 )
 
-2. 添加参数选项
+2. The second step is filling an ArgumentParser with information about program arguments is done by making calls to the add_argument() method.
+Generally, these calls tell the ArgumentParser how to take the strings on the command line and turn them into objects. This information is stored and used when parse_args() is called.
+
 ArgumentParser.add_argument(
-name or flags...		#参数名。参数有两种形式，即可选参数和位置参数。位置参数没有前缀，而可选参数需要加前缀。
+name or flags...		# 参数名。参数有两种形式，即可选参数和位置参数。位置参数没有前缀，而可选参数需要加前缀。
 [, action]
-[, nargs]				#参数的数量。可以为整数N(N个)  或  *(任意多个)  或  +(一个或更多)  或   ？(此时，首先从命令行获得参数，若没有则从const获得，然后从default获得)
-[, const]				#保存一个常量
-[, default]				#默认值
-[, type]				#参数类型
-[, choices]
-[, required]			#是否必选，只针对可选参数，对位置参数无效。
-[, help]
-[, metavar]
-[, dest]
+[, nargs]				# 参数的数量。可以为整数N(N个)  或  *(任意多个)  或  +(一个或更多)  或   ?(此时，首先从命令行获得参数，若没有则从const获得，然后从default获得)
+[, const]				# 保存一个常量
+[, default]				# 默认值
+[, type]				# The type to which the command-line argument should be converted.
+[, choices]				# A container of the allowable values for the argument.
+[, required]			# 是否必选，只针对可选参数，对位置参数无效。
+[, help]				# A brief description of what the argument does
+[, metavar]				# A name for the argument in usage messages
+[, dest]				# The name of the attribute to be added to the object returned by parse_args().
 )
 
-3. 解析参数
+注: 
+nargs为1(N)时, parse_args解析出的结果是： c=['["{\\"queueId\\":\\"46A29C1FCC\\",\\"queueType\\":\\"deferred\\"}","{\\"queueId\\":\\"C3ED7C1FCC\\",\\"ququeType\\":\\"deferred\\"}"]']
+nargs为?时, parse_args解析出的结果是： c='["{\\"queueId\\":\\"46A29C1FCC\\",\\"queueType\\":\\"deferred\\"}","{\\"queueId\\":\\"C3ED7C1FCC\\",\\"ququeType\\":\\"deferred\\"}"]'
+前者可以用下标([0])调用。
+
+3. The last step is parsing arguments through the parse_args() method.
+This will inspect the command line, convert each argument to the appropriate type and then invoke the appropriate action.
+In a script, parse_args() will typically be called with no arguments, and the ArgumentParser will automatically determine the command-line arguments from sys.argv.
+
 ArgumentParser.parse_args(
-args=None, 
-namespace=None
+args=None, 				# List of strings to parse. The default is taken from sys.argv
+namespace=None			# An object to take the attributes. The default is a new empty Namespace object.
 )
 
 该方法运行会用'-'来认证可选参数，剩下的即为位置参数。该方法返回一个 Namespace 对象，参数值通过属性的方式访问，也可以用内建的 vars() 函数转换为字典。

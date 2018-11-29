@@ -1,5 +1,13 @@
 1. fcntl模块
+https://docs.python.org/2/library/fcntl.html
+
+fcntl.LOCK_UN  解锁	
+fcntl.LOCK_EX  排他锁: 		除加锁进程外其他进程没有对已加锁文件读写访问权限。
+fcntl.LOCK_SH  共享锁: 		所有进程没有写访问权限，即使是加锁进程也没有。所有进程有读访问权限。
+fcntl.LOCK_NB  非阻塞锁:	如果指定此参数，函数不能获得文件锁就立即返回，否则，函数会等待获得文件锁。LOCK_NB可以同LOCK_SH或LOCK_NB进行按位或（|）运算操作。 fcnt.flock(f,fcntl.LOCK_EX|fcntl.LOCK_NB) 
 
 2. Flock模块 //自己实现的
 
-3. simpleflock模块  //自己实现的
+3. FcntlFileLock模块  //自己实现的
+
+4. simpleflock模块  //自己实现的

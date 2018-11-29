@@ -2,7 +2,25 @@ http://python3-cookbook.readthedocs.io/zh_CN/latest/c06/p02_read-write_json_data
 
 JSON(JavaScript Object Notation, JS对象标记)
 
-一、json模块提供了一种很简单的方式来编码和解码JSON数据。
+一、格式说明
+https://www.json.org/json-zh.html
+
+1. JSON构建于两种结构：
+<1>"名称/值"对的集合，不同的语言中，它被理解为对象(object)，纪录(record)，结构(struct)，字典(dictionary)，哈希表(hash table)，有键列表(keyed list)，或者关联数组(associative array)。
+对象是一个无序的 名称/值 集合。一个对象以{开始，以}结束。每个 名称 后跟一个冒号，名称/值 之间使用逗号分隔。
+
+eg:
+{"queueId":"id1","queueType":"incoming or deferred"}
+
+<2>值的有序列表，在大部分语言中，它被理解为数组(array)。
+数组是value的有序集合。一个数组以[开始，以]结束。值之间使用逗号分隔。
+value可以是双引号括起来的字符串、数值、true、false、null、对象(object)或者数组(array)。这些结构可以嵌套。
+字符串(string)是由双引号包围的任意数量Unicode字符的集合，使用反斜线转义。
+
+eg：
+[{"queueId":"id1","queueType":"incoming or deferred"},{"queueId":"idN","ququeType":"incoming or deferred"}]
+
+二、json模块提供了一种很简单的方式来编码和解码JSON数据。
 其中两个主要的函数是 json.dumps() 和 json.loads()，要比其他序列化函数库如pickle的接口少得多。
 
 1. 将Python数据结构转换为JSON。
@@ -26,7 +44,7 @@ with open('data.json', 'w') as f:
 with open('data.json', 'r') as f:
     data = json.load(f)
 	
-二、讨论
+三、讨论
 1. JSON编码支持的基本数据类型为 None, bool, int, float和str，以及包含这些类型数据的lists, tuples和dictionaries。 
 对于dictionaries，keys需要是字符串类型(字典中任何非字符串类型的key在编码时会先转换为字符串)。 
 为了遵循JSON规范，你应该只编码Python的lists和dictionaries。 而且，在web应用程序中，顶层对象被编码为一个字典是一个标准做法。
