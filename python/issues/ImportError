@@ -1,0 +1,6 @@
+1. 执行"from enum import Enum"，报错 ImportError: cannot import name 'Enum'
+<1>现象
+确实存在enum.Enum。
+
+<2>原因
+代码文件与enum.py同名。

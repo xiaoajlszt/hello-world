@@ -20,6 +20,11 @@ value可以是双引号括起来的字符串、数值、true、false、null、�
 eg：
 [{"queueId":"id1","queueType":"incoming or deferred"},{"queueId":"idN","ququeType":"incoming or deferred"}]
 
+2. eg: MsgQueue 
+<1> 1 次 json encode 之后的 string:	'[{"queueId":"97CFD4B6885","queueType":"deferred"}, {...}]'
+    1 次 json.loads 之后得到 list: [{u'queueId': u'97CFD4B6885', u'queueType': u'deferred'}, {...}], list 中多个是 dict。
+    //可以看出json数组[]解析之后对应list，json object解析之后对应dict。
+
 二、json模块提供了一种很简单的方式来编码和解码JSON数据。
 其中两个主要的函数是 json.dumps() 和 json.loads()，要比其他序列化函数库如pickle的接口少得多。
 
