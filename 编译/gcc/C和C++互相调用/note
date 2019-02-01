@@ -1,0 +1,146 @@
+0. reference
+https://www.jianshu.com/p/8d3eb96e142a
+http://www.cppblog.com/franksunny/archive/2007/11/29/37510.html
+
+1、C++调用C:
+
+test1.cpp:
+#include <iostream>
+using namespace std;
+
+extern "C"{
+#include "test2.h"
+}
+
+int main()
+{
+    cout << sum(1,2) <<endl;
+    return 0;
+}
+
+test2.h:
+int sum(int, int);
+
+test2.c:
+int sum(int i, int j)
+{
+    return i + j;
+}
+
+编译：
+gcc -g test1.cpp test2.c -o test -l stdc++
+
+2、C调用C++:
+因为在C中，编译器会将main函数中调用的sum函数编译为_sum, 然而写在C++文件中的sum函数则被编译为sum(int, int)，则链接的时候编译器会报找不到_sum函数的错误。
+因此需要在cpp中用extern "C" { }包含需要被C文件调用的函数。
+
+<1>
+test1.cpp:
+extern "C"		//在cpp中用extern "C" { }包含需要被C文件调用的函数。
+{
+	int sum(int i, int j)
+	{
+		return i + j;
+	}
+}
+
+-----------------------------
+或:
+extern "C" int sum(int, int);
+int sum(int i, int j)
+{
+    return i + j;
+}
+-----------------------------
+
+test2.c:
+#include <stdio.h>
+#include "test1.h"
+
+int main()
+{
+    printf("result:%d\n", sum(1,2));
+
+    return 0;
+}
+
+编译:
+gcc -g test2.c test1.cpp -o test
+
+<2> C 调用 C++ 的成员函数、重载函数
+http://www.cppblog.com/franksunny/archive/2007/11/29/37510.html
+
+extern "C" 只适用于非成员函数!!!
+
+// C++ code:
+class C
+{
+    // ...
+    virtual double f(int);
+};
+
+extern "C" double call_C_f(C* p, int i) //wrapper function
+{
+    return p->f(i);
+}
+
+/* C code: */
+double call_C_f(struct C* p, int i);
+void ccc(struct C* p, int i)
+{
+    double d = call_C_f(p,i);
+    /* ... */
+}
+
+------------------------------------
+
+// C++ code:
+void f(int);
+void f(double);
+
+extern "C" void f_i(int i) { f(i); }
+extern "C" void f_d(double d) { f(d); }
+
+/* C code: */
+void f_i(int);
+void f_d(double);
+
+void cccc(int i,double d)
+{
+    f_i(i);
+    f_d(d);
+    /* ... */
+}
+
+3. C和C++混合调用: //可以取代1和2中的内容
+在头文件的声明部分使用如下方式: 
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**/
+
+#ifdef __cplusplus
+}
+#endif
+
+//.cpp编译时会自动产生__cplusplus宏。
+
+//如果是C call C++，C++的头文件中包含上述声明，并且需要在cpp文件中调用该头文件！
+  如果是C++ call C，C的头文件中包含上述声明，并且也需要在cpp文件中调用该头文件！
+  即: 要想写一套C/C++均能调用的函数, 则必须按照C的方式编译 (因为C语言不支持C++, 而C++同时支持C/C++)。
+
+4. 说明:
+<0>extern
+用来声明一个函数，全局变量的作用域。extern告诉编译器，其声明的函数和变量可以供本文件或者其他文件使用。
+
+<1>extern "C"不能再C中使用。
+
+<2>关于gcc和g++:
+后缀为.c的，gcc把它当作是C程序，而g++当作是c++程序；后缀为.cpp的，两者都会认为是c++程序。
+本文中都是针对gcc编译。
+
+<3>C和C++的差异:
+C语言中,编译器对于函数 int test()和int test(int a)的编译结果得到的函数名是一样的,所以C语言不能重载;
+C++中int test()和int test(int a)编译后生成不同名字的函数,所以支持重载。

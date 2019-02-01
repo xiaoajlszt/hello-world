@@ -55,3 +55,5 @@ eg:
 
 5. xxd
 make a hexdump or do the reverse.
+
+6. readelf

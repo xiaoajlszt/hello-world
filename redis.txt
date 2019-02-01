@@ -1,0 +1,70 @@
+redis-server
+redis-cli
+redis-benchmark
+
+
+https://github.com/JasonLai256/the-little-redis-book/blob/master/cn/redis.md
+
+一 基础知识
+1. 在Redis里，数据库简单的使用一个数字编号来进行辨认，默认数据库的数字编号是0。
+如果你想切换到一个不同的数据库，你可以使用select命令来实现。
+在命令行界面里键入select 1，Redis应该会回复一条OK的信息，然后命令行界面里的提示符会变成类似redis 127.0.0.1:6379[1]>这样。
+如果你想切换回默认数据库，只要在命令行界面键入select 0即可。
+
+2. flushdb 清空数据库中的所有数据
+
+3. 拥有SQL背景的程序员通常会致力于让数据库的数据往返次数减至最小。这对于任何系统都是个好建议，包括Redis。
+然而，考虑到我们是在处理比较简单的数据结构，有时候我们还是需要与Redis服务器频繁交互，以达到我们的目的。
+刚开始的时候，可能会对这种数据访问模式感到不太自然。实际上，相对于我们通过Redis获得的高性能而言，这仅仅是微不足道的损失。
+
+二 数据结构
+1. 字符串Strings
+1) set <key> <value>
+set users:leto "{name: leto, planet: dune, likes: [spice]}"
+
+2) get <key>
+
+3) strlen <key>	能用来获取一个关键字对应值的长度
+
+4) getrange <key> <start> <end>	将返回指定范围内的关键字对应值
+
+5) append <key> <value>	会将value附加到已存在的关键字对应值中
+如果该关键字并不存在，则会创建一个新的关键字-值对
+
+
+2. 散列Hashes
+在很多方面里，散列数据结构很像字符串数据结构。
+两者显著的区别在于，散列数据结构提供了一个额外的间接层：一个域(Field)。
+
+1) HSET <key> <field> <value>
+hset users:goku powerlevel 9000
+
+2) HGET <key> <field>
+hget users:goku powerlevel
+
+3) HMSET key field value [field value ...]	# 设置多个域
+
+4) HMGET key field [field ...]				# 获取多个域
+
+5) HGETALL key								# 获取所有的域和值
+
+6) HKEYS key								# 列出所有的域
+
+7) HDEL key field [field ...]				# 删除指定的域
+
+
+3. 列表Lists
+对于一个给定的关键字，列表数据结构让你可以存储和处理一组值。
+你可以添加一个值到列表里、获取列表的第一个值或最后一个值以及用给定的索引来处理值。
+列表数据结构维护了值的顺序，提供了基于索引的高效操作。
+
+1) LPUSH key value [value ...]
+lpush newusers goku
+
+2) LTRIM key start stop						# 将指定范围外的值都删除掉，只留下范围内的值。
+ltrim newusers 0 50							# 使得该列表只包含50个最近被推入的用户
+ltrim是一个具有O(N)时间复杂度的操作，N是被删除的值的数量。
+
+
+
+
