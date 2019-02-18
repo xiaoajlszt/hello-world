@@ -1,0 +1,59 @@
+asyncio是python3.4引入的标准库，直接内置了对异步IO的支持。
+
+1. asyncio的编程模型就是一个消息循环。我们从asyncio模块中直接获取一个EventLoop的引用，然后把需要执行的协程扔到EventLoop中执行，就实现了异步IO。
+
+import threading
+import asyncio
+import datetime
+
+@asyncio.coroutine
+def hello():
+    print('%s Hello world! %s' % (datetime.datetime.now(), threading.currentThread()))
+    yield from asyncio.sleep(1)
+    print('%s Hello again! %s' % (datetime.datetime.now(), threading.currentThread()))
+
+loop = asyncio.get_event_loop()
+tasks = [hello(), hello()]
+loop.run_until_complete(asyncio.wait(tasks))
+loop.close()
+
+
+输出结果：
+2019-02-13 11:08:08.551175 Hello world! <_MainThread(MainThread, started 140519327733568)>
+2019-02-13 11:08:08.551230 Hello world! <_MainThread(MainThread, started 140519327733568)>
+2019-02-13 11:08:09.553432 Hello again! <_MainThread(MainThread, started 140519327733568)>
+2019-02-13 11:08:09.553610 Hello again! <_MainThread(MainThread, started 140519327733568)>
+
+由打印的当前线程名称可以看出，两个coroutine是由同一个线程并发执行的。
+如果把asyncio.sleep()换成真正的IO操作，则多个coroutine就可以由一个线程并发执行。
+
+说明：
+<1>@asyncio.coroutine把一个generator标记为coroutine类型，然后，我们就把这个coroutine扔到EventLoop中执行。
+<2>由于asyncio.sleep()也是一个coroutine，所以线程不会等待asyncio.sleep()，而是直接中断并执行下一个消息循环。
+当asyncio.sleep()返回时，线程就可以从yield from拿到返回值（此处是None），然后接着执行下一行语句。
+
+2. 总结 
+asyncio提供了完善的异步IO支持；
+异步操作需要在coroutine中通过yield from完成；
+多个coroutine可以封装成一组Task然后并发执行。
+
+3. python 3.5的新语法 async 和 await 
+用asyncio提供的@asyncio.coroutine可以把一个generator标记为coroutine类型，然后在coroutine内部用yield from调用另一个coroutine实现异步操作。
+为了简化并更好地标识异步I/O，Python3.5开始引入新的语法async和await。
+
+请注意，async和await是针对coroutine的新语法，要使用新的语法，只需要做两步简单的替换:
+<1>把@asyncio.coroutine替换为async
+<2>把yield from替换为await
+
+[old code]
+@asyncio.coroutine
+def hello():
+    print("Hello world!")
+    r = yield from asyncio.sleep(1)
+    print("Hello again!")
+	
+[new code]
+async def hello():
+    print("Hello world!")
+    r = await asyncio.sleep(1)
+    print("Hello again!")

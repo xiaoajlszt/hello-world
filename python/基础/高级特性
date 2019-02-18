@@ -204,6 +204,9 @@ for n in fib(6):
 
 <3>要想拿到返回值，必须捕获StopIteration错误，返回值包含在StopIteration的value中。
 
+3. 补充 generetor
+详见 协程.txt
+
 五、迭代器(Iterator)
 1、可以直接作用于for循环的数据类型：
 <1>集合数据类型：list、tuple、dict、set、str等

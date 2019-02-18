@@ -1,0 +1,5 @@
+flask快速上手:
+https://dormousehole.readthedocs.io/en/latest/
+
+flask的RESTful扩展库:
+flask-restful

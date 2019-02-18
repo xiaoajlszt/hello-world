@@ -1,0 +1,11 @@
+1. UDP相对于TCP
+client中没有connect; server中没有listen和accpet。
+
+2. recv / recvfrom 以及 send / sendto
+是可以在TCP和UDP中通用的，只不过它们的入参和返回值并不相同。
+
+3. 服务器绑定UDP端口和TCP端口互不冲突，也就是说，UDP的9999端口与TCP的9999端口可以各自绑定。
+
+4. 资料
+廖雪峰python3
+https://www.jianshu.com/p/e062b3dd110c
