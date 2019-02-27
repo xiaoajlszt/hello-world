@@ -1,0 +1,55 @@
+1. 官方指导：
+https://dev.mysql.com/doc/mysql-yum-repo-quick-guide/en/
+
+systemctl start mysqld.service
+systemctl status mysqld.service
+
+2. 修改密码
+<1>查询默认密码：
+grep 'temporary password' /var/log/mysqld.log
+
+<2>修改
+mysql -uroot -p
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass4!';
+
+注：
+MySQL's validate_password plugin is installed by default. This will require that passwords contain at least one upper case letter, 
+one lower case letter, one digit, and one special character, and that the total password length is at least 8 characters.
+
+<3>使用简化密码 -- 处理"Your password does not satisfy the current policy requirements"
+https://www.jianshu.com/p/b437566ccf98
+
+- set global validate_password.policy=0;
+- set global validate_password.length=4;
+
+- 然后退出后执行: mysql_secure_installation
+
+---------------------------------------------------------------
+当前安全变量值：
+mysql> SHOW VARIABLES LIKE 'validate_password%';
++--------------------------------------+-------+
+| Variable_name                        | Value |
++--------------------------------------+-------+
+| validate_password.check_user_name    | ON    |
+| validate_password.dictionary_file    |       |
+| validate_password.length             | 4     |
+| validate_password.mixed_case_count   | 1     |
+| validate_password.number_count       | 1     |
+| validate_password.policy             | LOW   |
+| validate_password.special_char_count | 1     |
++--------------------------------------+-------+
+---------------------------------------------------------------
+
+3. mycli	http://hao.jobbole.com/mycli-mysql/
+MyCli 是一个 MySQL 命令行工具，支持自动补全和语法高亮。也可用于 MariaDB 和 Percona。
+pip install mycli
+mycli -h localhost -u root 
+
+4. mysql 和 MariaDB
+MariaDB数据库管理系统是MySQL的一个分支，主要由开源社区在维护，采用GPL授权许可。
+开发这个分支的原因之一是：甲骨文公司收购了MySQL后，有将MySQL闭源的潜在风险，因此社区采用分支的方式来避开这个风险。
+
+MariaDB的目的是完全兼容MySQL，包括API和命令行，使之能轻松成为MySQL的代替品。在存储引擎方面，10.0.9版起使用XtraDB来代替MySQL的InnoDB。	
+
+MariaDB直到5.5版本，均依照MySQL的版本。因此，使用MariaDB5.5的人会从MySQL 5.5中了解到MariaDB的所有功能。
+从2012年11月12日起发布的10.0.0版开始，MariaDB不再依照MySQL的版号。10.0.x版以5.5版为基础，加上移植自MySQL 5.6版的功能和自行开发的新功能。

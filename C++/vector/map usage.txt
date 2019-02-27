@@ -1,0 +1,46 @@
+1. erase
+Removes from the map container either a single element or a range of elements ([first,last)).
+This effectively reduces the container size by the number of elements removed, which are destroyed.
+
+<1> override
+- iterator  erase (const_iterator position);
+- size_type erase (const key_type& k);
+- iterator  erase (const_iterator first, const_iterator last);
+
+<2> parameters
+1) position:
+Iterator pointing to a single element to be removed from the map.
+This shall point to a valid and dereferenceable element.
+Member types iterator and const_iterator are bidirectional iterator types that point to elements.
+
+2) k:
+Key of the element to be removed from the map.
+Member type key_type is the type of the elements in the container, defined in map as an alias of its first template parameter (Key).
+
+3) first, last:
+Iterators specifying a range within the map container to be removed: [first,last) //包括first，不包括last
+the range includes all the elements between first and last, including the element pointed by first but not the one pointed by last.
+
+<3> return
+For the key-based version (2), the function returns the number of elements erased. Member type size_type is an unsigned integral type.
+The other versions return an iterator to the element that follows the last element removed (or map::end, if the last element was removed).
+
+2. clear
+Removes all elements from the map container (which are destroyed), leaving the container with a size of 0.
+
+<1> override
+- void clear() noexcept;
+
+3. Memory:
+<1>对于类似 map<string, eMgrScanOption> g_dlpScanOptionMap 这样的用法：
+1) 程序退出之前需要手动释放 eMgrScanOption 中的 allocate 内存，erase 或者 clear 不会清空 eMgrScanOption 中指针指向的内存区域！
+2) 作为全局变量程序退出时，会自动调用map的析构函数，因此不需要显式调用 erase 或者 clear。
+
+<2>对于如下的全局结构，只需要手动释放 pScanOption 指向的内存即可，其他如 int、string 对应的字段内存，不需要显式释放！
+struct eMgrScanOption  {
+    int ruleVersion;
+    int xmlVersion;
+    string xmlSha1;
+    long long modifyTime;
+    EmDataPtr pScanOption;
+};

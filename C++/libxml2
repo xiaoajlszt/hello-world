@@ -4,3 +4,5 @@ https://blog.csdn.net/jian7223157/article/details/26442825
 
 https://blog.csdn.net/guomsh/article/details/7595244
 //text
+
+调用xmlGetProp()之后必须调用xmlFree()来释放内存。

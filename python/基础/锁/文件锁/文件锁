@@ -1,6 +1,13 @@
 1. fcntl模块
 https://docs.python.org/2/library/fcntl.html
 
+该模块通过文件描述符实现文件和I/O控制。
+该模块的函数均使用文件描述符fd作为它们的第一个参数。
+
+<1> fcntl.flock(fd, operation)
+对文件描述符fd执行锁操作。
+
+
 fcntl.LOCK_UN  解锁	
 fcntl.LOCK_EX  排他锁: 		除加锁进程外其他进程没有对已加锁文件读写访问权限。
 fcntl.LOCK_SH  共享锁: 		所有进程没有写访问权限，即使是加锁进程也没有。所有进程有读访问权限。

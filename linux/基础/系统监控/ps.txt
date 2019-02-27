@@ -1,0 +1,1 @@
+ps -p PID -o lstart,etime	//查看进程启动时间和运行时间

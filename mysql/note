@@ -1,4 +1,8 @@
-安装：
+官方安装指导:
+https://dev.mysql.com/doc/mysql-yum-repo-quick-guide/en/	 (首选)
+
+----------------------------------------------------------------------------------
+以下是之前的安装总结：
 http://blog.csdn.net/superchanon/article/details/8546254/     //两种安装总结
 http://www.cnblogs.com/xxoome/p/5864912.html				  //通用安装总结的很好，可能出现的问题总结的很好
 
@@ -71,8 +75,6 @@ ModuleNotFoundError: No module named 'MySQLdb'
 有缺少的需求 libmysqlclient.so.18()(64bit)
 
 需要安装 mysql-community-libs-compat-5.7.18-1.el7.x86_64.rpm
-
-
 
 -----------------------------------------------------------------------------------
 一、基本命令
