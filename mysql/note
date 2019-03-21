@@ -87,7 +87,7 @@ create database dbname;  //建库
 drop database dbname;    //删除库
 user dbname;             //选中库
 
-show tables;             //显示库中的所有数据表
+show tables;             //显示库中的所有数据表  or //select table_name from information_schema.tables where table_schema='当前数据库';
 desc tablename;          //查看表定义
 show create table tablename; //查看创建表的SQL语句    \G 选项使得记录能够按照字段竖着排列
 drop table tablename;    //删除表

@@ -1,0 +1,19 @@
+1. 事务启动方式
+- 显式启动事务语句， begin 或 start transaction。配套的提交语句是 commit，回滚语句是 rollback。
+- set autocommit=0，这个命令会将这个线程的自动提交关掉。意味着如果你只执行一个 select 语句，这个事务就启动了，而且并不会自动提交。
+这个事务持续存在直到你主动执行 commit 或 rollback 语句，或者断开连接。
+
+<1>有些客户端连接框架会默认连接成功后先执行一个 set autocommit=0 的命令。这就导致接下来的查询都在事务中，如果是长连接，就导致了意外的长事务。
+
+<2>可以在 information_schema 库的 innodb_trx 这个表中查询长事务。
+select * from information_schema.innodb_trx where TIME_TO_SEC(timediff(now(),trx_started))>60	//查询超过60S的事务
+
+<3>测试结果：
+- 如果set autocommit=1，且不使用 begin 或 start transaction 显式启动事务，那么每执行完一条语句都会结束事务。
+- 如果set autocommit=1，且使用 begin 或 start transaction 显式启动事务，那么需要主动执行 commit 或 rollback 语句结束事务。
+- 如果set autocommit=0，需要执行 begin 或 start transaction 开启事务，主动执行 commit 或 rollback结束事务。
+//set autocommit=off  set autocommit=on
+
+<4>作者建议
+总是使用set autocommit=1，并通过显示语句的方式来启动事务。带来的好处是，明确知道每个语句是否在事务中。
+在autocommit=1的情况下，使用begin显示启动事务，执行commit提交事务，执行commit work and chain提交事务并自动启动下一个事务(省去一次执行begin语句的开销)。
