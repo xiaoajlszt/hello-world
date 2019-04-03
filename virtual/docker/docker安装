@@ -158,5 +158,5 @@ $ rm -rf /var/lib/docker
 		   https
 -----------------------------------
 
-install docker-ce:
-https://docs.docker.com/install/linux/docker-ce/centos/#install-docker-ce-1
+docker-ce	社区版
+docker-ee   企业版
