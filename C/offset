@@ -1,0 +1,25 @@
+https://blog.csdn.net/lizhidefengzi/article/details/54411155
+
+
+一、 求结构体中某个字段相对于结构体起始位置的偏移量：
+
+1.使用offsetof宏
+#include <stddef.h>
+offsetof(structName, memberName);	//第一个参数是结构体名，第二个参数是结构体成员名字
+
+#define offsetof(s,m)   (size_t)&reinterpret_cast<const volatile char&>((((s *)0)->m))
+
+2. 定义一个结构体 结构体成员的地址 - 结构体起始地址
+struct node_t node; 
+(unsigned long)(&node.c)-(unsigned long)(&node)
+
+3. 不定义结构体求解：
+<1>当node的内存地址为0即(&node==0)的时候，上面的代码可简化为：(unsigned long)(&node.c)。
+<2>由于node地址为0，node.c可以表述为： (struct node_t *)0->c
+<3>最终结果为：&(((struct node_t *)0)->c)
+
+//这里也可以将node的内存地址设为1,2,3...，eg: &(((struct node_t *)1)->c) - 1
+
+二、 扩展：根据一个指向某结构体成员变量的指针，如何求该结构体的另外一个成员变量的值？
+<1>先根据一中的偏移量求出结构体的地址；
+<2>根据结构体的地址直接获取另一个成员变量的值。
