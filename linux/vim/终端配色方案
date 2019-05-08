@@ -80,5 +80,11 @@ Options - Global options - General - Default session - Edit default - Appearance
 2、加载配色方案文件
 Options->Style properties->Load
 
+3、Source Insight英文显示乱码
+解决：Preferences -> Syntax Formatting -> Use only color formatting前面的钩挑上
+
+4、支持Python语言
+http://blog.csdn.net/serapme/article/details/46671387
+
 五、NodePad++配色方案
 设置 - 语言格式设置 - 选择主题
