@@ -1,0 +1,20 @@
+1. 最小安装centos
+安装centos时选择最小安装，安装完毕进入虚机(配置好网络，DNS等之后)执行：
+yum group install -y "Development and Creative Workstation"   //安装程序组
+其中："Development and Creative Workstation" 对应安装界面软件选择中的"开发及生成工作站"。
+yum install -y cmake git-review samba python-pip gcc gcc-c++ telnet zlib zlib-devel  //再安装需要的其他程序
+
+2. 网络配置
+IPADDR NETMASK GATEWAY等
+修改网口名为eth0(可选)
+
+3. DNS配置
+网络配置文件中增加 
+DNS1=8.8.8.8
+DNS2=8.8.4.4
+
+4. hostname配置
+
+5. samba配置
+
+//注:以上配置完成后需要重启机器
