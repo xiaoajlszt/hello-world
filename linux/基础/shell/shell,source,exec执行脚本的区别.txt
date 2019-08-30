@@ -1,0 +1,14 @@
+https://www.jianshu.com/p/dd7956aec097
+
+在UNIX/Linux中，经常需要写脚本执行自动化工作。执行脚本有多种方式，可以通过sh，source或者exec。这些方式有一些区别，需要根据需求选择合适的方式。
+
+1. sh方式
+使用$ sh script.sh执行脚本时，当前shell是父进程，生成一个子shell进程，在子shell中执行脚本。脚本执行完毕，退出子shell，回到当前shell。
+$ ./script.sh与$ sh script.sh等效。
+
+2. source方式
+使用$ source script.sh方式，在当前上下文中执行脚本，不会生成新的进程。脚本执行完毕，回到当前shell。
+source方式也叫点命令，$ . script.sh与$ source script.sh等效。
+
+3. exec方式
+使用exec command方式，会用command进程替换当前shell进程，并且保持PID不变。执行完毕，直接退出，不回到之前的shell环境。

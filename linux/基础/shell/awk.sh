@@ -21,6 +21,7 @@ https://www.cnblogs.com/kingstarer/p/6059978.html
   FNR   与NR类似，不过多文件记录不递增，每个文件都从1开始
 
   FS    指定列分隔符
+  OFS   列输出时的分隔符  
   RS    每条记录的分隔符，默认为\n
 
   $0 一整行
