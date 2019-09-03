@@ -1,0 +1,128 @@
+分表和表分区的目的就是减少数据库的负担，提高数据库的效率，通常点来讲就是提高表的增删改查效率。
+
+1.资料
+http://www.cnblogs.com/mliudong/p/3625522.html
+http://www.2cto.com/database/201503/380348.html
+
+2.概念
+分表: 分表是将一个大表按照一定的规则分解成多张具有独立存储空间的实体表，我们可以称为子表，每个表都对应三个文件，MYD数据文件，.MYI索引文件，.frm表结构文件。
+这些子表可以分布在同一块磁盘上，也可以在不同的机器上。app读写的时候根据事先定义好的规则得到对应的子表名，然后去操作它。
+
+分区: 分区和分表相似，都是按照规则分解表。不同在于分表将大表分解为若干个独立的实体表，而分区是将数据分段划分在多个位置存放，可以是同一块磁盘也可以在不同的机器。
+分区后，表面上还是一张表，但数据散列到多个位置了。app读写的时候操作的还是大表名字，db自动去组织分区的数据。
+
+分表和分区
+- 都能提高mysql的性高，在高并发状态下都有一个良好的表现。
+- 分表和分区不矛盾，可以相互配合的，对于那些大访问量，并且表数据比较多的表，我们可以采取分表和分区结合的方式（如果merge这种分表方式，不能和分区配合的话，可以用其他的分表试），访问量不大，但是表数据很多的表，我们可以采取分区的方式等。
+- 分表技术是比较麻烦的，需要手动去创建子表，app服务端读写时候需要计算子表名。采用merge好一些，但也要创建子表和配置子表间的union关系。
+- 表分区相对于分表，操作方便，不需要创建子表。
+
+---------------------------------------------
+merge补充说明:
+https://blog.csdn.net/gaohuanjie/article/details/50947055
+Merge存储引擎允许将一组使用MyISAM存储引擎的并且表结构相同（即每张表的字段顺序、字段名称、字段类型、索引定义的顺序及其定义的方式必须相同）的数据表合并为一个表，方便了数据的查询。
+假设有log_2004、log_2005、log_2006、log_2007 这四张日志记录表，其数据分别是每一年的数据，表结构如下（YY代表年份）:
+CREATE TABLE log_YY (  
+	  dt  DATETIME NOT NULL,  
+	  info VARCHAR(100) NOT NULL,  
+	  INDEX (dt)  
+) ENGINE = MyISAM;
+
+可以通过如下SQL语句把这些表归拢为一个逻辑单元:
+CREATE TABLE log_merge(  
+	    dt DATETIME NOT NULL,  
+	    info VARCHAR(100) NOT NULL,  
+	    INDEX(dt)  
+) ENGINE = MERGE UNION = (log_2004, log_2005, log_2006, log_2007);
+
+说明：ENGINE选项的值必须是MERGE；UNION选项列出了将被收录在这个log_merge数据表的所有表。该log_merge表创建成功后，就可以像普通表那样查询它，只是每一次查询都将同时作用于构成它的每一个成员数据表。
+譬如查询这些日志数据表的数据行总数: SELECT COUNT（*） FROM log_merge;
+
+创建MERGE存储引擎的表也支持DELETE 和UPDATE操作。INSERT操作比较麻烦，因为MySQL需要知道应该把新数据行插入到哪一个成员表里去。
+在MERGE存储引擎数据表的定义里可以包括一个INSERT_METHOD选项（MySQL4.0之后支持），这个选项的值有NO、FIRST、LAST三个，其含义依次是禁止INSERT操作、将数据行插入到UNION中的第一个表或将数据行插入到UNION中的最后一个表。
+
+比如下面SQL语句指定将新数据添加到log_2007数据表--它是UNION选项所列出的最后一个数据表：
+CREATE TABLE log_merge(  
+	    dt DATETIME NOT NULL,  
+	    info VARCHAR(100) NOT NULL,  
+	    INDEX(dt)  
+) ENGINE = MERGE UNION = (log_2004, log_2005, log_2006, log_2007)  
+INSERT_METHOD = LAST;
+
+创建一个新的成员数据表log_2009并让它有同样的表结构，然后修改log_merge数据表把log_2009包括进来：
+CREATE TABLE log_2009 LIKE log_2008;  
+ALTER TABLE log_merge  
+UNION = (log_2004, log_2005, log_2006, log_2007,log_2008,log_2009);
+        
+注意：使用Merge合并起来的表结构相同的表最好不要有主键，否则会出现这种情况：一共有两个成员表，其主键在两个表中存在相同情况，但是写了一条按相同主键值查询的SQL语句，这时只能查到UNION列表中第一个表中的数据。
+---------------------------------------------
+
+3.操作
+SELECT * FROM information_schema.PARTITIONS WHERE table_name='tablename';//查看表的分区
+select count(*) from tableName PARTITION (P01);
+ALTER TABLE policy_partition ADD PARTITION (PARTITION p08 VALUES LESS THAN (20170702000000)); //新增分区
+alter table policy_partition drop partition p8;  //删除分区
+
+4.分区与索引
+mysql分区后每个分区成了独立的文件，虽然从逻辑上还是一张表其实已经分成了多张独立的表，从 information_schema.INNODB_SYS_TABLES 系统表可以看到每个分区都存在独立的TABLE_ID,
+由于Innodb数据和索引都是保存在".ibd"文件当中（从 information_schema.INNODB_SYS_INDEXES 系统表中也可以得到每个索引都是对应各自的分区(primary key和unique也不例外）），所以分区表的索引也是随着各个分区单独存储。
+
+在 information_schema.INNODB_SYS_INDEXES 系统表中type代表索引的类型
+0:一般的索引
+1:(GEN_CLUST_INDEX)不存在主键索引的表,会自动生成一个6个字节的标示值
+2:unique索引
+3:primary索引
+所以当我们在分区表中创建索引时其实也是在每个分区中创建索引，每个分区维护各自的索引（其实也就是local index）;
+对于一般的索引(非主键或者唯一)没什么问题由于索引树中只保留了索引key和主键key(如果存在主键则是主键的key否则就是系统自动生成的6个的key)不受分区的影响；
+但是如果表中存在主键就不一样了，虽然在每个分区文件中都存在主键索引但是主键索引需要保证全局的唯一性就是所有分区中的主键的值都必须唯一（唯一键也是一样的道理）。
+所以在创建分区时如果表中存在主键或者唯一键，那么分区列必须包含主键或者唯一键的部分或者全部列（全部列还好理解，部分列也可以个人猜测是为了各个分区和主键建立关系），
+由于需要保证全局性又要保证插入数据更新数据到具体的分区，所以就需要将分区和主键建立关系。由于通过一般的索引进行查找其它非索引字段需要通过主键，如果主键不能保证全局唯一性的话那么就需要去每个分区查找了，这样性能可想而知。
+
+性能依次降低:
+<1>主键分区
+主键分区即字段是主键同时也是分区字段，性能最好
+
+<2>部分主键+分区索引
+使用组合主键里面的部分字段作为分区字段，同时将分区字段建索引
+
+<3>分区索引
+没有主键，只有分区字段且分区字段建索引
+
+<4>分区+分区字段没有索引
+只建了分区，但是分区字段没有建索引
+
+-------------------------------------------
+分区与索引补充：from 极客时间
+上期的问题是，怎么给分区表 t 创建自增主键。由于 MySQL 要求主键包含所有的分区字段，所以肯定是要创建联合主键的。
+这时候就有两种可选：一种是 (ftime, id)，另一种是(id, ftime)。
+如果从利用率上来看，应该使用 (ftime, id) 这种模式。因为用 ftime 做分区 key，说明大多数语句都是包含 ftime 的，使用这种模式，可以利用前缀索引的规则，减少一个索引。
+
+CREATE TABLE `t` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `ftime` datetime NOT NULL,
+  `c` int(11) DEFAULT NULL,
+  PRIMARY KEY (`ftime`,`id`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+PARTITION BY RANGE (YEAR(ftime))
+(PARTITION p_2017 VALUES LESS THAN (2017) ENGINE = InnoDB,
+ PARTITION p_2018 VALUES LESS THAN (2018) ENGINE = InnoDB,
+ PARTITION p_2019 VALUES LESS THAN (2019) ENGINE = InnoDB,
+ PARTITION p_others VALUES LESS THAN MAXVALUE ENGINE = InnoDB);
+
+当然把字段反过来，创建成：
+  PRIMARY KEY (`id`,`ftime`),
+  KEY `id` (`ftime`)
+也是可以的。
+-------------------------------------------
+
+5.要不要使用分区表: from极客时间
+分区表包含了一个.frm 文件和 4 个.ibd 文件，每个分区对应一个.ibd 文件。也就是说：
+对于引擎层来说，这是 4 个表； 
+对于 Server 层来说，这是 1 个表。
+
+MySQL 在第一次打开分区表的时候，需要访问所有的分区；
+在 server 层，认为这是同一张表，因此所有分区共用同一个MDL 锁；
+在引擎层，认为这是不同的表，因此 MDL 锁之后的执行过程，会根据分区表规则，只访问必要的分区。
+
+实际使用时，分区表跟用户分表比起来，有两个绕不开的问题：一个是第一次访问的时候需要访问所有分区，另一个是共用 MDL 锁。

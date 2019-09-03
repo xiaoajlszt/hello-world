@@ -164,9 +164,6 @@ select * from tablename;  //把所有记录都选出来
 select field1,field2,...,fieldn tablename;  //逗号分割需要查询的字段
 select * from tablename where field1=1;     //列出符合条件的记录 > < >= <= != 多个条件之间使用or and等逻辑运算符
 
-SELECT * FROM information_schema.PARTITIONS WHERE table_name='tablename';//查看表的分区
-select count(*) from tableName PARTITION (P01);
-
 show index from policy_big;  //查看索引
 show keys from policy_big;   //查看索引
 
@@ -450,10 +447,6 @@ innodb_buffer_pool_size	20000M	20000M
 
 三、一些资料
 1、金海：
-<1>mysql分区表，分区自己维护增加和删除，时间序列是range那种类型。
-http://www.cnblogs.com/mliudong/p/3625522.html
-http://www.2cto.com/database/201503/380348.html
-
 <2>laodfile用法和技巧和性能
 http://blog.csdn.net/qmyzch/article/details/53141911   （设置缓存大小）
 http://blog.jobbole.com/85657/   性能测试
@@ -487,16 +480,6 @@ http://blog.csdn.net/aeolus_pu/article/details/56833191
 2、索引
 http://blog.csdn.net/lmh12506/article/details/8879916
 http://blog.csdn.net/xluren/article/details/32746183   
-
-3、分区表操作
-http://blog.csdn.net/orangleliu/article/details/57088338    MySQL对数据表已有表进行分区表
-
-SELECT * FROM information_schema.PARTITIONS WHERE table_name='tablename';//查看表的分区
-select count(*) from tableName PARTITION (P01);
-ALTER TABLE policy_partition ADD PARTITION (PARTITION p08 VALUES LESS THAN (20170702000000)); //新增分区
-alter table policy_partition drop partition p8;  //删除分区
-
-
 
 四、一些问题：
 1、->
