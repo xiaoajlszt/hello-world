@@ -154,8 +154,13 @@ ALTER TABLE tablename RENAME [TO] new_tablename  //表改名
 常用的语句关键词主要包括insert、delete、update、select等。
 INSERT INTO tablename (field1,field2,⋯⋯fieldn) VALUES(value1,value2,⋯⋯valuesn);
 UPDATE tablename SET field1=value1，field2=value2，⋯⋯fieldn=valuen [WHERE CONDITION]
-DELETE FROM tablename [WHERE CONDITION]
 SELECT * FROM tablename [WHERE CONDITION]
+
+DELETE FROM tablename [WHERE CONDITION]
+truncate table tablename
+不带where参数的delete语句可以删除mysql表中所有内容，使用truncate table也可以清空mysql表中所有内容。
+效率上truncate比delete快，但truncate删除后不记录mysql日志，不可以恢复数据。
+delete的效果有点像将mysql表中所有记录一条一条删除到删完，而truncate相当于保留mysql表的结构，重新创建了这个表，所有的状态都相当于新表。
 
 /***********************************************查询**************************************************/
 
@@ -178,7 +183,7 @@ INSERT INTO policy_user (SELECT * FROM policy_little PARTITION(p01) where Policy
 
 insert ignore into policy_user SELECT * FROM policy_little PARTITION(p01); //忽略主键或唯一索引重复
 
-delete from policy_user;//删除表中数据
+delete from policy_user;//删除表中全部数据
 
 2)distinct //将表中的记录去掉重复后显示出来
 select distinct field1 from tablename; //将字段1不重复的记录显示出来，只显示字段1那列
@@ -269,6 +274,8 @@ WITH ROLLUP 	:表示对分类聚合后的结果进行再汇总。
 
 <3>举例：
 1)内连接
+join默认是指 inner join
+
 mysql> select * from emp;
 +--------+------------+---------+--------+
 | ename  | hiredate   | sal     | deptno |
