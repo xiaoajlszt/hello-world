@@ -1,0 +1,37 @@
+Netstat（network statistics）是在内核中访问网络连接状态及其相关信息的命令行程序，可以显示路由表、实际的网络连接和网络接口设备的状态信息，以及与 IP、TCP、UDP 和 ICMP 协议相关的统计数据，一般用于检验本机各端口的网络服务运行状况。
+
+1.命令选项
+<1>显示所有连接	//netstat -a
+-a 选项会列出 tcp, udp 和 unix 协议下所有套接字的所有连接。
+
+<2>只列出 TCP 或 UDP 协议的连接
+使用 -t 选项列出 TCP 协议的连接，可和 -a 选项配合使用  //netstat -at
+使用 -u 选项列出 UDP 协议的连接，可和 -a 选项配合使用  //netstat -au
+
+<3>禁用反向域名解析，加快查询速度	//netstat -nat
+默认情况下 netstat 会通过反向域名解析查找每个 IP 地址对应的主机名，会降低查找速度。
+n 选项可以禁用此行为，并且用户 ID 和端口号也优先使用数字显示。
+
+<4>只列出监听中的连接	//netstat -ntl
+-l 选项可以只列出正在监听的连接（不能和 a 选项同时使用）
+
+<5>获取进程名、进程号以及用户 ID 	//netstat -ntlpe
+-p  选项可以查看进程信息（此时 netstat 应尽量运行在 root 权限之下，否则不能得到运行在 root 权限下的进程名）
+-pe 选项可以同时查看进程名（号）和进程所属的用户名
+
+<6>显示路由信息	//netstat -r
+使用 -r 选项打印内核路由信息，与 route 命令输出一样。
+
+<7>网络接口信息	//netstat -ie
+-i 选项可以输出网络接口设备的统计信息，结合上 -e 选项，等于 ifconfig 命令的输出。
+
+<8>获取网络协议的统计信息	//netstat -s
+-s 选项可以输出针对不同网络协议的统计信息，包括 Ip、Icmp、Tcp 和 Udp 等。
+
+2.示例
+<1>打印 active 状态的连接
+netstat -anp | grep ESTABLISHED
+
+<2>查看指定服务是否正常运行
+netstat -anp | grep apache2
+netstat -anp | grep :80

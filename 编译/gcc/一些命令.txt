@@ -1,0 +1,11 @@
+3. strings
+<1>用途：打印文件中的可打印字符。
+<2>可用于：文本文件、目标文件、可执行文件、动态库、静态库
+
+4. hexdump
+<1>Linux下的一个二进制文件查看工具，它可以将二进制文件转换为ASCII、八进制、十进制、十六进制格式进行查看。 
+
+5. xxd
+make a hexdump or do the reverse.
+
+6. readelf

@@ -1,0 +1,47 @@
+https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/ldd.html
+
+ldd  //list dynamic dependencies 列出动态库依赖关系。
+用来查看进程运行所需的共享库,常用来解决进程因缺少某个库文件而不能运行的一些问题。
+
+eg:
+ldd /bin/ls //ldd命令通常使用"-v"或"--verbose"选项来显示所依赖的动态连接库的尽可能的详细信息，即可得到/bin/ls命令的相关共享库文件列表。
+
+在 ldd 命令打印的结果中：
+	第一列：=>左边 表示该程序依赖的共享库
+	第二列：=>右边 表示由 Linux 的共享库系统找到的对应的共享库在文件系统中的具体位置 //默认情况下，/etc/ld.so.conf 文件中包含有默认的共享库搜索路径。
+	第三列：库加载的开始地址
+
+通过上面的信息，我们可以得到以下几个信息：
+	通过对比第一列和第二列，我们可以分析程序需要依赖的库和系统实际提供的，是否相匹配。通过观察第三列，我们可以知道在当前的库中的符号在对应的进程的地址空间中的开始位置。
+
+原理：
+ldd是一个shell脚本；ldd显示可执行模块的dependency的工作原理，其实质是通过ld-linux.so（elf动态库的装载器）来实现的。
+ld-linux.so模块会先于executable模块进程工作，并获得控制权，因此当上述的那些环境变量被设置时，ld-linux.so选择了显示可执行模块的dependency。
+
+antlr3c使用动态库时：
+[root@Master uspp]# ldd ./build/test/ft_lb/lb_test 
+        linux-vdso.so.1 =>  (0x00007ffe1f787000)
+        libantlr3c.so => not found
+        libpthread.so.0 => /lib64/libpthread.so.0 (0x00007f47c3307000)
+        libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007f47c2fff000)
+        libm.so.6 => /lib64/libm.so.6 (0x00007f47c2cfd000)
+        libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007f47c2ae6000)
+        libc.so.6 => /lib64/libc.so.6 (0x00007f47c2725000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007f47c354e000)
+
+antlr3c使用静态库时：
+[root@Master uspp]# ldd ./build/test/ft_lb/lb_test 
+        linux-vdso.so.1 =>  (0x00007ffe394f1000)
+        libpthread.so.0 => /lib64/libpthread.so.0 (0x00007fe7a26f2000)
+        libstdc++.so.6 => /lib64/libstdc++.so.6 (0x00007fe7a23e9000)
+        libm.so.6 => /lib64/libm.so.6 (0x00007fe7a20e7000)
+        libgcc_s.so.1 => /lib64/libgcc_s.so.1 (0x00007fe7a1ed1000)
+        libc.so.6 => /lib64/libc.so.6 (0x00007fe7a1b0f000)
+        /lib64/ld-linux-x86-64.so.2 (0x00007fe7a2938000)
+		
+Windows和Linux的加载时链接是由操作系统来完成的，格式在不同的系统下有不同的区别，但是原理还是一样的。
+linux下文件的类型是不依赖于其后缀名的，但一般来讲：
+.o,是目标文件,相当于windows中的.obj文件
+.so 为共享库,是shared object,用于动态连接的,和dll差不多
+.a为静态库,是好多个.o合在一起,用于静态连接
+.la为libtool自动生成的一些共享库，vi编辑查看，主要记录了一些配置信息。

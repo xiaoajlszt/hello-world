@@ -57,11 +57,6 @@ man sys_time.h   对应sys/time.h (在默认路径/usr/include/中)
 6、dmidecode查看硬件信息
 http://man.linuxde.net/dmidecode
 
-7、svn使用
-<1>安装websvn-2.3.3-13.el7.noarch  //noarch是no architecture的缩写，说明这个包可以在各个不同的cpu(X64\X86等)上使用。
-<2>语法
-http://blog.csdn.net/ithomer/article/details/6187464
-
 8、mkdir 
 -p, --parents
     no error if existing, make parent directories as needed
