@@ -70,3 +70,7 @@ sed 's/^/添加的头部&/g;s/$/&添加的尾部/g'
 sed -i "s/SL10067372SL/${sl_name}/g" uspp/Dockerfile
 sed -i "/^mail.*/i\$FileCreateMode 0644" /etc/rsyslog.conf	//在mail.*开头的行的前一行插入"$FileCreateMode 0644"
 sed -i "/^mail.*/a\$FileCreateMode 0600" /etc/rsyslog.conf	//在mail.*开头的行的后一行插入"$FileCreateMode 0600"
+
+2.以行为单位的替换与显示
+sed '2,5c No 2-5 number' file //将第2-5行的内容取代成为"No 2-5 number"
+sed -n '5,7p' file //显示第5-7行
