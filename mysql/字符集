@@ -191,3 +191,43 @@ mysql> select * from zh_test;
 6、参考资料
 深入浅出MySQL
 http://www.cnblogs.com/HondaHsu/p/3640180.html
+
+--------------------------------
+
+1.utf8mb4
+MySQL 5.5.3之后增加了utfmb4字符编码，utf8mb4是utf8的超集并完全兼容utf8，能够用四个字节存储更多的字符。
+
+标准的UTF-8字符集编码是可以使用1-4个字节去编码21位字符，这几乎包含了世界上所有能看见的语言。
+MySQL里面实现的utf8最长使用3个字符，包含了大多数字符但并不是所有。例如emoji和一些不常用的汉字，如"墅"，这些需要四个字节才能编码的就不支持。
+
+2.字符集、连接字符集、排序字符集
+utf8mb4对应的排序字符集有utf8mb4_unicode_ci、utf8mb4_general_ci。
+
+utf8mb4_unicode_ci 和 utf8mb4_general_ci 的对比:
+
+准确性：
+utf8mb4_unicode_ci 是基于标准的Unicode来排序和比较，能够在各种语言之间精确排序；
+utf8mb4_general_ci 没有实现Unicode排序规则，在遇到某些特殊语言或者字符集，排序结果可能不一致。
+但是，在绝大多数情况下，这些特殊字符的顺序并不需要那么精确。
+
+性能：
+utf8mb4_general_ci 在比较和排序的时候更快；
+utf8mb4_unicode_ci 在特殊情况下，Unicode排序规则为了能够处理特殊字符的情况，实现了略微复杂的排序算法。
+但是在绝大多数情况下发，不会发生此类复杂比较。相比选择哪一种collation，使用者更应该关心字符集与排序规则在db里需要统一。
+
+3.utf8mb4_unicode_ci、utf8mb4_general_ci均不区分大小写；
+解决方法：
+方法1 将列到校验规则改为 utf8mb4_bin 或者 utf8_general_cs
+CREATE TABLE `T2` (
+  `name` varchar(20) COLLATE utf8mb4_bin DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
+
+方法2 不修改表结构，通过binary查询
+select * from T where name = BINARY'you';
+或者
+select * from T where BINARY name = 'you';
+
+4. 
+utf8mb4_general_cs 大小写敏感
+utf8mb4_bin 大小写敏感
+不存在 utf8_unicode_cs
