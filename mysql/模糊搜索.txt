@@ -1,0 +1,171 @@
+https://www.jianshu.com/p/c48106149b6a
+
+在MySQL 5.7.6之前，全文索引只支持英文全文索引，不支持中文全文索引，需要利用分词器把中文段落预处理拆分成单词，然后存入数据库。
+从MySQL 5.7.6开始，MySQL内置了ngram全文解析器，用来支持中文、日文、韩文分词。
+
+1.ngram全文解析器
+ngram就是一段文字里面连续的n个字的序列。ngram全文解析器能够对文本进行分词，每个单词是连续的n个字的序列。
+
+例如，用ngram全文解析器对“生日快乐”进行分词:
+n=1: '生', '日', '快', '乐' 
+n=2: '生日', '日快', '快乐' 
+n=3: '生日快', '日快乐' 
+n=4: '生日快乐'
+
+1.1 设置ngram_token_size变量
+
+方法1: 启动mysqld命令时
+mysqld --ngram_token_size=2
+
+方法2: 
+修改MySQL /ets/my.cnf配置文件，加入： 
+[mysqld] 
+ngram_token_size=2
+
+验证结果：
+mysql> show variables like '%ngram_token_size%';
++------------------+-------+
+| Variable_name    | Value |
++------------------+-------+
+| ngram_token_size | 2     |
++------------------+-------+
+1 row in set (0.00 sec)
+
+1.2 ngram_token_size 说明
+MySQL使用全局变量ngram_token_size来配置ngram中n的大小，它的取值范围是1到10，默认值是2。
+通常ngram_token_size设置为要查询的单词的最小字数。
+如果需要搜索单字，就要把ngram_token_size设置为1。
+在默认值是2的情况下，搜索单字是得不到任何结果的。因为中文单词最少是两个汉字，推荐使用默认值2。
+
+eg:
+mysql> select * from t_testfulltext;
++----+--------------+------+
+| id | name         | d    |
++----+--------------+------+
+|  1 | 今天真好     | NULL |
+|  2 | 今天不好     | NULL |
+|  3 | 明天真好     | NULL |
+|  4 | 天天不好     | NULL |
++----+--------------+------+
+
+<1>ngram_token_size 为1时，"不好"能搜到全部4条记录，这是因为"不"和"好"被拆成了2个词，搜索结果为包含任意一个词的结果的结合。
+mysql> select * from t_testfulltext where match(name) against('不好' IN NATURAL LANGUAGE MODE);
++----+--------------+------+
+| id | name         | d    |
++----+--------------+------+
+|  2 | 今天不好     | NULL |
+|  4 | 天天不好     | NULL |
+|  1 | 今天真好     | NULL |
+|  3 | 明天真好     | NULL |
++----+--------------+------+
+4 rows in set (0.00 sec)
+
+2. 创建全文索引
+CREATE TABLE articles (
+    id INT UNSIGNED AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    title VARCHAR (200),
+    body TEXT,
+    FULLTEXT (title, body) WITH PARSER ngram
+) ENGINE = INNODB;
+
+CREATE FULLTEXT INDEX ft_index ON articles (title,body) WITH PARSER ngram;
+
+ALTER TABLE articles ADD FULLTEXT INDEX ft_index (title,body) WITH PARSER ngram;
+
+alter table t_testfulltext drop index ft_index;
+alter table t_testfulltext add fulltext index ft_index (name) WITH PARSER ngram;
+
+3. 检索
+常用的全文检索模式有两种：
+
+<1>自然语言模式(NATURAL LANGUAGE MODE)
+自然语言模式是MySQL 默认的全文检索模式。自然语言模式不能使用操作符，不能指定关键词必须出现或者必须不能出现等复杂查询。
+//不指定模式时，默认使用自然语言模式！！！
+
+- select * from t_testfulltext where match(name) against('今天' IN NATURAL LANGUAGE MODE);
+
+上面的示例返回结果会自动按照相关性排序，相关性高的在前面。相关性的值是一个非负浮点数，0表示无相关性。
+
+// 获取相关性的值
+mysql> SELECT id,name,MATCH(name) AGAINST ('今天真好' IN NATURAL LANGUAGE MODE) AS score FROM t_testfulltext ORDER BY score DESC;
++----+-----------------------+----------------------------+
+| id | name                  | score                      |
++----+-----------------------+----------------------------+
+|  1 | 今天真好              |         0.0906190574169159 |
+|  3 | 明天真好              |         0.0906190574169159 |
+|  5 | 今天翔哥真好          | 0.000000003771856604828372 |
+|  6 | 今天翔哥真好吗        | 0.000000003771856604828372 |
+|  2 | 今天不好              | 0.000000001885928302414186 |
+|  4 | 天天不好              |                          0 |
++----+-----------------------+----------------------------+
+6 rows in set (0.00 sec)
+
+- 获取匹配结果记录数
+mysql> SELECT COUNT(*) FROM t_testfulltext WHERE MATCH (name) AGAINST ('今天真好' IN NATURAL LANGUAGE MODE);
++----------+
+| COUNT(*) |
++----------+
+|        5 |
++----------+
+1 row in set (0.01 sec)
+
+<2>BOOLEAN模式(BOOLEAN MODE)
+BOOLEAN模式可以使用操作符，可以支持指定关键词必须出现或者必须不能出现或者关键词的权重高还是低等复杂查询。
+eg:
+mysql> SELECT * FROM t_testfulltext WHERE MATCH (name) AGAINST ('今天*' IN BOOLEAN MODE);
++----+-----------------------+------+
+| id | name                  | d    |
++----+-----------------------+------+
+|  1 | 今天真好              | NULL |
+|  2 | 今天不好              | NULL |
+|  5 | 今天翔哥真好          | NULL |
+|  6 | 今天翔哥真好吗        | NULL |
++----+-----------------------+------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM t_testfulltext WHERE MATCH (name) AGAINST ('今天真好*' IN BOOLEAN MODE);
++----+--------------+------+
+| id | name         | d    |
++----+--------------+------+
+|  1 | 今天真好     | NULL |
++----+--------------+------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM t_testfulltext WHERE MATCH (name) AGAINST ("翔哥真好" IN BOOLEAN MODE);
++----+-----------------------+------+
+| id | name                  | d    |
++----+-----------------------+------+
+|  5 | 今天翔哥真好          | NULL |
+|  6 | 今天翔哥真好吗        | NULL |
++----+-----------------------+------+
+2 rows in set (0.00 sec)
+
+```
+'apple banana' 
+无操作符，表示或，要么包含apple，要么包含banana
+
+'+apple +juice'
+必须同时包含两个词
+
+'+apple macintosh'
+必须包含apple，但是如果也包含macintosh的话，相关性会更高。
+
+'+apple -macintosh'
+必须包含apple，同时不能包含macintosh。
+
+'+apple ~macintosh'
+必须包含apple，但是如果也包含macintosh的话，相关性要比不包含macintosh的记录低。
+
+'+apple +(>juice <pie)'
+查询必须包含apple和juice或者apple和pie的记录，但是apple juice的相关性要比apple pie高。
+
+'apple*'
+查询包含以apple开头的单词的记录，如apple、apples、applet。
+
+'"some words"'
+使用双引号把要搜素的词括起来，效果类似于like '%some words%'，
+例如“some words of wisdom”会被匹配到，而“some noise words”就不会被匹配。
+```
+
+4. 注意点：
+修改全局变量 ngram_token_size 值后，表中旧数据的全文索引形成分词结果是不会更新的。需要重新创建全文索引后，才能正常检索到数据！！！
