@@ -169,3 +169,41 @@ mysql> SELECT * FROM t_testfulltext WHERE MATCH (name) AGAINST ("翔哥真好" I
 
 4. 注意点：
 修改全局变量 ngram_token_size 值后，表中旧数据的全文索引形成分词结果是不会更新的。需要重新创建全文索引后，才能正常检索到数据！！！
+
+------
+mysql 官方文档
+https://dev.mysql.com/doc/refman/5.7/en/fulltext-search.html
+
+mysql 中文文档 
+https://www.docs4dev.com/docs/zh/mysql/5.7/reference/fulltext-natural-language.html#%E8%87%AA%E7%84%B6%E8%AF%AD%E8%A8%80-full-text-%E6%90%9C%E7%B4%A2
+
+1.简介
+- 从 MySQL 5.7.6 开始，MySQL提供了一个支持中文，日文和韩文(CJK)的 built-in full-text ngram 解析器，以及一个可安装的日文版 MeCab full-text 解析器插件。
+- 创建 table 时可以在创建TABLE语句中给出FULLTEXT索引定义，或者稍后使用ALTER TABLE或创建指数添加FULLTEXT索引定义。
+对于大型数据集，将数据加载到没有FULLTEXT索引的 table 然后在此之后创建索引要快得多，而不是将数据加载到具有现有FULLTEXT索引的 table 中！！！
+
+- full-text 搜索有三种类型：
+  - 自然语言搜索。 如果给出了IN NATURAL LANGUAGE MODE修饰符或者没有给出修饰符，则 Full-text 搜索是自然语言搜索。
+  - boolean搜索。 IN BOOLEAN MODE修饰符指定 boolean 搜索，使用特殊查询语言的规则来解释search string。
+  	string 包含要搜索的单词。它还可以包含 operators，它们指定要求，使得匹配行中必须存在或不存在单词，或者它应该比平常更高或更低。
+  	某些 common 单词(停用词)在搜索索引中被省略，如果在搜索 string 中存在，则不会 match！！！ 
+  - 查询扩展搜索是自然语言搜索的修改。 IN NATURAL LANGUAGE MODE WITH QUERY EXPANSION或WITH QUERY EXPANSION修饰符指定查询扩展搜索。
+  	search string 用于执行自然语言搜索。然后将搜索返回的最相关行中的单词添加到搜索 string 中，然后再次进行搜索。查询返回第二次搜索中的行。 
+
+2. Full-Text Stopwords
+InnoDB默认的stopwords在表INFORMATION_SCHEMA.INNODB_FT_DEFAULT_STOPWORD中。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
